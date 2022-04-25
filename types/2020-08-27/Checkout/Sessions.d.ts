@@ -221,7 +221,7 @@ declare module 'stripe' {
         total_details: Session.TotalDetails | null;
 
         /**
-         * The URL to the Checkout Session.
+         * The URL to the Checkout Session. Redirect customers to this URL to take them to Checkout. If you're using [Custom Domains](https://stripe.com/docs/payments/checkout/custom-domains), the URL will use your subdomain. Otherwise, it'll use `checkout.stripe.com.`
          */
         url: string | null;
       }
@@ -303,10 +303,20 @@ declare module 'stripe' {
 
         interface CustomerDetails {
           /**
+           * The customer's address at the time of checkout. Note: This property is populated only for sessions on or after March 30, 2022.
+           */
+          address: Stripe.Address | null;
+
+          /**
            * The email associated with the Customer, if one exists, on the Checkout Session at the time of checkout or at time of session expiry.
            * Otherwise, if the customer has consented to promotional content, this value is the most recent valid email provided by the customer on the Checkout form.
            */
           email: string | null;
+
+          /**
+           * The customer's name at the time of checkout. Note: This property is populated only for sessions on or after March 30, 2022.
+           */
+          name: string | null;
 
           /**
            * The customer's phone number at the time of checkout
@@ -443,6 +453,8 @@ declare module 'stripe' {
           konbini?: PaymentMethodOptions.Konbini;
 
           oxxo?: PaymentMethodOptions.Oxxo;
+
+          us_bank_account?: PaymentMethodOptions.UsBankAccount;
         }
 
         namespace PaymentMethodOptions {
@@ -515,6 +527,17 @@ declare module 'stripe' {
              * The number of calendar days before an OXXO invoice expires. For example, if you create an OXXO invoice on Monday and you set expires_after_days to 2, the OXXO invoice will expire on Wednesday at 23:59 America/Mexico_City time.
              */
             expires_after_days: number;
+          }
+
+          interface UsBankAccount {
+            /**
+             * Bank account verification method.
+             */
+            verification_method?: UsBankAccount.VerificationMethod;
+          }
+
+          namespace UsBankAccount {
+            type VerificationMethod = 'automatic' | 'instant';
           }
         }
 
@@ -825,17 +848,17 @@ declare module 'stripe' {
 
         interface TotalDetails {
           /**
-           * This is the sum of all the line item discounts.
+           * This is the sum of all the discounts.
            */
           amount_discount: number;
 
           /**
-           * This is the sum of all the line item shipping amounts.
+           * This is the sum of all the shipping amounts.
            */
           amount_shipping: number | null;
 
           /**
-           * This is the sum of all the line item tax amounts.
+           * This is the sum of all the tax amounts.
            */
           amount_tax: number;
 
@@ -845,12 +868,12 @@ declare module 'stripe' {
         namespace TotalDetails {
           interface Breakdown {
             /**
-             * The aggregated line item discounts.
+             * The aggregated discounts.
              */
             discounts: Array<Breakdown.Discount>;
 
             /**
-             * The aggregated line item tax amounts by rate.
+             * The aggregated tax amounts by rate.
              */
             taxes: Array<Breakdown.Tax>;
           }
@@ -956,7 +979,8 @@ declare module 'stripe' {
          * When a Customer is not created, you can still retrieve email, address, and other customer data entered in Checkout
          * with [customer_details](https://stripe.com/docs/api/checkout/sessions/object#checkout_session_object-customer_details).
          *
-         * Sessions that do not create Customers will instead create [Guest Customers](https://support.stripe.com/questions/guest-customer-faq) in the Dashboard.
+         * Sessions that don't create Customers instead create [Guest Customers](https://support.stripe.com/questions/guest-customer-faq)
+         * in the Dashboard. Promotion codes limited to first time customers will return invalid for these Sessions.
          *
          * Can only be set in `payment` and `setup` mode.
          */
@@ -1297,12 +1321,12 @@ declare module 'stripe' {
               metadata?: Stripe.MetadataParam;
 
               /**
-               * The product's name, meant to be displayable to the customer. Whenever this product is sold via a subscription, name will show up on associated invoice line item descriptions.
+               * The product's name, meant to be displayable to the customer.
                */
               name: string;
 
               /**
-               * A [tax code](https://stripe.com/docs/tax/tax-codes) ID.
+               * A [tax code](https://stripe.com/docs/tax/tax-categories) ID.
                */
               tax_code?: string;
             }
@@ -1529,6 +1553,11 @@ declare module 'stripe' {
           oxxo?: PaymentMethodOptions.Oxxo;
 
           /**
+           * contains details about the Us Bank Account payment method options.
+           */
+          us_bank_account?: PaymentMethodOptions.UsBankAccount;
+
+          /**
            * contains details about the WeChat Pay payment method options.
            */
           wechat_pay?: PaymentMethodOptions.WechatPay;
@@ -1616,6 +1645,17 @@ declare module 'stripe' {
             expires_after_days?: number;
           }
 
+          interface UsBankAccount {
+            /**
+             * Verification method for the intent
+             */
+            verification_method?: UsBankAccount.VerificationMethod;
+          }
+
+          namespace UsBankAccount {
+            type VerificationMethod = 'automatic' | 'instant';
+          }
+
           interface WechatPay {
             /**
              * The app ID registered with WeChat Pay. Only required when client is ios or android.
@@ -1651,8 +1691,10 @@ declare module 'stripe' {
           | 'konbini'
           | 'oxxo'
           | 'p24'
+          | 'paynow'
           | 'sepa_debit'
           | 'sofort'
+          | 'us_bank_account'
           | 'wechat_pay';
 
         interface PhoneNumberCollection {
@@ -1968,7 +2010,7 @@ declare module 'stripe' {
             tax_behavior?: ShippingRateData.TaxBehavior;
 
             /**
-             * A [tax code](https://stripe.com/docs/tax/tax-codes) ID. The Shipping tax code is `txcd_92010001`.
+             * A [tax code](https://stripe.com/docs/tax/tax-categories) ID. The Shipping tax code is `txcd_92010001`.
              */
             tax_code?: string;
 
