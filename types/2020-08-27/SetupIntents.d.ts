@@ -22,6 +22,13 @@ declare module 'stripe' {
       application: string | Stripe.Application | null;
 
       /**
+       * If present, the SetupIntent's payment method will be attached to the in-context Stripe Account.
+       *
+       * It can only be used for this Stripe Account's own money movement flows like InboundTransfer and OutboundTransfers. It cannot be set to true when setting up a PaymentMethod for a Customer, and defaults to false when attaching a PaymentMethod to a Customer.
+       */
+      attach_to_self?: boolean;
+
+      /**
        * Reason for cancellation of this SetupIntent, one of `abandoned`, `requested_by_customer`, or `duplicate`.
        */
       cancellation_reason: SetupIntent.CancellationReason | null;
@@ -49,6 +56,13 @@ declare module 'stripe' {
        * An arbitrary string attached to the object. Often useful for displaying to users.
        */
       description: string | null;
+
+      /**
+       * Indicates the directions of money movement for which this payment method is intended to be used.
+       *
+       * Include `inbound` if you intend to use the payment method as the origin to pull funds from. Include `outbound` if you intend to use the payment method as the destination to send funds to. You can include both if you intend to use the payment method for both purposes.
+       */
+      flow_directions?: Array<SetupIntent.FlowDirection> | null;
 
       /**
        * The error encountered in the previous SetupIntent confirmation.
@@ -123,6 +137,8 @@ declare module 'stripe' {
         | 'abandoned'
         | 'duplicate'
         | 'requested_by_customer';
+
+      type FlowDirection = 'inbound' | 'outbound';
 
       interface LastSetupError {
         /**
@@ -744,12 +760,28 @@ declare module 'stripe' {
 
         interface UsBankAccount {
           /**
+           * Additional fields for network related functions
+           */
+          networks?: UsBankAccount.Networks;
+
+          /**
            * Verification method for the intent
            */
           verification_method?: UsBankAccount.VerificationMethod;
         }
 
         namespace UsBankAccount {
+          interface Networks {
+            /**
+             * Triggers validations to run across the selected networks
+             */
+            requested?: Array<Networks.Requested>;
+          }
+
+          namespace Networks {
+            type Requested = 'ach' | 'us_domestic_wire';
+          }
+
           type VerificationMethod = 'automatic' | 'instant' | 'microdeposits';
         }
       }
@@ -998,12 +1030,28 @@ declare module 'stripe' {
 
         interface UsBankAccount {
           /**
+           * Additional fields for network related functions
+           */
+          networks?: UsBankAccount.Networks;
+
+          /**
            * Verification method for the intent
            */
           verification_method?: UsBankAccount.VerificationMethod;
         }
 
         namespace UsBankAccount {
+          interface Networks {
+            /**
+             * Triggers validations to run across the selected networks
+             */
+            requested?: Array<Networks.Requested>;
+          }
+
+          namespace Networks {
+            type Requested = 'ach' | 'us_domestic_wire';
+          }
+
           type VerificationMethod = 'automatic' | 'instant' | 'microdeposits';
         }
       }
@@ -1343,12 +1391,28 @@ declare module 'stripe' {
 
         interface UsBankAccount {
           /**
+           * Additional fields for network related functions
+           */
+          networks?: UsBankAccount.Networks;
+
+          /**
            * Verification method for the intent
            */
           verification_method?: UsBankAccount.VerificationMethod;
         }
 
         namespace UsBankAccount {
+          interface Networks {
+            /**
+             * Triggers validations to run across the selected networks
+             */
+            requested?: Array<Networks.Requested>;
+          }
+
+          namespace Networks {
+            type Requested = 'ach' | 'us_domestic_wire';
+          }
+
           type VerificationMethod = 'automatic' | 'instant' | 'microdeposits';
         }
       }

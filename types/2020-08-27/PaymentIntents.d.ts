@@ -2973,6 +2973,11 @@ declare module 'stripe' {
 
         interface UsBankAccount {
           /**
+           * Additional fields for network related functions
+           */
+          networks?: UsBankAccount.Networks;
+
+          /**
            * Indicates that you intend to make future payments with this PaymentIntent's payment method.
            *
            * Providing this parameter will [attach the payment method](https://stripe.com/docs/payments/save-during-payment) to the PaymentIntent's Customer, if present, after the PaymentIntent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be [attached](https://stripe.com/docs/api/payment_methods/attach) to a Customer after the transaction completes.
@@ -2990,6 +2995,17 @@ declare module 'stripe' {
         }
 
         namespace UsBankAccount {
+          interface Networks {
+            /**
+             * Triggers validations to run across the selected networks
+             */
+            requested?: Array<Networks.Requested>;
+          }
+
+          namespace Networks {
+            type Requested = 'ach' | 'us_domestic_wire';
+          }
+
           type SetupFutureUsage = 'none' | 'off_session' | 'on_session';
 
           type VerificationMethod = 'automatic' | 'instant' | 'microdeposits';
@@ -4462,6 +4478,11 @@ declare module 'stripe' {
 
         interface UsBankAccount {
           /**
+           * Additional fields for network related functions
+           */
+          networks?: UsBankAccount.Networks;
+
+          /**
            * Indicates that you intend to make future payments with this PaymentIntent's payment method.
            *
            * Providing this parameter will [attach the payment method](https://stripe.com/docs/payments/save-during-payment) to the PaymentIntent's Customer, if present, after the PaymentIntent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be [attached](https://stripe.com/docs/api/payment_methods/attach) to a Customer after the transaction completes.
@@ -4479,6 +4500,17 @@ declare module 'stripe' {
         }
 
         namespace UsBankAccount {
+          interface Networks {
+            /**
+             * Triggers validations to run across the selected networks
+             */
+            requested?: Array<Networks.Requested>;
+          }
+
+          namespace Networks {
+            type Requested = 'ach' | 'us_domestic_wire';
+          }
+
           type SetupFutureUsage = 'none' | 'off_session' | 'on_session';
 
           type VerificationMethod = 'automatic' | 'instant' | 'microdeposits';
@@ -6088,6 +6120,11 @@ declare module 'stripe' {
 
         interface UsBankAccount {
           /**
+           * Additional fields for network related functions
+           */
+          networks?: UsBankAccount.Networks;
+
+          /**
            * Indicates that you intend to make future payments with this PaymentIntent's payment method.
            *
            * Providing this parameter will [attach the payment method](https://stripe.com/docs/payments/save-during-payment) to the PaymentIntent's Customer, if present, after the PaymentIntent is confirmed and any required actions from the user are complete. If no Customer was provided, the payment method can still be [attached](https://stripe.com/docs/api/payment_methods/attach) to a Customer after the transaction completes.
@@ -6105,6 +6142,17 @@ declare module 'stripe' {
         }
 
         namespace UsBankAccount {
+          interface Networks {
+            /**
+             * Triggers validations to run across the selected networks
+             */
+            requested?: Array<Networks.Requested>;
+          }
+
+          namespace Networks {
+            type Requested = 'ach' | 'us_domestic_wire';
+          }
+
           type SetupFutureUsage = 'none' | 'off_session' | 'on_session';
 
           type VerificationMethod = 'automatic' | 'instant' | 'microdeposits';

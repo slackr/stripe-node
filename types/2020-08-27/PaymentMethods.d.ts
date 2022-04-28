@@ -695,6 +695,11 @@ declare module 'stripe' {
         last4: string | null;
 
         /**
+         * Contains information about US bank account networks that can be used.
+         */
+        networks?: UsBankAccount.Networks | null;
+
+        /**
          * Routing number of the bank account.
          */
         routing_number: string | null;
@@ -704,6 +709,22 @@ declare module 'stripe' {
         type AccountHolderType = 'company' | 'individual';
 
         type AccountType = 'checking' | 'savings';
+
+        interface Networks {
+          /**
+           * The preferred network.
+           */
+          preferred: string | null;
+
+          /**
+           * All supported networks.
+           */
+          supported: Array<Networks.Supported>;
+        }
+
+        namespace Networks {
+          type Supported = 'ach' | 'us_domestic_wire';
+        }
       }
 
       interface WechatPay {}
