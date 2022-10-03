@@ -2,7 +2,33 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace Product {
+      export interface PackageDimensions {
+        /**
+         * Height, in inches.
+         */
+        height: number;
+
+        /**
+         * Length, in inches.
+         */
+        length: number;
+
+        /**
+         * Weight, in ounces.
+         */
+        weight: number;
+
+        /**
+         * Width, in inches.
+         */
+        width: number;
+      }
+
+      export type Type = 'good' | 'service';
+    }
+
+    export /**
      * Products describe the specific goods or services you offer to your customers.
      * For example, you might offer a Standard and Premium version of your goods or service; each version would be a separate Product.
      * They can be used in conjunction with [Prices](https://stripe.com/docs/api#prices) to configure pricing in Payment Links, Checkout, and Subscriptions.
@@ -121,33 +147,7 @@ declare module 'stripe' {
       url: string | null;
     }
 
-    namespace Product {
-      interface PackageDimensions {
-        /**
-         * Height, in inches.
-         */
-        height: number;
-
-        /**
-         * Length, in inches.
-         */
-        length: number;
-
-        /**
-         * Weight, in ounces.
-         */
-        weight: number;
-
-        /**
-         * Width, in inches.
-         */
-        width: number;
-      }
-
-      type Type = 'good' | 'service';
-    }
-
-    /**
+    export /**
      * The DeletedProduct object.
      */
     interface DeletedProduct {
@@ -167,7 +167,167 @@ declare module 'stripe' {
       deleted: true;
     }
 
-    interface ProductCreateParams {
+    namespace ProductCreateParams {
+      export interface DefaultPriceData {
+        /**
+         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+         */
+        currency: string;
+
+        /**
+         * Prices defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
+         */
+        currency_options?: {
+          [key: string]: DefaultPriceData.CurrencyOptions;
+        };
+
+        /**
+         * The recurring components of a price such as `interval` and `interval_count`.
+         */
+        recurring?: DefaultPriceData.Recurring;
+
+        /**
+         * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+         */
+        tax_behavior?: DefaultPriceData.TaxBehavior;
+
+        /**
+         * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge. One of `unit_amount` or `unit_amount_decimal` is required.
+         */
+        unit_amount?: number;
+
+        /**
+         * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
+         */
+        unit_amount_decimal?: string;
+      }
+
+      export interface PackageDimensions {
+        /**
+         * Height, in inches. Maximum precision is 2 decimal places.
+         */
+        height: number;
+
+        /**
+         * Length, in inches. Maximum precision is 2 decimal places.
+         */
+        length: number;
+
+        /**
+         * Weight, in ounces. Maximum precision is 2 decimal places.
+         */
+        weight: number;
+
+        /**
+         * Width, in inches. Maximum precision is 2 decimal places.
+         */
+        width: number;
+      }
+
+      export type Type = 'good' | 'service';
+
+      namespace DefaultPriceData {
+        export interface CurrencyOptions {
+          /**
+           * When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
+           */
+          custom_unit_amount?: CurrencyOptions.CustomUnitAmount;
+
+          /**
+           * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+           */
+          tax_behavior?: CurrencyOptions.TaxBehavior;
+
+          /**
+           * Each element represents a pricing tier. This parameter requires `billing_scheme` to be set to `tiered`. See also the documentation for `billing_scheme`.
+           */
+          tiers?: Array<CurrencyOptions.Tier>;
+
+          /**
+           * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+           */
+          unit_amount?: number;
+
+          /**
+           * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
+           */
+          unit_amount_decimal?: string;
+        }
+
+        export interface Recurring {
+          /**
+           * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
+           */
+          interval: Recurring.Interval;
+
+          /**
+           * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
+           */
+          interval_count?: number;
+        }
+
+        export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+
+        namespace CurrencyOptions {
+          export interface CustomUnitAmount {
+            /**
+             * Pass in `true` to enable `custom_unit_amount`, otherwise omit `custom_unit_amount`.
+             */
+            enabled: boolean;
+
+            /**
+             * The maximum unit amount the customer can specify for this item.
+             */
+            maximum?: number;
+
+            /**
+             * The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
+             */
+            minimum?: number;
+
+            /**
+             * The starting unit amount which can be updated by the customer.
+             */
+            preset?: number;
+          }
+
+          export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+
+          export interface Tier {
+            /**
+             * The flat billing amount for an entire tier, regardless of the number of units in the tier.
+             */
+            flat_amount?: number;
+
+            /**
+             * Same as `flat_amount`, but accepts a decimal value representing an integer in the minor units of the currency. Only one of `flat_amount` and `flat_amount_decimal` can be set.
+             */
+            flat_amount_decimal?: string;
+
+            /**
+             * The per unit billing amount for each individual unit for which this tier applies.
+             */
+            unit_amount?: number;
+
+            /**
+             * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
+             */
+            unit_amount_decimal?: string;
+
+            /**
+             * Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use `inf` to define a fallback tier.
+             */
+            up_to: 'inf' | number;
+          }
+        }
+
+        namespace Recurring {
+          export type Interval = 'day' | 'month' | 'week' | 'year';
+        }
+      }
+    }
+
+    export interface ProductCreateParams {
       /**
        * The product's name, meant to be displayable to the customer.
        */
@@ -262,142 +422,15 @@ declare module 'stripe' {
       url?: string;
     }
 
-    namespace ProductCreateParams {
-      interface DefaultPriceData {
-        /**
-         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-         */
-        currency: string;
+    export interface ProductRetrieveParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+    }
 
-        /**
-         * Prices defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
-         */
-        currency_options?: {
-          [key: string]: DefaultPriceData.CurrencyOptions;
-        };
-
-        /**
-         * The recurring components of a price such as `interval` and `interval_count`.
-         */
-        recurring?: DefaultPriceData.Recurring;
-
-        /**
-         * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
-         */
-        tax_behavior?: DefaultPriceData.TaxBehavior;
-
-        /**
-         * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge. One of `unit_amount` or `unit_amount_decimal` is required.
-         */
-        unit_amount?: number;
-
-        /**
-         * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
-         */
-        unit_amount_decimal?: string;
-      }
-
-      namespace DefaultPriceData {
-        interface CurrencyOptions {
-          /**
-           * When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
-           */
-          custom_unit_amount?: CurrencyOptions.CustomUnitAmount;
-
-          /**
-           * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
-           */
-          tax_behavior?: CurrencyOptions.TaxBehavior;
-
-          /**
-           * Each element represents a pricing tier. This parameter requires `billing_scheme` to be set to `tiered`. See also the documentation for `billing_scheme`.
-           */
-          tiers?: Array<CurrencyOptions.Tier>;
-
-          /**
-           * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
-           */
-          unit_amount?: number;
-
-          /**
-           * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
-           */
-          unit_amount_decimal?: string;
-        }
-
-        namespace CurrencyOptions {
-          interface CustomUnitAmount {
-            /**
-             * Pass in `true` to enable `custom_unit_amount`, otherwise omit `custom_unit_amount`.
-             */
-            enabled: boolean;
-
-            /**
-             * The maximum unit amount the customer can specify for this item.
-             */
-            maximum?: number;
-
-            /**
-             * The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
-             */
-            minimum?: number;
-
-            /**
-             * The starting unit amount which can be updated by the customer.
-             */
-            preset?: number;
-          }
-
-          type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
-
-          interface Tier {
-            /**
-             * The flat billing amount for an entire tier, regardless of the number of units in the tier.
-             */
-            flat_amount?: number;
-
-            /**
-             * Same as `flat_amount`, but accepts a decimal value representing an integer in the minor units of the currency. Only one of `flat_amount` and `flat_amount_decimal` can be set.
-             */
-            flat_amount_decimal?: string;
-
-            /**
-             * The per unit billing amount for each individual unit for which this tier applies.
-             */
-            unit_amount?: number;
-
-            /**
-             * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
-             */
-            unit_amount_decimal?: string;
-
-            /**
-             * Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use `inf` to define a fallback tier.
-             */
-            up_to: 'inf' | number;
-          }
-        }
-
-        interface Recurring {
-          /**
-           * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
-           */
-          interval: Recurring.Interval;
-
-          /**
-           * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
-           */
-          interval_count?: number;
-        }
-
-        namespace Recurring {
-          type Interval = 'day' | 'month' | 'week' | 'year';
-        }
-
-        type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
-      }
-
-      interface PackageDimensions {
+    namespace ProductUpdateParams {
+      export interface PackageDimensions {
         /**
          * Height, in inches. Maximum precision is 2 decimal places.
          */
@@ -418,18 +451,9 @@ declare module 'stripe' {
          */
         width: number;
       }
-
-      type Type = 'good' | 'service';
     }
 
-    interface ProductRetrieveParams {
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-    }
-
-    interface ProductUpdateParams {
+    export interface ProductUpdateParams {
       /**
        * Whether the product is available for purchase.
        */
@@ -516,31 +540,11 @@ declare module 'stripe' {
       url?: Stripe.Emptyable<string>;
     }
 
-    namespace ProductUpdateParams {
-      interface PackageDimensions {
-        /**
-         * Height, in inches. Maximum precision is 2 decimal places.
-         */
-        height: number;
-
-        /**
-         * Length, in inches. Maximum precision is 2 decimal places.
-         */
-        length: number;
-
-        /**
-         * Weight, in ounces. Maximum precision is 2 decimal places.
-         */
-        weight: number;
-
-        /**
-         * Width, in inches. Maximum precision is 2 decimal places.
-         */
-        width: number;
-      }
+    namespace ProductListParams {
+      export type Type = 'good' | 'service';
     }
 
-    interface ProductListParams extends PaginationParams {
+    export interface ProductListParams extends PaginationParams {
       /**
        * Only return products that are active or inactive (e.g., pass `false` to list all inactive products).
        */
@@ -577,13 +581,9 @@ declare module 'stripe' {
       url?: string;
     }
 
-    namespace ProductListParams {
-      type Type = 'good' | 'service';
-    }
+    export interface ProductDeleteParams {}
 
-    interface ProductDeleteParams {}
-
-    interface ProductSearchParams {
+    export interface ProductSearchParams {
       /**
        * The search query string. See [search query language](https://stripe.com/docs/search#search-query-language) and the list of supported [query fields for products](https://stripe.com/docs/search#query-fields-for-products).
        */

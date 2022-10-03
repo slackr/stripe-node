@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Issuing {
-      /**
+      export /**
        * When an [issued card](https://stripe.com/docs/issuing) is used to make a purchase, an Issuing `Authorization`
        * object is created. [Authorizations](https://stripe.com/docs/issuing/purchases/authorizations) must be approved for the
        * purchase to be completed successfully.
@@ -122,21 +122,21 @@ declare module 'stripe' {
       }
 
       namespace Authorization {
-        interface AmountDetails {
+        export interface AmountDetails {
           /**
            * The fee charged by the ATM for the cash withdrawal.
            */
           atm_fee: number | null;
         }
 
-        type AuthorizationMethod =
+        export type AuthorizationMethod =
           | 'chip'
           | 'contactless'
           | 'keyed_in'
           | 'online'
           | 'swipe';
 
-        interface MerchantData {
+        export interface MerchantData {
           /**
            * A categorization of the seller's type of business. See our [merchant categories guide](https://stripe.com/docs/issuing/merchant-categories) for a list of possible values.
            */
@@ -178,7 +178,7 @@ declare module 'stripe' {
           state: string | null;
         }
 
-        interface PendingRequest {
+        export interface PendingRequest {
           /**
            * The additional amount Stripe will hold if the authorization is approved, in the card's [currency](https://stripe.com/docs/api#issuing_authorization_object-pending-request-currency) and in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
            */
@@ -210,16 +210,7 @@ declare module 'stripe' {
           merchant_currency: string;
         }
 
-        namespace PendingRequest {
-          interface AmountDetails {
-            /**
-             * The fee charged by the ATM for the cash withdrawal.
-             */
-            atm_fee: number | null;
-          }
-        }
-
-        interface RequestHistory {
+        export interface RequestHistory {
           /**
            * The `pending_request.amount` at the time of the request, presented in your card's currency and in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal). Stripe held this amount from your account to fund the authorization if the request was approved.
            */
@@ -261,33 +252,9 @@ declare module 'stripe' {
           reason: RequestHistory.Reason;
         }
 
-        namespace RequestHistory {
-          interface AmountDetails {
-            /**
-             * The fee charged by the ATM for the cash withdrawal.
-             */
-            atm_fee: number | null;
-          }
+        export type Status = 'closed' | 'pending' | 'reversed';
 
-          type Reason =
-            | 'account_disabled'
-            | 'card_active'
-            | 'card_inactive'
-            | 'cardholder_inactive'
-            | 'cardholder_verification_required'
-            | 'insufficient_funds'
-            | 'not_allowed'
-            | 'spending_controls'
-            | 'suspected_fraud'
-            | 'verification_failed'
-            | 'webhook_approved'
-            | 'webhook_declined'
-            | 'webhook_timeout';
-        }
-
-        type Status = 'closed' | 'pending' | 'reversed';
-
-        interface Treasury {
+        export interface Treasury {
           /**
            * The array of [ReceivedCredits](https://stripe.com/docs/api/treasury/received_credits) associated with this authorization
            */
@@ -304,7 +271,7 @@ declare module 'stripe' {
           transaction: string | null;
         }
 
-        interface VerificationData {
+        export interface VerificationData {
           /**
            * Whether the cardholder provided an address first line and if it matched the cardholder's `billing.address.line1`.
            */
@@ -326,25 +293,61 @@ declare module 'stripe' {
           expiry_check: VerificationData.ExpiryCheck;
         }
 
+        namespace PendingRequest {
+          export interface AmountDetails {
+            /**
+             * The fee charged by the ATM for the cash withdrawal.
+             */
+            atm_fee: number | null;
+          }
+        }
+
+        namespace RequestHistory {
+          export interface AmountDetails {
+            /**
+             * The fee charged by the ATM for the cash withdrawal.
+             */
+            atm_fee: number | null;
+          }
+
+          export type Reason =
+            | 'account_disabled'
+            | 'card_active'
+            | 'card_inactive'
+            | 'cardholder_inactive'
+            | 'cardholder_verification_required'
+            | 'insufficient_funds'
+            | 'not_allowed'
+            | 'spending_controls'
+            | 'suspected_fraud'
+            | 'verification_failed'
+            | 'webhook_approved'
+            | 'webhook_declined'
+            | 'webhook_timeout';
+        }
+
         namespace VerificationData {
-          type AddressLine1Check = 'match' | 'mismatch' | 'not_provided';
+          export type AddressLine1Check = 'match' | 'mismatch' | 'not_provided';
 
-          type AddressPostalCodeCheck = 'match' | 'mismatch' | 'not_provided';
+          export type AddressPostalCodeCheck =
+            | 'match'
+            | 'mismatch'
+            | 'not_provided';
 
-          type CvcCheck = 'match' | 'mismatch' | 'not_provided';
+          export type CvcCheck = 'match' | 'mismatch' | 'not_provided';
 
-          type ExpiryCheck = 'match' | 'mismatch' | 'not_provided';
+          export type ExpiryCheck = 'match' | 'mismatch' | 'not_provided';
         }
       }
 
-      interface AuthorizationRetrieveParams {
+      export interface AuthorizationRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface AuthorizationUpdateParams {
+      export interface AuthorizationUpdateParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
@@ -356,7 +359,7 @@ declare module 'stripe' {
         metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
       }
 
-      interface AuthorizationListParams extends PaginationParams {
+      export interface AuthorizationListParams extends PaginationParams {
         /**
          * Only return authorizations that belong to the given card.
          */
@@ -384,10 +387,10 @@ declare module 'stripe' {
       }
 
       namespace AuthorizationListParams {
-        type Status = 'closed' | 'pending' | 'reversed';
+        export type Status = 'closed' | 'pending' | 'reversed';
       }
 
-      interface AuthorizationApproveParams {
+      export interface AuthorizationApproveParams {
         /**
          * If the authorization's `pending_request.is_amount_controllable` property is `true`, you may provide this value to control how much to hold for the authorization. Must be positive (use [`decline`](https://stripe.com/docs/api/issuing/authorizations/decline) to decline an authorization request).
          */
@@ -404,7 +407,7 @@ declare module 'stripe' {
         metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
       }
 
-      interface AuthorizationDeclineParams {
+      export interface AuthorizationDeclineParams {
         /**
          * Specifies which fields in the response should be expanded.
          */

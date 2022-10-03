@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Treasury {
-      /**
+      export /**
        * TransactionEntries represent individual units of money movements within a single [Transaction](https://stripe.com/docs/api#transactions).
        */
       interface TransactionEntry {
@@ -74,7 +74,7 @@ declare module 'stripe' {
       }
 
       namespace TransactionEntry {
-        interface BalanceImpact {
+        export interface BalanceImpact {
           /**
            * The change made to funds the user can spend right now.
            */
@@ -91,7 +91,7 @@ declare module 'stripe' {
           outbound_pending: number;
         }
 
-        interface FlowDetails {
+        export interface FlowDetails {
           /**
            * You can reverse some [ReceivedCredits](https://stripe.com/docs/api#received_credits) depending on their network and source flow. Reversing a ReceivedCredit leads to the creation of a new object known as a CreditReversal.
            */
@@ -146,20 +146,7 @@ declare module 'stripe' {
           type: FlowDetails.Type;
         }
 
-        namespace FlowDetails {
-          type Type =
-            | 'credit_reversal'
-            | 'debit_reversal'
-            | 'inbound_transfer'
-            | 'issuing_authorization'
-            | 'other'
-            | 'outbound_payment'
-            | 'outbound_transfer'
-            | 'received_credit'
-            | 'received_debit';
-        }
-
-        type FlowType =
+        export type FlowType =
           | 'credit_reversal'
           | 'debit_reversal'
           | 'inbound_transfer'
@@ -170,7 +157,7 @@ declare module 'stripe' {
           | 'received_credit'
           | 'received_debit';
 
-        type Type =
+        export type Type =
           | 'credit_reversal'
           | 'credit_reversal_posting'
           | 'debit_reversal'
@@ -191,16 +178,29 @@ declare module 'stripe' {
           | 'outbound_transfer_return'
           | 'received_credit'
           | 'received_debit';
+
+        namespace FlowDetails {
+          export type Type =
+            | 'credit_reversal'
+            | 'debit_reversal'
+            | 'inbound_transfer'
+            | 'issuing_authorization'
+            | 'other'
+            | 'outbound_payment'
+            | 'outbound_transfer'
+            | 'received_credit'
+            | 'received_debit';
+        }
       }
 
-      interface TransactionEntryRetrieveParams {
+      export interface TransactionEntryRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface TransactionEntryListParams extends PaginationParams {
+      export interface TransactionEntryListParams extends PaginationParams {
         /**
          * Returns objects associated with this FinancialAccount.
          */
@@ -227,7 +227,7 @@ declare module 'stripe' {
       }
 
       namespace TransactionEntryListParams {
-        type OrderBy = 'created' | 'effective_at';
+        export type OrderBy = 'created' | 'effective_at';
       }
 
       class TransactionEntriesResource {

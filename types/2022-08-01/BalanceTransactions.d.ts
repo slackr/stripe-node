@@ -2,7 +2,70 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace BalanceTransaction {
+      export interface FeeDetail {
+        /**
+         * Amount of the fee, in cents.
+         */
+        amount: number;
+
+        /**
+         * ID of the Connect application that earned the fee.
+         */
+        application: string | null;
+
+        /**
+         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+         */
+        currency: string;
+
+        /**
+         * An arbitrary string attached to the object. Often useful for displaying to users.
+         */
+        description: string | null;
+
+        /**
+         * Type of the fee, one of: `application_fee`, `stripe_fee` or `tax`.
+         */
+        type: string;
+      }
+
+      export type Type =
+        | 'adjustment'
+        | 'advance'
+        | 'advance_funding'
+        | 'anticipation_repayment'
+        | 'application_fee'
+        | 'application_fee_refund'
+        | 'charge'
+        | 'connect_collection_transfer'
+        | 'contribution'
+        | 'issuing_authorization_hold'
+        | 'issuing_authorization_release'
+        | 'issuing_dispute'
+        | 'issuing_transaction'
+        | 'payment'
+        | 'payment_failure_refund'
+        | 'payment_refund'
+        | 'payout'
+        | 'payout_cancel'
+        | 'payout_failure'
+        | 'refund'
+        | 'refund_failure'
+        | 'reserve_transaction'
+        | 'reserved_funds'
+        | 'stripe_fee'
+        | 'stripe_fx_fee'
+        | 'tax_fee'
+        | 'topup'
+        | 'topup_reversal'
+        | 'transfer'
+        | 'transfer_cancel'
+        | 'transfer_failure'
+        | 'transfer_refund';
+    }
+
+    export /**
      * Balance transactions represent funds moving through your Stripe account.
      * They're created for every type of transaction that comes into or flows out of your Stripe account balance.
      *
@@ -103,77 +166,14 @@ declare module 'stripe' {
       type: BalanceTransaction.Type;
     }
 
-    namespace BalanceTransaction {
-      interface FeeDetail {
-        /**
-         * Amount of the fee, in cents.
-         */
-        amount: number;
-
-        /**
-         * ID of the Connect application that earned the fee.
-         */
-        application: string | null;
-
-        /**
-         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-         */
-        currency: string;
-
-        /**
-         * An arbitrary string attached to the object. Often useful for displaying to users.
-         */
-        description: string | null;
-
-        /**
-         * Type of the fee, one of: `application_fee`, `stripe_fee` or `tax`.
-         */
-        type: string;
-      }
-
-      type Type =
-        | 'adjustment'
-        | 'advance'
-        | 'advance_funding'
-        | 'anticipation_repayment'
-        | 'application_fee'
-        | 'application_fee_refund'
-        | 'charge'
-        | 'connect_collection_transfer'
-        | 'contribution'
-        | 'issuing_authorization_hold'
-        | 'issuing_authorization_release'
-        | 'issuing_dispute'
-        | 'issuing_transaction'
-        | 'payment'
-        | 'payment_failure_refund'
-        | 'payment_refund'
-        | 'payout'
-        | 'payout_cancel'
-        | 'payout_failure'
-        | 'refund'
-        | 'refund_failure'
-        | 'reserve_transaction'
-        | 'reserved_funds'
-        | 'stripe_fee'
-        | 'stripe_fx_fee'
-        | 'tax_fee'
-        | 'topup'
-        | 'topup_reversal'
-        | 'transfer'
-        | 'transfer_cancel'
-        | 'transfer_failure'
-        | 'transfer_refund';
-    }
-
-    interface BalanceTransactionRetrieveParams {
+    export interface BalanceTransactionRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface BalanceTransactionListParams extends PaginationParams {
+    export interface BalanceTransactionListParams extends PaginationParams {
       /**
        * This parameter is deprecated and we recommend listing by created and filtering in memory instead.
        */

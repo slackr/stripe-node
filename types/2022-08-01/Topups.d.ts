@@ -2,7 +2,16 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace Topup {
+      export type Status =
+        | 'canceled'
+        | 'failed'
+        | 'pending'
+        | 'reversed'
+        | 'succeeded';
+    }
+
+    export /**
      * To top up your Stripe balance, you create a top-up object. You can retrieve
      * individual top-ups, as well as list all top-ups. Top-ups are identified by a
      * unique, random ID.
@@ -91,16 +100,7 @@ declare module 'stripe' {
       transfer_group: string | null;
     }
 
-    namespace Topup {
-      type Status =
-        | 'canceled'
-        | 'failed'
-        | 'pending'
-        | 'reversed'
-        | 'succeeded';
-    }
-
-    interface TopupCreateParams {
+    export interface TopupCreateParams {
       /**
        * A positive integer representing how much to transfer.
        */
@@ -142,14 +142,14 @@ declare module 'stripe' {
       transfer_group?: string;
     }
 
-    interface TopupRetrieveParams {
+    export interface TopupRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface TopupUpdateParams {
+    export interface TopupUpdateParams {
       /**
        * An arbitrary string attached to the object. Often useful for displaying to users.
        */
@@ -166,7 +166,11 @@ declare module 'stripe' {
       metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
     }
 
-    interface TopupListParams extends PaginationParams {
+    namespace TopupListParams {
+      export type Status = 'canceled' | 'failed' | 'pending' | 'succeeded';
+    }
+
+    export interface TopupListParams extends PaginationParams {
       /**
        * A positive integer representing how much to transfer.
        */
@@ -188,11 +192,7 @@ declare module 'stripe' {
       status?: TopupListParams.Status;
     }
 
-    namespace TopupListParams {
-      type Status = 'canceled' | 'failed' | 'pending' | 'succeeded';
-    }
-
-    interface TopupCancelParams {
+    export interface TopupCancelParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

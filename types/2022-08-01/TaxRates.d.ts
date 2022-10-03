@@ -2,7 +2,19 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace TaxRate {
+      export type TaxType =
+        | 'gst'
+        | 'hst'
+        | 'jct'
+        | 'pst'
+        | 'qst'
+        | 'rst'
+        | 'sales_tax'
+        | 'vat';
+    }
+
+    export /**
      * Tax rates can be applied to [invoices](https://stripe.com/docs/billing/invoices/tax-rates), [subscriptions](https://stripe.com/docs/billing/subscriptions/taxes) and [Checkout Sessions](https://stripe.com/docs/payments/checkout/set-up-a-subscription#tax-rates) to collect tax.
      *
      * Related guide: [Tax Rates](https://stripe.com/docs/billing/taxes/tax-rates).
@@ -79,8 +91,8 @@ declare module 'stripe' {
       tax_type: TaxRate.TaxType | null;
     }
 
-    namespace TaxRate {
-      type TaxType =
+    namespace TaxRateCreateParams {
+      export type TaxType =
         | 'gst'
         | 'hst'
         | 'jct'
@@ -91,7 +103,7 @@ declare module 'stripe' {
         | 'vat';
     }
 
-    interface TaxRateCreateParams {
+    export interface TaxRateCreateParams {
       /**
        * The display name of the tax rate, which will be shown to users.
        */
@@ -148,8 +160,15 @@ declare module 'stripe' {
       tax_type?: TaxRateCreateParams.TaxType;
     }
 
-    namespace TaxRateCreateParams {
-      type TaxType =
+    export interface TaxRateRetrieveParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+    }
+
+    namespace TaxRateUpdateParams {
+      export type TaxType =
         | 'gst'
         | 'hst'
         | 'jct'
@@ -160,14 +179,7 @@ declare module 'stripe' {
         | 'vat';
     }
 
-    interface TaxRateRetrieveParams {
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-    }
-
-    interface TaxRateUpdateParams {
+    export interface TaxRateUpdateParams {
       /**
        * Flag determining whether the tax rate is active or inactive (archived). Inactive tax rates cannot be used with new applications or Checkout Sessions, but will still work for subscriptions and invoices that already have it set.
        */
@@ -214,19 +226,7 @@ declare module 'stripe' {
       tax_type?: TaxRateUpdateParams.TaxType;
     }
 
-    namespace TaxRateUpdateParams {
-      type TaxType =
-        | 'gst'
-        | 'hst'
-        | 'jct'
-        | 'pst'
-        | 'qst'
-        | 'rst'
-        | 'sales_tax'
-        | 'vat';
-    }
-
-    interface TaxRateListParams extends PaginationParams {
+    export interface TaxRateListParams extends PaginationParams {
       /**
        * Optional flag to filter by tax rates that are either active or inactive (archived).
        */

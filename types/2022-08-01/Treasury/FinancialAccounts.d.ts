@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Treasury {
-      /**
+      export /**
        * Stripe Treasury provides users with a container for money called a FinancialAccount that is separate from their Payments balance.
        * FinancialAccounts serve as the source and destination of Treasury's money movement APIs.
        */
@@ -88,7 +88,7 @@ declare module 'stripe' {
       }
 
       namespace FinancialAccount {
-        type ActiveFeature =
+        export type ActiveFeature =
           | 'card_issuing'
           | 'deposit_insurance'
           | 'financial_addresses.aba'
@@ -100,7 +100,7 @@ declare module 'stripe' {
           | 'outbound_transfers.us_domestic_wire'
           | 'remote_deposit_capture';
 
-        interface Balance {
+        export interface Balance {
           /**
            * Funds the user can spend right now.
            */
@@ -123,7 +123,7 @@ declare module 'stripe' {
           };
         }
 
-        interface FinancialAddress {
+        export interface FinancialAddress {
           /**
            * ABA Records contain U.S. bank account details per the ABA format.
            */
@@ -140,8 +140,53 @@ declare module 'stripe' {
           type: 'aba';
         }
 
+        export type PendingFeature =
+          | 'card_issuing'
+          | 'deposit_insurance'
+          | 'financial_addresses.aba'
+          | 'inbound_transfers.ach'
+          | 'intra_stripe_flows'
+          | 'outbound_payments.ach'
+          | 'outbound_payments.us_domestic_wire'
+          | 'outbound_transfers.ach'
+          | 'outbound_transfers.us_domestic_wire'
+          | 'remote_deposit_capture';
+
+        export interface PlatformRestrictions {
+          /**
+           * Restricts all inbound money movement.
+           */
+          inbound_flows: PlatformRestrictions.InboundFlows | null;
+
+          /**
+           * Restricts all outbound money movement.
+           */
+          outbound_flows: PlatformRestrictions.OutboundFlows | null;
+        }
+
+        export type RestrictedFeature =
+          | 'card_issuing'
+          | 'deposit_insurance'
+          | 'financial_addresses.aba'
+          | 'inbound_transfers.ach'
+          | 'intra_stripe_flows'
+          | 'outbound_payments.ach'
+          | 'outbound_payments.us_domestic_wire'
+          | 'outbound_transfers.ach'
+          | 'outbound_transfers.us_domestic_wire'
+          | 'remote_deposit_capture';
+
+        export type Status = 'closed' | 'open';
+
+        export interface StatusDetails {
+          /**
+           * Details related to the closure of this FinancialAccount
+           */
+          closed: StatusDetails.Closed | null;
+        }
+
         namespace FinancialAddress {
-          interface Aba {
+          export interface Aba {
             /**
              * The name of the person or business that owns the bank account.
              */
@@ -168,62 +213,17 @@ declare module 'stripe' {
             routing_number: string;
           }
 
-          type SupportedNetwork = 'ach' | 'us_domestic_wire';
-        }
-
-        type PendingFeature =
-          | 'card_issuing'
-          | 'deposit_insurance'
-          | 'financial_addresses.aba'
-          | 'inbound_transfers.ach'
-          | 'intra_stripe_flows'
-          | 'outbound_payments.ach'
-          | 'outbound_payments.us_domestic_wire'
-          | 'outbound_transfers.ach'
-          | 'outbound_transfers.us_domestic_wire'
-          | 'remote_deposit_capture';
-
-        interface PlatformRestrictions {
-          /**
-           * Restricts all inbound money movement.
-           */
-          inbound_flows: PlatformRestrictions.InboundFlows | null;
-
-          /**
-           * Restricts all outbound money movement.
-           */
-          outbound_flows: PlatformRestrictions.OutboundFlows | null;
+          export type SupportedNetwork = 'ach' | 'us_domestic_wire';
         }
 
         namespace PlatformRestrictions {
-          type InboundFlows = 'restricted' | 'unrestricted';
+          export type InboundFlows = 'restricted' | 'unrestricted';
 
-          type OutboundFlows = 'restricted' | 'unrestricted';
-        }
-
-        type RestrictedFeature =
-          | 'card_issuing'
-          | 'deposit_insurance'
-          | 'financial_addresses.aba'
-          | 'inbound_transfers.ach'
-          | 'intra_stripe_flows'
-          | 'outbound_payments.ach'
-          | 'outbound_payments.us_domestic_wire'
-          | 'outbound_transfers.ach'
-          | 'outbound_transfers.us_domestic_wire'
-          | 'remote_deposit_capture';
-
-        type Status = 'closed' | 'open';
-
-        interface StatusDetails {
-          /**
-           * Details related to the closure of this FinancialAccount
-           */
-          closed: StatusDetails.Closed | null;
+          export type OutboundFlows = 'restricted' | 'unrestricted';
         }
 
         namespace StatusDetails {
-          interface Closed {
+          export interface Closed {
             /**
              * The array that contains reasons for a FinancialAccount closure.
              */
@@ -231,12 +231,15 @@ declare module 'stripe' {
           }
 
           namespace Closed {
-            type Reason = 'account_rejected' | 'closed_by_platform' | 'other';
+            export type Reason =
+              | 'account_rejected'
+              | 'closed_by_platform'
+              | 'other';
           }
         }
       }
 
-      interface FinancialAccountCreateParams {
+      export interface FinancialAccountCreateParams {
         /**
          * The currencies the FinancialAccount can hold a balance in.
          */
@@ -264,7 +267,7 @@ declare module 'stripe' {
       }
 
       namespace FinancialAccountCreateParams {
-        interface Features {
+        export interface Features {
           /**
            * Encodes the FinancialAccount's ability to be used with the Issuing product, including attaching cards to and drawing funds from the FinancialAccount.
            */
@@ -301,118 +304,7 @@ declare module 'stripe' {
           outbound_transfers?: Features.OutboundTransfers;
         }
 
-        namespace Features {
-          interface CardIssuing {
-            /**
-             * Whether the FinancialAccount should have the Feature.
-             */
-            requested: boolean;
-          }
-
-          interface DepositInsurance {
-            /**
-             * Whether the FinancialAccount should have the Feature.
-             */
-            requested: boolean;
-          }
-
-          interface FinancialAddresses {
-            /**
-             * Adds an ABA FinancialAddress to the FinancialAccount.
-             */
-            aba?: FinancialAddresses.Aba;
-          }
-
-          namespace FinancialAddresses {
-            interface Aba {
-              /**
-               * Whether the FinancialAccount should have the Feature.
-               */
-              requested: boolean;
-            }
-          }
-
-          interface InboundTransfers {
-            /**
-             * Enables ACH Debits via the InboundTransfers API.
-             */
-            ach?: InboundTransfers.Ach;
-          }
-
-          namespace InboundTransfers {
-            interface Ach {
-              /**
-               * Whether the FinancialAccount should have the Feature.
-               */
-              requested: boolean;
-            }
-          }
-
-          interface IntraStripeFlows {
-            /**
-             * Whether the FinancialAccount should have the Feature.
-             */
-            requested: boolean;
-          }
-
-          interface OutboundPayments {
-            /**
-             * Enables ACH transfers via the OutboundPayments API.
-             */
-            ach?: OutboundPayments.Ach;
-
-            /**
-             * Enables US domestic wire tranfers via the OutboundPayments API.
-             */
-            us_domestic_wire?: OutboundPayments.UsDomesticWire;
-          }
-
-          namespace OutboundPayments {
-            interface Ach {
-              /**
-               * Whether the FinancialAccount should have the Feature.
-               */
-              requested: boolean;
-            }
-
-            interface UsDomesticWire {
-              /**
-               * Whether the FinancialAccount should have the Feature.
-               */
-              requested: boolean;
-            }
-          }
-
-          interface OutboundTransfers {
-            /**
-             * Enables ACH transfers via the OutboundTransfers API.
-             */
-            ach?: OutboundTransfers.Ach;
-
-            /**
-             * Enables US domestic wire tranfers via the OutboundTransfers API.
-             */
-            us_domestic_wire?: OutboundTransfers.UsDomesticWire;
-          }
-
-          namespace OutboundTransfers {
-            interface Ach {
-              /**
-               * Whether the FinancialAccount should have the Feature.
-               */
-              requested: boolean;
-            }
-
-            interface UsDomesticWire {
-              /**
-               * Whether the FinancialAccount should have the Feature.
-               */
-              requested: boolean;
-            }
-          }
-        }
-
-        interface PlatformRestrictions {
+        export interface PlatformRestrictions {
           /**
            * Restricts all inbound money movement.
            */
@@ -424,21 +316,132 @@ declare module 'stripe' {
           outbound_flows?: PlatformRestrictions.OutboundFlows;
         }
 
-        namespace PlatformRestrictions {
-          type InboundFlows = 'restricted' | 'unrestricted';
+        namespace Features {
+          export interface CardIssuing {
+            /**
+             * Whether the FinancialAccount should have the Feature.
+             */
+            requested: boolean;
+          }
 
-          type OutboundFlows = 'restricted' | 'unrestricted';
+          export interface DepositInsurance {
+            /**
+             * Whether the FinancialAccount should have the Feature.
+             */
+            requested: boolean;
+          }
+
+          export interface FinancialAddresses {
+            /**
+             * Adds an ABA FinancialAddress to the FinancialAccount.
+             */
+            aba?: FinancialAddresses.Aba;
+          }
+
+          export interface InboundTransfers {
+            /**
+             * Enables ACH Debits via the InboundTransfers API.
+             */
+            ach?: InboundTransfers.Ach;
+          }
+
+          export interface IntraStripeFlows {
+            /**
+             * Whether the FinancialAccount should have the Feature.
+             */
+            requested: boolean;
+          }
+
+          export interface OutboundPayments {
+            /**
+             * Enables ACH transfers via the OutboundPayments API.
+             */
+            ach?: OutboundPayments.Ach;
+
+            /**
+             * Enables US domestic wire tranfers via the OutboundPayments API.
+             */
+            us_domestic_wire?: OutboundPayments.UsDomesticWire;
+          }
+
+          export interface OutboundTransfers {
+            /**
+             * Enables ACH transfers via the OutboundTransfers API.
+             */
+            ach?: OutboundTransfers.Ach;
+
+            /**
+             * Enables US domestic wire tranfers via the OutboundTransfers API.
+             */
+            us_domestic_wire?: OutboundTransfers.UsDomesticWire;
+          }
+
+          namespace FinancialAddresses {
+            export interface Aba {
+              /**
+               * Whether the FinancialAccount should have the Feature.
+               */
+              requested: boolean;
+            }
+          }
+
+          namespace InboundTransfers {
+            export interface Ach {
+              /**
+               * Whether the FinancialAccount should have the Feature.
+               */
+              requested: boolean;
+            }
+          }
+
+          namespace OutboundPayments {
+            export interface Ach {
+              /**
+               * Whether the FinancialAccount should have the Feature.
+               */
+              requested: boolean;
+            }
+
+            export interface UsDomesticWire {
+              /**
+               * Whether the FinancialAccount should have the Feature.
+               */
+              requested: boolean;
+            }
+          }
+
+          namespace OutboundTransfers {
+            export interface Ach {
+              /**
+               * Whether the FinancialAccount should have the Feature.
+               */
+              requested: boolean;
+            }
+
+            export interface UsDomesticWire {
+              /**
+               * Whether the FinancialAccount should have the Feature.
+               */
+              requested: boolean;
+            }
+          }
+        }
+
+        namespace PlatformRestrictions {
+          export type InboundFlows = 'restricted' | 'unrestricted';
+
+          export type OutboundFlows = 'restricted' | 'unrestricted';
         }
       }
 
-      interface FinancialAccountRetrieveParams {
+      export interface FinancialAccountRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface FinancialAccountUpdateParams {
+      export interface FinancialAccountUpdateParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
@@ -461,7 +464,7 @@ declare module 'stripe' {
       }
 
       namespace FinancialAccountUpdateParams {
-        interface Features {
+        export interface Features {
           /**
            * Encodes the FinancialAccount's ability to be used with the Issuing product, including attaching cards to and drawing funds from the FinancialAccount.
            */
@@ -498,118 +501,7 @@ declare module 'stripe' {
           outbound_transfers?: Features.OutboundTransfers;
         }
 
-        namespace Features {
-          interface CardIssuing {
-            /**
-             * Whether the FinancialAccount should have the Feature.
-             */
-            requested: boolean;
-          }
-
-          interface DepositInsurance {
-            /**
-             * Whether the FinancialAccount should have the Feature.
-             */
-            requested: boolean;
-          }
-
-          interface FinancialAddresses {
-            /**
-             * Adds an ABA FinancialAddress to the FinancialAccount.
-             */
-            aba?: FinancialAddresses.Aba;
-          }
-
-          namespace FinancialAddresses {
-            interface Aba {
-              /**
-               * Whether the FinancialAccount should have the Feature.
-               */
-              requested: boolean;
-            }
-          }
-
-          interface InboundTransfers {
-            /**
-             * Enables ACH Debits via the InboundTransfers API.
-             */
-            ach?: InboundTransfers.Ach;
-          }
-
-          namespace InboundTransfers {
-            interface Ach {
-              /**
-               * Whether the FinancialAccount should have the Feature.
-               */
-              requested: boolean;
-            }
-          }
-
-          interface IntraStripeFlows {
-            /**
-             * Whether the FinancialAccount should have the Feature.
-             */
-            requested: boolean;
-          }
-
-          interface OutboundPayments {
-            /**
-             * Enables ACH transfers via the OutboundPayments API.
-             */
-            ach?: OutboundPayments.Ach;
-
-            /**
-             * Enables US domestic wire tranfers via the OutboundPayments API.
-             */
-            us_domestic_wire?: OutboundPayments.UsDomesticWire;
-          }
-
-          namespace OutboundPayments {
-            interface Ach {
-              /**
-               * Whether the FinancialAccount should have the Feature.
-               */
-              requested: boolean;
-            }
-
-            interface UsDomesticWire {
-              /**
-               * Whether the FinancialAccount should have the Feature.
-               */
-              requested: boolean;
-            }
-          }
-
-          interface OutboundTransfers {
-            /**
-             * Enables ACH transfers via the OutboundTransfers API.
-             */
-            ach?: OutboundTransfers.Ach;
-
-            /**
-             * Enables US domestic wire tranfers via the OutboundTransfers API.
-             */
-            us_domestic_wire?: OutboundTransfers.UsDomesticWire;
-          }
-
-          namespace OutboundTransfers {
-            interface Ach {
-              /**
-               * Whether the FinancialAccount should have the Feature.
-               */
-              requested: boolean;
-            }
-
-            interface UsDomesticWire {
-              /**
-               * Whether the FinancialAccount should have the Feature.
-               */
-              requested: boolean;
-            }
-          }
-        }
-
-        interface PlatformRestrictions {
+        export interface PlatformRestrictions {
           /**
            * Restricts all inbound money movement.
            */
@@ -621,14 +513,125 @@ declare module 'stripe' {
           outbound_flows?: PlatformRestrictions.OutboundFlows;
         }
 
-        namespace PlatformRestrictions {
-          type InboundFlows = 'restricted' | 'unrestricted';
+        namespace Features {
+          export interface CardIssuing {
+            /**
+             * Whether the FinancialAccount should have the Feature.
+             */
+            requested: boolean;
+          }
 
-          type OutboundFlows = 'restricted' | 'unrestricted';
+          export interface DepositInsurance {
+            /**
+             * Whether the FinancialAccount should have the Feature.
+             */
+            requested: boolean;
+          }
+
+          export interface FinancialAddresses {
+            /**
+             * Adds an ABA FinancialAddress to the FinancialAccount.
+             */
+            aba?: FinancialAddresses.Aba;
+          }
+
+          export interface InboundTransfers {
+            /**
+             * Enables ACH Debits via the InboundTransfers API.
+             */
+            ach?: InboundTransfers.Ach;
+          }
+
+          export interface IntraStripeFlows {
+            /**
+             * Whether the FinancialAccount should have the Feature.
+             */
+            requested: boolean;
+          }
+
+          export interface OutboundPayments {
+            /**
+             * Enables ACH transfers via the OutboundPayments API.
+             */
+            ach?: OutboundPayments.Ach;
+
+            /**
+             * Enables US domestic wire tranfers via the OutboundPayments API.
+             */
+            us_domestic_wire?: OutboundPayments.UsDomesticWire;
+          }
+
+          export interface OutboundTransfers {
+            /**
+             * Enables ACH transfers via the OutboundTransfers API.
+             */
+            ach?: OutboundTransfers.Ach;
+
+            /**
+             * Enables US domestic wire tranfers via the OutboundTransfers API.
+             */
+            us_domestic_wire?: OutboundTransfers.UsDomesticWire;
+          }
+
+          namespace FinancialAddresses {
+            export interface Aba {
+              /**
+               * Whether the FinancialAccount should have the Feature.
+               */
+              requested: boolean;
+            }
+          }
+
+          namespace InboundTransfers {
+            export interface Ach {
+              /**
+               * Whether the FinancialAccount should have the Feature.
+               */
+              requested: boolean;
+            }
+          }
+
+          namespace OutboundPayments {
+            export interface Ach {
+              /**
+               * Whether the FinancialAccount should have the Feature.
+               */
+              requested: boolean;
+            }
+
+            export interface UsDomesticWire {
+              /**
+               * Whether the FinancialAccount should have the Feature.
+               */
+              requested: boolean;
+            }
+          }
+
+          namespace OutboundTransfers {
+            export interface Ach {
+              /**
+               * Whether the FinancialAccount should have the Feature.
+               */
+              requested: boolean;
+            }
+
+            export interface UsDomesticWire {
+              /**
+               * Whether the FinancialAccount should have the Feature.
+               */
+              requested: boolean;
+            }
+          }
+        }
+
+        namespace PlatformRestrictions {
+          export type InboundFlows = 'restricted' | 'unrestricted';
+
+          export type OutboundFlows = 'restricted' | 'unrestricted';
         }
       }
 
-      interface FinancialAccountListParams extends PaginationParams {
+      export interface FinancialAccountListParams extends PaginationParams {
         created?: Stripe.RangeQueryParam | number;
 
         /**
@@ -637,14 +640,14 @@ declare module 'stripe' {
         expand?: Array<string>;
       }
 
-      interface FinancialAccountRetrieveFeaturesParams {
+      export interface FinancialAccountRetrieveFeaturesParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface FinancialAccountUpdateFeaturesParams {
+      export interface FinancialAccountUpdateFeaturesParams {
         /**
          * Encodes the FinancialAccount's ability to be used with the Issuing product, including attaching cards to and drawing funds from the FinancialAccount.
          */
@@ -687,60 +690,42 @@ declare module 'stripe' {
       }
 
       namespace FinancialAccountUpdateFeaturesParams {
-        interface CardIssuing {
+        export interface CardIssuing {
           /**
            * Whether the FinancialAccount should have the Feature.
            */
           requested: boolean;
         }
 
-        interface DepositInsurance {
+        export interface DepositInsurance {
           /**
            * Whether the FinancialAccount should have the Feature.
            */
           requested: boolean;
         }
 
-        interface FinancialAddresses {
+        export interface FinancialAddresses {
           /**
            * Adds an ABA FinancialAddress to the FinancialAccount.
            */
           aba?: FinancialAddresses.Aba;
         }
 
-        namespace FinancialAddresses {
-          interface Aba {
-            /**
-             * Whether the FinancialAccount should have the Feature.
-             */
-            requested: boolean;
-          }
-        }
-
-        interface InboundTransfers {
+        export interface InboundTransfers {
           /**
            * Enables ACH Debits via the InboundTransfers API.
            */
           ach?: InboundTransfers.Ach;
         }
 
-        namespace InboundTransfers {
-          interface Ach {
-            /**
-             * Whether the FinancialAccount should have the Feature.
-             */
-            requested: boolean;
-          }
-        }
-
-        interface IntraStripeFlows {
+        export interface IntraStripeFlows {
           /**
            * Whether the FinancialAccount should have the Feature.
            */
           requested: boolean;
         }
 
-        interface OutboundPayments {
+        export interface OutboundPayments {
           /**
            * Enables ACH transfers via the OutboundPayments API.
            */
@@ -752,23 +737,7 @@ declare module 'stripe' {
           us_domestic_wire?: OutboundPayments.UsDomesticWire;
         }
 
-        namespace OutboundPayments {
-          interface Ach {
-            /**
-             * Whether the FinancialAccount should have the Feature.
-             */
-            requested: boolean;
-          }
-
-          interface UsDomesticWire {
-            /**
-             * Whether the FinancialAccount should have the Feature.
-             */
-            requested: boolean;
-          }
-        }
-
-        interface OutboundTransfers {
+        export interface OutboundTransfers {
           /**
            * Enables ACH transfers via the OutboundTransfers API.
            */
@@ -780,15 +749,49 @@ declare module 'stripe' {
           us_domestic_wire?: OutboundTransfers.UsDomesticWire;
         }
 
-        namespace OutboundTransfers {
-          interface Ach {
+        namespace FinancialAddresses {
+          export interface Aba {
+            /**
+             * Whether the FinancialAccount should have the Feature.
+             */
+            requested: boolean;
+          }
+        }
+
+        namespace InboundTransfers {
+          export interface Ach {
+            /**
+             * Whether the FinancialAccount should have the Feature.
+             */
+            requested: boolean;
+          }
+        }
+
+        namespace OutboundPayments {
+          export interface Ach {
             /**
              * Whether the FinancialAccount should have the Feature.
              */
             requested: boolean;
           }
 
-          interface UsDomesticWire {
+          export interface UsDomesticWire {
+            /**
+             * Whether the FinancialAccount should have the Feature.
+             */
+            requested: boolean;
+          }
+        }
+
+        namespace OutboundTransfers {
+          export interface Ach {
+            /**
+             * Whether the FinancialAccount should have the Feature.
+             */
+            requested: boolean;
+          }
+
+          export interface UsDomesticWire {
             /**
              * Whether the FinancialAccount should have the Feature.
              */

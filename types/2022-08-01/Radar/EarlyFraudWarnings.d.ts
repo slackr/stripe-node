@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Radar {
-      /**
+      export /**
        * An early fraud warning indicates that the card issuer has notified us that a
        * charge may be fraudulent.
        *
@@ -51,14 +51,14 @@ declare module 'stripe' {
         payment_intent?: string | Stripe.PaymentIntent;
       }
 
-      interface EarlyFraudWarningRetrieveParams {
+      export interface EarlyFraudWarningRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface EarlyFraudWarningListParams extends PaginationParams {
+      export interface EarlyFraudWarningListParams extends PaginationParams {
         /**
          * Only return early fraud warnings for the charge specified by this charge ID.
          */

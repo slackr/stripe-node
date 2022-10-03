@@ -4,7 +4,7 @@ declare module 'stripe' {
   namespace Stripe {
     namespace TestHelpers {
       namespace Treasury {
-        interface ReceivedDebitCreateParams {
+        export interface ReceivedDebitCreateParams {
           /**
            * Amount (in cents) to be transferred.
            */
@@ -42,7 +42,7 @@ declare module 'stripe' {
         }
 
         namespace ReceivedDebitCreateParams {
-          interface InitiatingPaymentMethodDetails {
+          export interface InitiatingPaymentMethodDetails {
             /**
              * The source type.
              */
@@ -55,7 +55,7 @@ declare module 'stripe' {
           }
 
           namespace InitiatingPaymentMethodDetails {
-            interface UsBankAccount {
+            export interface UsBankAccount {
               /**
                * The bank account holder's name.
                */

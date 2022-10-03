@@ -2,117 +2,8 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
-     * This is an object representing a Stripe account. You can retrieve it to see
-     * properties on the account like its current e-mail address or if the account is
-     * enabled yet to make live charges.
-     *
-     * Some properties, marked below, are available only to platforms that want to
-     * [create and manage Express or Custom accounts](https://stripe.com/docs/connect/accounts).
-     */
-    interface Account {
-      /**
-       * Unique identifier for the object.
-       */
-      id: string;
-
-      /**
-       * String representing the object's type. Objects of the same type share the same value.
-       */
-      object: 'account';
-
-      /**
-       * Business information about the account.
-       */
-      business_profile?: Account.BusinessProfile | null;
-
-      /**
-       * The business type.
-       */
-      business_type?: Account.BusinessType | null;
-
-      capabilities?: Account.Capabilities;
-
-      /**
-       * Whether the account can create live charges.
-       */
-      charges_enabled: boolean;
-
-      company?: Account.Company;
-
-      controller?: Account.Controller;
-
-      /**
-       * The account's country.
-       */
-      country?: string;
-
-      /**
-       * Time at which the account was connected. Measured in seconds since the Unix epoch.
-       */
-      created?: number;
-
-      /**
-       * Three-letter ISO currency code representing the default currency for the account. This must be a currency that [Stripe supports in the account's country](https://stripe.com/docs/payouts).
-       */
-      default_currency?: string;
-
-      deleted?: void;
-
-      /**
-       * Whether account details have been submitted. Standard accounts cannot receive payouts before this is true.
-       */
-      details_submitted: boolean;
-
-      /**
-       * An email address associated with the account. You can treat this as metadata: it is not used for authentication or messaging account holders.
-       */
-      email: string | null;
-
-      /**
-       * External accounts (bank accounts and debit cards) currently attached to this account
-       */
-      external_accounts?: ApiList<Stripe.BankAccount | Stripe.Card>;
-
-      future_requirements?: Account.FutureRequirements;
-
-      /**
-       * This is an object representing a person associated with a Stripe account.
-       *
-       * A platform cannot access a Standard or Express account's persons after the account starts onboarding, such as after generating an account link for the account.
-       * See the [Standard onboarding](https://stripe.com/docs/connect/standard-accounts) or [Express onboarding documentation](https://stripe.com/docs/connect/express-accounts) for information about platform pre-filling and account onboarding steps.
-       *
-       * Related guide: [Handling Identity Verification with the API](https://stripe.com/docs/connect/identity-verification-api#person-information).
-       */
-      individual?: Stripe.Person;
-
-      /**
-       * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
-       */
-      metadata?: Stripe.Metadata;
-
-      /**
-       * Whether Stripe can send payouts to this account.
-       */
-      payouts_enabled: boolean;
-
-      requirements?: Account.Requirements;
-
-      /**
-       * Options for customizing how the account functions within Stripe.
-       */
-      settings?: Account.Settings | null;
-
-      tos_acceptance?: Account.TosAcceptance;
-
-      /**
-       * The Stripe account type. Can be `standard`, `express`, or `custom`.
-       */
-      type: Account.Type;
-    }
-
     namespace Account {
-      interface BusinessProfile {
+      export interface BusinessProfile {
         /**
          * [The merchant category code for the account](https://stripe.com/docs/connect/setting-mcc). MCCs are used to classify businesses based on the goods or services they provide.
          */
@@ -154,13 +45,13 @@ declare module 'stripe' {
         url: string | null;
       }
 
-      type BusinessType =
+      export type BusinessType =
         | 'company'
         | 'government_entity'
         | 'individual'
         | 'non_profit';
 
-      interface Capabilities {
+      export interface Capabilities {
         /**
          * The status of the Canadian pre-authorized debits payments capability of the account, or whether the account can directly process Canadian pre-authorized debits charges.
          */
@@ -327,75 +218,7 @@ declare module 'stripe' {
         us_bank_account_ach_payments?: Capabilities.UsBankAccountAchPayments;
       }
 
-      namespace Capabilities {
-        type AcssDebitPayments = 'active' | 'inactive' | 'pending';
-
-        type AffirmPayments = 'active' | 'inactive' | 'pending';
-
-        type AfterpayClearpayPayments = 'active' | 'inactive' | 'pending';
-
-        type AuBecsDebitPayments = 'active' | 'inactive' | 'pending';
-
-        type BacsDebitPayments = 'active' | 'inactive' | 'pending';
-
-        type BancontactPayments = 'active' | 'inactive' | 'pending';
-
-        type BankTransferPayments = 'active' | 'inactive' | 'pending';
-
-        type BlikPayments = 'active' | 'inactive' | 'pending';
-
-        type BoletoPayments = 'active' | 'inactive' | 'pending';
-
-        type CardIssuing = 'active' | 'inactive' | 'pending';
-
-        type CardPayments = 'active' | 'inactive' | 'pending';
-
-        type CartesBancairesPayments = 'active' | 'inactive' | 'pending';
-
-        type EpsPayments = 'active' | 'inactive' | 'pending';
-
-        type FpxPayments = 'active' | 'inactive' | 'pending';
-
-        type GiropayPayments = 'active' | 'inactive' | 'pending';
-
-        type GrabpayPayments = 'active' | 'inactive' | 'pending';
-
-        type IdealPayments = 'active' | 'inactive' | 'pending';
-
-        type JcbPayments = 'active' | 'inactive' | 'pending';
-
-        type KlarnaPayments = 'active' | 'inactive' | 'pending';
-
-        type KonbiniPayments = 'active' | 'inactive' | 'pending';
-
-        type LegacyPayments = 'active' | 'inactive' | 'pending';
-
-        type LinkPayments = 'active' | 'inactive' | 'pending';
-
-        type OxxoPayments = 'active' | 'inactive' | 'pending';
-
-        type P24Payments = 'active' | 'inactive' | 'pending';
-
-        type PaynowPayments = 'active' | 'inactive' | 'pending';
-
-        type PromptpayPayments = 'active' | 'inactive' | 'pending';
-
-        type SepaDebitPayments = 'active' | 'inactive' | 'pending';
-
-        type SofortPayments = 'active' | 'inactive' | 'pending';
-
-        type TaxReportingUs1099K = 'active' | 'inactive' | 'pending';
-
-        type TaxReportingUs1099Misc = 'active' | 'inactive' | 'pending';
-
-        type Transfers = 'active' | 'inactive' | 'pending';
-
-        type Treasury = 'active' | 'inactive' | 'pending';
-
-        type UsBankAccountAchPayments = 'active' | 'inactive' | 'pending';
-      }
-
-      interface Company {
+      export interface Company {
         address?: Stripe.Address;
 
         /**
@@ -474,150 +297,7 @@ declare module 'stripe' {
         verification?: Company.Verification | null;
       }
 
-      namespace Company {
-        interface AddressKana {
-          /**
-           * City/Ward.
-           */
-          city: string | null;
-
-          /**
-           * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
-           */
-          country: string | null;
-
-          /**
-           * Block/Building number.
-           */
-          line1: string | null;
-
-          /**
-           * Building details.
-           */
-          line2: string | null;
-
-          /**
-           * ZIP or postal code.
-           */
-          postal_code: string | null;
-
-          /**
-           * Prefecture.
-           */
-          state: string | null;
-
-          /**
-           * Town/cho-me.
-           */
-          town: string | null;
-        }
-
-        interface AddressKanji {
-          /**
-           * City/Ward.
-           */
-          city: string | null;
-
-          /**
-           * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
-           */
-          country: string | null;
-
-          /**
-           * Block/Building number.
-           */
-          line1: string | null;
-
-          /**
-           * Building details.
-           */
-          line2: string | null;
-
-          /**
-           * ZIP or postal code.
-           */
-          postal_code: string | null;
-
-          /**
-           * Prefecture.
-           */
-          state: string | null;
-
-          /**
-           * Town/cho-me.
-           */
-          town: string | null;
-        }
-
-        interface OwnershipDeclaration {
-          /**
-           * The Unix timestamp marking when the beneficial owner attestation was made.
-           */
-          date: number | null;
-
-          /**
-           * The IP address from which the beneficial owner attestation was made.
-           */
-          ip: string | null;
-
-          /**
-           * The user-agent string from the browser where the beneficial owner attestation was made.
-           */
-          user_agent: string | null;
-        }
-
-        type Structure =
-          | 'free_zone_establishment'
-          | 'free_zone_llc'
-          | 'government_instrumentality'
-          | 'governmental_unit'
-          | 'incorporated_non_profit'
-          | 'limited_liability_partnership'
-          | 'llc'
-          | 'multi_member_llc'
-          | 'private_company'
-          | 'private_corporation'
-          | 'private_partnership'
-          | 'public_company'
-          | 'public_corporation'
-          | 'public_partnership'
-          | 'single_member_llc'
-          | 'sole_establishment'
-          | 'sole_proprietorship'
-          | 'tax_exempt_government_instrumentality'
-          | 'unincorporated_association'
-          | 'unincorporated_non_profit';
-
-        interface Verification {
-          document: Verification.Document;
-        }
-
-        namespace Verification {
-          interface Document {
-            /**
-             * The back of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `additional_verification`.
-             */
-            back: string | Stripe.File | null;
-
-            /**
-             * A user-displayable string describing the verification state of this document.
-             */
-            details: string | null;
-
-            /**
-             * One of `document_corrupt`, `document_expired`, `document_failed_copy`, `document_failed_greyscale`, `document_failed_other`, `document_failed_test_mode`, `document_fraudulent`, `document_incomplete`, `document_invalid`, `document_manipulated`, `document_not_readable`, `document_not_uploaded`, `document_type_not_supported`, or `document_too_large`. A machine-readable code specifying the verification state for this document.
-             */
-            details_code: string | null;
-
-            /**
-             * The front of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `additional_verification`.
-             */
-            front: string | Stripe.File | null;
-          }
-        }
-      }
-
-      interface Controller {
+      export interface Controller {
         /**
          * `true` if the Connect application retrieving the resource controls the account and can therefore exercise [platform controls](https://stripe.com/docs/connect/platform-controls-for-standard-accounts). Otherwise, this field is null.
          */
@@ -629,11 +309,7 @@ declare module 'stripe' {
         type: Controller.Type;
       }
 
-      namespace Controller {
-        type Type = 'account' | 'application';
-      }
-
-      interface FutureRequirements {
+      export interface FutureRequirements {
         /**
          * Fields that are due and can be satisfied by providing the corresponding alternative fields instead.
          */
@@ -675,88 +351,7 @@ declare module 'stripe' {
         pending_verification: Array<string> | null;
       }
 
-      namespace FutureRequirements {
-        interface Alternative {
-          /**
-           * Fields that can be provided to satisfy all fields in `original_fields_due`.
-           */
-          alternative_fields_due: Array<string>;
-
-          /**
-           * Fields that are due and can be satisfied by providing all fields in `alternative_fields_due`.
-           */
-          original_fields_due: Array<string>;
-        }
-
-        interface Error {
-          /**
-           * The code for the type of error.
-           */
-          code: Error.Code;
-
-          /**
-           * An informative message that indicates the error type and provides additional details about the error.
-           */
-          reason: string;
-
-          /**
-           * The specific user onboarding requirement field (in the requirements hash) that needs to be resolved.
-           */
-          requirement: string;
-        }
-
-        namespace Error {
-          type Code =
-            | 'invalid_address_city_state_postal_code'
-            | 'invalid_street_address'
-            | 'invalid_tos_acceptance'
-            | 'invalid_value_other'
-            | 'verification_document_address_mismatch'
-            | 'verification_document_address_missing'
-            | 'verification_document_corrupt'
-            | 'verification_document_country_not_supported'
-            | 'verification_document_dob_mismatch'
-            | 'verification_document_duplicate_type'
-            | 'verification_document_expired'
-            | 'verification_document_failed_copy'
-            | 'verification_document_failed_greyscale'
-            | 'verification_document_failed_other'
-            | 'verification_document_failed_test_mode'
-            | 'verification_document_fraudulent'
-            | 'verification_document_id_number_mismatch'
-            | 'verification_document_id_number_missing'
-            | 'verification_document_incomplete'
-            | 'verification_document_invalid'
-            | 'verification_document_issue_or_expiry_date_missing'
-            | 'verification_document_manipulated'
-            | 'verification_document_missing_back'
-            | 'verification_document_missing_front'
-            | 'verification_document_name_mismatch'
-            | 'verification_document_name_missing'
-            | 'verification_document_nationality_mismatch'
-            | 'verification_document_not_readable'
-            | 'verification_document_not_signed'
-            | 'verification_document_not_uploaded'
-            | 'verification_document_photo_mismatch'
-            | 'verification_document_too_large'
-            | 'verification_document_type_not_supported'
-            | 'verification_failed_address_match'
-            | 'verification_failed_business_iec_number'
-            | 'verification_failed_document_match'
-            | 'verification_failed_id_number_match'
-            | 'verification_failed_keyed_identity'
-            | 'verification_failed_keyed_match'
-            | 'verification_failed_name_match'
-            | 'verification_failed_other'
-            | 'verification_failed_tax_id_match'
-            | 'verification_failed_tax_id_not_issued'
-            | 'verification_missing_executives'
-            | 'verification_missing_owners'
-            | 'verification_requires_additional_memorandum_of_associations';
-        }
-      }
-
-      interface Requirements {
+      export interface Requirements {
         /**
          * Fields that are due and can be satisfied by providing the corresponding alternative fields instead.
          */
@@ -798,8 +393,273 @@ declare module 'stripe' {
         pending_verification: Array<string> | null;
       }
 
-      namespace Requirements {
-        interface Alternative {
+      export interface Settings {
+        bacs_debit_payments?: Settings.BacsDebitPayments;
+
+        branding: Settings.Branding;
+
+        card_issuing?: Settings.CardIssuing;
+
+        card_payments: Settings.CardPayments;
+
+        dashboard: Settings.Dashboard;
+
+        payments: Settings.Payments;
+
+        payouts?: Settings.Payouts;
+
+        sepa_debit_payments?: Settings.SepaDebitPayments;
+
+        treasury?: Settings.Treasury;
+      }
+
+      export interface TosAcceptance {
+        /**
+         * The Unix timestamp marking when the account representative accepted their service agreement
+         */
+        date?: number | null;
+
+        /**
+         * The IP address from which the account representative accepted their service agreement
+         */
+        ip?: string | null;
+
+        /**
+         * The user's service agreement type
+         */
+        service_agreement?: string;
+
+        /**
+         * The user agent of the browser from which the account representative accepted their service agreement
+         */
+        user_agent?: string | null;
+      }
+
+      export type Type = 'custom' | 'express' | 'standard';
+
+      namespace Capabilities {
+        export type AcssDebitPayments = 'active' | 'inactive' | 'pending';
+
+        export type AffirmPayments = 'active' | 'inactive' | 'pending';
+
+        export type AfterpayClearpayPayments =
+          | 'active'
+          | 'inactive'
+          | 'pending';
+
+        export type AuBecsDebitPayments = 'active' | 'inactive' | 'pending';
+
+        export type BacsDebitPayments = 'active' | 'inactive' | 'pending';
+
+        export type BancontactPayments = 'active' | 'inactive' | 'pending';
+
+        export type BankTransferPayments = 'active' | 'inactive' | 'pending';
+
+        export type BlikPayments = 'active' | 'inactive' | 'pending';
+
+        export type BoletoPayments = 'active' | 'inactive' | 'pending';
+
+        export type CardIssuing = 'active' | 'inactive' | 'pending';
+
+        export type CardPayments = 'active' | 'inactive' | 'pending';
+
+        export type CartesBancairesPayments = 'active' | 'inactive' | 'pending';
+
+        export type EpsPayments = 'active' | 'inactive' | 'pending';
+
+        export type FpxPayments = 'active' | 'inactive' | 'pending';
+
+        export type GiropayPayments = 'active' | 'inactive' | 'pending';
+
+        export type GrabpayPayments = 'active' | 'inactive' | 'pending';
+
+        export type IdealPayments = 'active' | 'inactive' | 'pending';
+
+        export type JcbPayments = 'active' | 'inactive' | 'pending';
+
+        export type KlarnaPayments = 'active' | 'inactive' | 'pending';
+
+        export type KonbiniPayments = 'active' | 'inactive' | 'pending';
+
+        export type LegacyPayments = 'active' | 'inactive' | 'pending';
+
+        export type LinkPayments = 'active' | 'inactive' | 'pending';
+
+        export type OxxoPayments = 'active' | 'inactive' | 'pending';
+
+        export type P24Payments = 'active' | 'inactive' | 'pending';
+
+        export type PaynowPayments = 'active' | 'inactive' | 'pending';
+
+        export type PromptpayPayments = 'active' | 'inactive' | 'pending';
+
+        export type SepaDebitPayments = 'active' | 'inactive' | 'pending';
+
+        export type SofortPayments = 'active' | 'inactive' | 'pending';
+
+        export type TaxReportingUs1099K = 'active' | 'inactive' | 'pending';
+
+        export type TaxReportingUs1099Misc = 'active' | 'inactive' | 'pending';
+
+        export type Transfers = 'active' | 'inactive' | 'pending';
+
+        export type Treasury = 'active' | 'inactive' | 'pending';
+
+        export type UsBankAccountAchPayments =
+          | 'active'
+          | 'inactive'
+          | 'pending';
+      }
+
+      namespace Company {
+        export interface AddressKana {
+          /**
+           * City/Ward.
+           */
+          city: string | null;
+
+          /**
+           * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+           */
+          country: string | null;
+
+          /**
+           * Block/Building number.
+           */
+          line1: string | null;
+
+          /**
+           * Building details.
+           */
+          line2: string | null;
+
+          /**
+           * ZIP or postal code.
+           */
+          postal_code: string | null;
+
+          /**
+           * Prefecture.
+           */
+          state: string | null;
+
+          /**
+           * Town/cho-me.
+           */
+          town: string | null;
+        }
+
+        export interface AddressKanji {
+          /**
+           * City/Ward.
+           */
+          city: string | null;
+
+          /**
+           * Two-letter country code ([ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)).
+           */
+          country: string | null;
+
+          /**
+           * Block/Building number.
+           */
+          line1: string | null;
+
+          /**
+           * Building details.
+           */
+          line2: string | null;
+
+          /**
+           * ZIP or postal code.
+           */
+          postal_code: string | null;
+
+          /**
+           * Prefecture.
+           */
+          state: string | null;
+
+          /**
+           * Town/cho-me.
+           */
+          town: string | null;
+        }
+
+        export interface OwnershipDeclaration {
+          /**
+           * The Unix timestamp marking when the beneficial owner attestation was made.
+           */
+          date: number | null;
+
+          /**
+           * The IP address from which the beneficial owner attestation was made.
+           */
+          ip: string | null;
+
+          /**
+           * The user-agent string from the browser where the beneficial owner attestation was made.
+           */
+          user_agent: string | null;
+        }
+
+        export type Structure =
+          | 'free_zone_establishment'
+          | 'free_zone_llc'
+          | 'government_instrumentality'
+          | 'governmental_unit'
+          | 'incorporated_non_profit'
+          | 'limited_liability_partnership'
+          | 'llc'
+          | 'multi_member_llc'
+          | 'private_company'
+          | 'private_corporation'
+          | 'private_partnership'
+          | 'public_company'
+          | 'public_corporation'
+          | 'public_partnership'
+          | 'single_member_llc'
+          | 'sole_establishment'
+          | 'sole_proprietorship'
+          | 'tax_exempt_government_instrumentality'
+          | 'unincorporated_association'
+          | 'unincorporated_non_profit';
+
+        export interface Verification {
+          document: Verification.Document;
+        }
+
+        namespace Verification {
+          export interface Document {
+            /**
+             * The back of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `additional_verification`.
+             */
+            back: string | Stripe.File | null;
+
+            /**
+             * A user-displayable string describing the verification state of this document.
+             */
+            details: string | null;
+
+            /**
+             * One of `document_corrupt`, `document_expired`, `document_failed_copy`, `document_failed_greyscale`, `document_failed_other`, `document_failed_test_mode`, `document_fraudulent`, `document_incomplete`, `document_invalid`, `document_manipulated`, `document_not_readable`, `document_not_uploaded`, `document_type_not_supported`, or `document_too_large`. A machine-readable code specifying the verification state for this document.
+             */
+            details_code: string | null;
+
+            /**
+             * The front of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `additional_verification`.
+             */
+            front: string | Stripe.File | null;
+          }
+        }
+      }
+
+      namespace Controller {
+        export type Type = 'account' | 'application';
+      }
+
+      namespace FutureRequirements {
+        export interface Alternative {
           /**
            * Fields that can be provided to satisfy all fields in `original_fields_due`.
            */
@@ -811,7 +671,7 @@ declare module 'stripe' {
           original_fields_due: Array<string>;
         }
 
-        interface Error {
+        export interface Error {
           /**
            * The code for the type of error.
            */
@@ -829,7 +689,7 @@ declare module 'stripe' {
         }
 
         namespace Error {
-          type Code =
+          export type Code =
             | 'invalid_address_city_state_postal_code'
             | 'invalid_street_address'
             | 'invalid_tos_acceptance'
@@ -879,35 +739,96 @@ declare module 'stripe' {
         }
       }
 
-      interface Settings {
-        bacs_debit_payments?: Settings.BacsDebitPayments;
+      namespace Requirements {
+        export interface Alternative {
+          /**
+           * Fields that can be provided to satisfy all fields in `original_fields_due`.
+           */
+          alternative_fields_due: Array<string>;
 
-        branding: Settings.Branding;
+          /**
+           * Fields that are due and can be satisfied by providing all fields in `alternative_fields_due`.
+           */
+          original_fields_due: Array<string>;
+        }
 
-        card_issuing?: Settings.CardIssuing;
+        export interface Error {
+          /**
+           * The code for the type of error.
+           */
+          code: Error.Code;
 
-        card_payments: Settings.CardPayments;
+          /**
+           * An informative message that indicates the error type and provides additional details about the error.
+           */
+          reason: string;
 
-        dashboard: Settings.Dashboard;
+          /**
+           * The specific user onboarding requirement field (in the requirements hash) that needs to be resolved.
+           */
+          requirement: string;
+        }
 
-        payments: Settings.Payments;
-
-        payouts?: Settings.Payouts;
-
-        sepa_debit_payments?: Settings.SepaDebitPayments;
-
-        treasury?: Settings.Treasury;
+        namespace Error {
+          export type Code =
+            | 'invalid_address_city_state_postal_code'
+            | 'invalid_street_address'
+            | 'invalid_tos_acceptance'
+            | 'invalid_value_other'
+            | 'verification_document_address_mismatch'
+            | 'verification_document_address_missing'
+            | 'verification_document_corrupt'
+            | 'verification_document_country_not_supported'
+            | 'verification_document_dob_mismatch'
+            | 'verification_document_duplicate_type'
+            | 'verification_document_expired'
+            | 'verification_document_failed_copy'
+            | 'verification_document_failed_greyscale'
+            | 'verification_document_failed_other'
+            | 'verification_document_failed_test_mode'
+            | 'verification_document_fraudulent'
+            | 'verification_document_id_number_mismatch'
+            | 'verification_document_id_number_missing'
+            | 'verification_document_incomplete'
+            | 'verification_document_invalid'
+            | 'verification_document_issue_or_expiry_date_missing'
+            | 'verification_document_manipulated'
+            | 'verification_document_missing_back'
+            | 'verification_document_missing_front'
+            | 'verification_document_name_mismatch'
+            | 'verification_document_name_missing'
+            | 'verification_document_nationality_mismatch'
+            | 'verification_document_not_readable'
+            | 'verification_document_not_signed'
+            | 'verification_document_not_uploaded'
+            | 'verification_document_photo_mismatch'
+            | 'verification_document_too_large'
+            | 'verification_document_type_not_supported'
+            | 'verification_failed_address_match'
+            | 'verification_failed_business_iec_number'
+            | 'verification_failed_document_match'
+            | 'verification_failed_id_number_match'
+            | 'verification_failed_keyed_identity'
+            | 'verification_failed_keyed_match'
+            | 'verification_failed_name_match'
+            | 'verification_failed_other'
+            | 'verification_failed_tax_id_match'
+            | 'verification_failed_tax_id_not_issued'
+            | 'verification_missing_executives'
+            | 'verification_missing_owners'
+            | 'verification_requires_additional_memorandum_of_associations';
+        }
       }
 
       namespace Settings {
-        interface BacsDebitPayments {
+        export interface BacsDebitPayments {
           /**
            * The Bacs Direct Debit Display Name for this account. For payments made with Bacs Direct Debit, this will appear on the mandate, and as the statement descriptor.
            */
           display_name?: string;
         }
 
-        interface Branding {
+        export interface Branding {
           /**
            * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) An icon for the account. Must be square and at least 128px x 128px.
            */
@@ -929,30 +850,11 @@ declare module 'stripe' {
           secondary_color: string | null;
         }
 
-        interface CardIssuing {
+        export interface CardIssuing {
           tos_acceptance?: CardIssuing.TosAcceptance;
         }
 
-        namespace CardIssuing {
-          interface TosAcceptance {
-            /**
-             * The Unix timestamp marking when the account representative accepted the service agreement.
-             */
-            date: number | null;
-
-            /**
-             * The IP address from which the account representative accepted the service agreement.
-             */
-            ip: string | null;
-
-            /**
-             * The user agent of the browser from which the account representative accepted the service agreement.
-             */
-            user_agent?: string;
-          }
-        }
-
-        interface CardPayments {
+        export interface CardPayments {
           decline_on?: CardPayments.DeclineOn;
 
           /**
@@ -971,21 +873,7 @@ declare module 'stripe' {
           statement_descriptor_prefix_kanji: string | null;
         }
 
-        namespace CardPayments {
-          interface DeclineOn {
-            /**
-             * Whether Stripe automatically declines charges with an incorrect ZIP or postal code. This setting only applies when a ZIP or postal code is provided and they fail bank verification.
-             */
-            avs_failure: boolean;
-
-            /**
-             * Whether Stripe automatically declines charges with an incorrect CVC. This setting only applies when a CVC is provided and it fails bank verification.
-             */
-            cvc_failure: boolean;
-          }
-        }
-
-        interface Dashboard {
+        export interface Dashboard {
           /**
            * The display name for this account. This is used on the Stripe Dashboard to differentiate between accounts.
            */
@@ -997,7 +885,7 @@ declare module 'stripe' {
           timezone: string | null;
         }
 
-        interface Payments {
+        export interface Payments {
           /**
            * The default text that appears on credit card statements when a charge is made. This field prefixes any dynamic `statement_descriptor` specified on the charge.
            */
@@ -1024,7 +912,7 @@ declare module 'stripe' {
           statement_descriptor_prefix_kanji: string | null;
         }
 
-        interface Payouts {
+        export interface Payouts {
           /**
            * A Boolean indicating if Stripe should try to reclaim negative balances from an attached bank account. See our [Understanding Connect Account Balances](https://stripe.com/docs/connect/account-balances) documentation for details. Default value is `false` for Custom accounts, otherwise `true`.
            */
@@ -1038,8 +926,52 @@ declare module 'stripe' {
           statement_descriptor: string | null;
         }
 
+        export interface SepaDebitPayments {
+          /**
+           * SEPA creditor identifier that identifies the company making the payment.
+           */
+          creditor_id?: string;
+        }
+
+        export interface Treasury {
+          tos_acceptance?: Treasury.TosAcceptance;
+        }
+
+        namespace CardIssuing {
+          export interface TosAcceptance {
+            /**
+             * The Unix timestamp marking when the account representative accepted the service agreement.
+             */
+            date: number | null;
+
+            /**
+             * The IP address from which the account representative accepted the service agreement.
+             */
+            ip: string | null;
+
+            /**
+             * The user agent of the browser from which the account representative accepted the service agreement.
+             */
+            user_agent?: string;
+          }
+        }
+
+        namespace CardPayments {
+          export interface DeclineOn {
+            /**
+             * Whether Stripe automatically declines charges with an incorrect ZIP or postal code. This setting only applies when a ZIP or postal code is provided and they fail bank verification.
+             */
+            avs_failure: boolean;
+
+            /**
+             * Whether Stripe automatically declines charges with an incorrect CVC. This setting only applies when a CVC is provided and it fails bank verification.
+             */
+            cvc_failure: boolean;
+          }
+        }
+
         namespace Payouts {
-          interface Schedule {
+          export interface Schedule {
             /**
              * The number of days charges for the account will be held before being paid out.
              */
@@ -1062,19 +994,8 @@ declare module 'stripe' {
           }
         }
 
-        interface SepaDebitPayments {
-          /**
-           * SEPA creditor identifier that identifies the company making the payment.
-           */
-          creditor_id?: string;
-        }
-
-        interface Treasury {
-          tos_acceptance?: Treasury.TosAcceptance;
-        }
-
         namespace Treasury {
-          interface TosAcceptance {
+          export interface TosAcceptance {
             /**
              * The Unix timestamp marking when the account representative accepted the service agreement.
              */
@@ -1092,33 +1013,118 @@ declare module 'stripe' {
           }
         }
       }
-
-      interface TosAcceptance {
-        /**
-         * The Unix timestamp marking when the account representative accepted their service agreement
-         */
-        date?: number | null;
-
-        /**
-         * The IP address from which the account representative accepted their service agreement
-         */
-        ip?: string | null;
-
-        /**
-         * The user's service agreement type
-         */
-        service_agreement?: string;
-
-        /**
-         * The user agent of the browser from which the account representative accepted their service agreement
-         */
-        user_agent?: string | null;
-      }
-
-      type Type = 'custom' | 'express' | 'standard';
     }
 
-    /**
+    export /**
+     * This is an object representing a Stripe account. You can retrieve it to see
+     * properties on the account like its current e-mail address or if the account is
+     * enabled yet to make live charges.
+     *
+     * Some properties, marked below, are available only to platforms that want to
+     * [create and manage Express or Custom accounts](https://stripe.com/docs/connect/accounts).
+     */
+    interface Account {
+      /**
+       * Unique identifier for the object.
+       */
+      id: string;
+
+      /**
+       * String representing the object's type. Objects of the same type share the same value.
+       */
+      object: 'account';
+
+      /**
+       * Business information about the account.
+       */
+      business_profile?: Account.BusinessProfile | null;
+
+      /**
+       * The business type.
+       */
+      business_type?: Account.BusinessType | null;
+
+      capabilities?: Account.Capabilities;
+
+      /**
+       * Whether the account can create live charges.
+       */
+      charges_enabled: boolean;
+
+      company?: Account.Company;
+
+      controller?: Account.Controller;
+
+      /**
+       * The account's country.
+       */
+      country?: string;
+
+      /**
+       * Time at which the account was connected. Measured in seconds since the Unix epoch.
+       */
+      created?: number;
+
+      /**
+       * Three-letter ISO currency code representing the default currency for the account. This must be a currency that [Stripe supports in the account's country](https://stripe.com/docs/payouts).
+       */
+      default_currency?: string;
+
+      deleted?: void;
+
+      /**
+       * Whether account details have been submitted. Standard accounts cannot receive payouts before this is true.
+       */
+      details_submitted: boolean;
+
+      /**
+       * An email address associated with the account. You can treat this as metadata: it is not used for authentication or messaging account holders.
+       */
+      email: string | null;
+
+      /**
+       * External accounts (bank accounts and debit cards) currently attached to this account
+       */
+      external_accounts?: ApiList<Stripe.BankAccount | Stripe.Card>;
+
+      future_requirements?: Account.FutureRequirements;
+
+      /**
+       * This is an object representing a person associated with a Stripe account.
+       *
+       * A platform cannot access a Standard or Express account's persons after the account starts onboarding, such as after generating an account link for the account.
+       * See the [Standard onboarding](https://stripe.com/docs/connect/standard-accounts) or [Express onboarding documentation](https://stripe.com/docs/connect/express-accounts) for information about platform pre-filling and account onboarding steps.
+       *
+       * Related guide: [Handling Identity Verification with the API](https://stripe.com/docs/connect/identity-verification-api#person-information).
+       */
+      individual?: Stripe.Person;
+
+      /**
+       * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+       */
+      metadata?: Stripe.Metadata;
+
+      /**
+       * Whether Stripe can send payouts to this account.
+       */
+      payouts_enabled: boolean;
+
+      requirements?: Account.Requirements;
+
+      /**
+       * Options for customizing how the account functions within Stripe.
+       */
+      settings?: Account.Settings | null;
+
+      tos_acceptance?: Account.TosAcceptance;
+
+      /**
+       * The Stripe account type. Can be `standard`, `express`, or `custom`.
+       */
+      type: Account.Type;
+    }
+
+    export /**
      * The DeletedAccount object.
      */
     interface DeletedAccount {
@@ -1138,7 +1144,1141 @@ declare module 'stripe' {
       deleted: true;
     }
 
-    interface AccountCreateParams {
+    namespace AccountCreateParams {
+      export interface BusinessProfile {
+        /**
+         * [The merchant category code for the account](https://stripe.com/docs/connect/setting-mcc). MCCs are used to classify businesses based on the goods or services they provide.
+         */
+        mcc?: string;
+
+        /**
+         * The customer-facing business name.
+         */
+        name?: string;
+
+        /**
+         * Internal-only description of the product sold by, or service provided by, the business. Used by Stripe for risk and underwriting purposes.
+         */
+        product_description?: string;
+
+        /**
+         * A publicly available mailing address for sending support issues to.
+         */
+        support_address?: Stripe.AddressParam;
+
+        /**
+         * A publicly available email address for sending support issues to.
+         */
+        support_email?: string;
+
+        /**
+         * A publicly available phone number to call with support issues.
+         */
+        support_phone?: string;
+
+        /**
+         * A publicly available website for handling support issues.
+         */
+        support_url?: Stripe.Emptyable<string>;
+
+        /**
+         * The business's publicly available website.
+         */
+        url?: string;
+      }
+
+      export type BusinessType =
+        | 'company'
+        | 'government_entity'
+        | 'individual'
+        | 'non_profit';
+
+      export interface Capabilities {
+        /**
+         * The acss_debit_payments capability.
+         */
+        acss_debit_payments?: Capabilities.AcssDebitPayments;
+
+        /**
+         * The affirm_payments capability.
+         */
+        affirm_payments?: Capabilities.AffirmPayments;
+
+        /**
+         * The afterpay_clearpay_payments capability.
+         */
+        afterpay_clearpay_payments?: Capabilities.AfterpayClearpayPayments;
+
+        /**
+         * The au_becs_debit_payments capability.
+         */
+        au_becs_debit_payments?: Capabilities.AuBecsDebitPayments;
+
+        /**
+         * The bacs_debit_payments capability.
+         */
+        bacs_debit_payments?: Capabilities.BacsDebitPayments;
+
+        /**
+         * The bancontact_payments capability.
+         */
+        bancontact_payments?: Capabilities.BancontactPayments;
+
+        /**
+         * The bank_transfer_payments capability.
+         */
+        bank_transfer_payments?: Capabilities.BankTransferPayments;
+
+        /**
+         * The blik_payments capability.
+         */
+        blik_payments?: Capabilities.BlikPayments;
+
+        /**
+         * The boleto_payments capability.
+         */
+        boleto_payments?: Capabilities.BoletoPayments;
+
+        /**
+         * The card_issuing capability.
+         */
+        card_issuing?: Capabilities.CardIssuing;
+
+        /**
+         * The card_payments capability.
+         */
+        card_payments?: Capabilities.CardPayments;
+
+        /**
+         * The cartes_bancaires_payments capability.
+         */
+        cartes_bancaires_payments?: Capabilities.CartesBancairesPayments;
+
+        /**
+         * The eps_payments capability.
+         */
+        eps_payments?: Capabilities.EpsPayments;
+
+        /**
+         * The fpx_payments capability.
+         */
+        fpx_payments?: Capabilities.FpxPayments;
+
+        /**
+         * The giropay_payments capability.
+         */
+        giropay_payments?: Capabilities.GiropayPayments;
+
+        /**
+         * The grabpay_payments capability.
+         */
+        grabpay_payments?: Capabilities.GrabpayPayments;
+
+        /**
+         * The ideal_payments capability.
+         */
+        ideal_payments?: Capabilities.IdealPayments;
+
+        /**
+         * The jcb_payments capability.
+         */
+        jcb_payments?: Capabilities.JcbPayments;
+
+        /**
+         * The klarna_payments capability.
+         */
+        klarna_payments?: Capabilities.KlarnaPayments;
+
+        /**
+         * The konbini_payments capability.
+         */
+        konbini_payments?: Capabilities.KonbiniPayments;
+
+        /**
+         * The legacy_payments capability.
+         */
+        legacy_payments?: Capabilities.LegacyPayments;
+
+        /**
+         * The link_payments capability.
+         */
+        link_payments?: Capabilities.LinkPayments;
+
+        /**
+         * The oxxo_payments capability.
+         */
+        oxxo_payments?: Capabilities.OxxoPayments;
+
+        /**
+         * The p24_payments capability.
+         */
+        p24_payments?: Capabilities.P24Payments;
+
+        /**
+         * The paynow_payments capability.
+         */
+        paynow_payments?: Capabilities.PaynowPayments;
+
+        /**
+         * The promptpay_payments capability.
+         */
+        promptpay_payments?: Capabilities.PromptpayPayments;
+
+        /**
+         * The sepa_debit_payments capability.
+         */
+        sepa_debit_payments?: Capabilities.SepaDebitPayments;
+
+        /**
+         * The sofort_payments capability.
+         */
+        sofort_payments?: Capabilities.SofortPayments;
+
+        /**
+         * The tax_reporting_us_1099_k capability.
+         */
+        tax_reporting_us_1099_k?: Capabilities.TaxReportingUs1099K;
+
+        /**
+         * The tax_reporting_us_1099_misc capability.
+         */
+        tax_reporting_us_1099_misc?: Capabilities.TaxReportingUs1099Misc;
+
+        /**
+         * The transfers capability.
+         */
+        transfers?: Capabilities.Transfers;
+
+        /**
+         * The treasury capability.
+         */
+        treasury?: Capabilities.Treasury;
+
+        /**
+         * The us_bank_account_ach_payments capability.
+         */
+        us_bank_account_ach_payments?: Capabilities.UsBankAccountAchPayments;
+      }
+
+      export interface Company {
+        /**
+         * The company's primary address.
+         */
+        address?: Stripe.AddressParam;
+
+        /**
+         * The Kana variation of the company's primary address (Japan only).
+         */
+        address_kana?: Stripe.JapanAddressParam;
+
+        /**
+         * The Kanji variation of the company's primary address (Japan only).
+         */
+        address_kanji?: Stripe.JapanAddressParam;
+
+        /**
+         * Whether the company's directors have been provided. Set this Boolean to `true` after creating all the company's directors with [the Persons API](https://stripe.com/docs/api/persons) for accounts with a `relationship.director` requirement. This value is not automatically set to `true` after creating directors, so it needs to be updated to indicate all directors have been provided.
+         */
+        directors_provided?: boolean;
+
+        /**
+         * Whether the company's executives have been provided. Set this Boolean to `true` after creating all the company's executives with [the Persons API](https://stripe.com/docs/api/persons) for accounts with a `relationship.executive` requirement.
+         */
+        executives_provided?: boolean;
+
+        /**
+         * The company's legal name.
+         */
+        name?: string;
+
+        /**
+         * The Kana variation of the company's legal name (Japan only).
+         */
+        name_kana?: string;
+
+        /**
+         * The Kanji variation of the company's legal name (Japan only).
+         */
+        name_kanji?: string;
+
+        /**
+         * Whether the company's owners have been provided. Set this Boolean to `true` after creating all the company's owners with [the Persons API](https://stripe.com/docs/api/persons) for accounts with a `relationship.owner` requirement.
+         */
+        owners_provided?: boolean;
+
+        /**
+         * This hash is used to attest that the beneficial owner information provided to Stripe is both current and correct.
+         */
+        ownership_declaration?: Company.OwnershipDeclaration;
+
+        /**
+         * The company's phone number (used for verification).
+         */
+        phone?: string;
+
+        /**
+         * The identification number given to a company when it is registered or incorporated, if distinct from the identification number used for filing taxes. (Examples are the CIN for companies and LLP IN for partnerships in India, and the Company Registration Number in Hong Kong).
+         */
+        registration_number?: string;
+
+        /**
+         * The category identifying the legal structure of the company or legal entity. See [Business structure](https://stripe.com/docs/connect/identity-verification#business-structure) for more details.
+         */
+        structure?: Stripe.Emptyable<Company.Structure>;
+
+        /**
+         * The business ID number of the company, as appropriate for the company's country. (Examples are an Employer ID Number in the U.S., a Business Number in Canada, or a Company Number in the UK.)
+         */
+        tax_id?: string;
+
+        /**
+         * The jurisdiction in which the `tax_id` is registered (Germany-based companies only).
+         */
+        tax_id_registrar?: string;
+
+        /**
+         * The VAT number of the company.
+         */
+        vat_id?: string;
+
+        /**
+         * Information on the verification state of the company.
+         */
+        verification?: Company.Verification;
+      }
+
+      export interface Documents {
+        /**
+         * One or more documents that support the [Bank account ownership verification](https://support.stripe.com/questions/bank-account-ownership-verification) requirement. Must be a document associated with the account's primary active bank account that displays the last 4 digits of the account number, either a statement or a voided check.
+         */
+        bank_account_ownership_verification?: Documents.BankAccountOwnershipVerification;
+
+        /**
+         * One or more documents that demonstrate proof of a company's license to operate.
+         */
+        company_license?: Documents.CompanyLicense;
+
+        /**
+         * One or more documents showing the company's Memorandum of Association.
+         */
+        company_memorandum_of_association?: Documents.CompanyMemorandumOfAssociation;
+
+        /**
+         * (Certain countries only) One or more documents showing the ministerial decree legalizing the company's establishment.
+         */
+        company_ministerial_decree?: Documents.CompanyMinisterialDecree;
+
+        /**
+         * One or more documents that demonstrate proof of a company's registration with the appropriate local authorities.
+         */
+        company_registration_verification?: Documents.CompanyRegistrationVerification;
+
+        /**
+         * One or more documents that demonstrate proof of a company's tax ID.
+         */
+        company_tax_id_verification?: Documents.CompanyTaxIdVerification;
+
+        /**
+         * One or more documents showing the company's proof of registration with the national business registry.
+         */
+        proof_of_registration?: Documents.ProofOfRegistration;
+      }
+
+      export interface ExternalAccount {
+        /**
+         * The type of external account. Should be bank_account.
+         */
+        object: string;
+
+        /**
+         * The country in which the bank account is located.
+         */
+        country: string;
+
+        /**
+         * The currency the bank account is in. This must be a country/currency pairing that [Stripe supports](https://stripe.com/docs/payouts).
+         */
+        currency: string;
+
+        /**
+         * The name of the person or business that owns the bank account. This field is required when attaching the bank account to a Customer object.
+         */
+        account_holder_name?: string;
+
+        /**
+         * The type of entity that holds the account. This can be either individual or company. This field is required when attaching the bank account to a Customer object.
+         */
+        account_holder_type?: string;
+
+        /**
+         * The routing number, sort code, or other country-appropriate institution number for the bank account. For US bank accounts, this is required and should be the ACH routing number, not the wire routing number. If you are providing an IBAN for account_number, this field is not required.
+         */
+        routing_number?: string;
+
+        /**
+         * The account number for the bank account, in string form. Must be a checking account.
+         */
+        account_number: string;
+      }
+
+      export interface Individual {
+        /**
+         * The individual's primary address.
+         */
+        address?: Stripe.AddressParam;
+
+        /**
+         * The Kana variation of the the individual's primary address (Japan only).
+         */
+        address_kana?: Stripe.JapanAddressParam;
+
+        /**
+         * The Kanji variation of the the individual's primary address (Japan only).
+         */
+        address_kanji?: Stripe.JapanAddressParam;
+
+        /**
+         * The individual's date of birth.
+         */
+        dob?: Stripe.Emptyable<Individual.Dob>;
+
+        /**
+         * The individual's email address.
+         */
+        email?: string;
+
+        /**
+         * The individual's first name.
+         */
+        first_name?: string;
+
+        /**
+         * The Kana variation of the the individual's first name (Japan only).
+         */
+        first_name_kana?: string;
+
+        /**
+         * The Kanji variation of the individual's first name (Japan only).
+         */
+        first_name_kanji?: string;
+
+        /**
+         * A list of alternate names or aliases that the individual is known by.
+         */
+        full_name_aliases?: Stripe.Emptyable<Array<string>>;
+
+        /**
+         * The individual's gender (International regulations require either "male" or "female").
+         */
+        gender?: string;
+
+        /**
+         * The government-issued ID number of the individual, as appropriate for the representative's country. (Examples are a Social Security Number in the U.S., or a Social Insurance Number in Canada). Instead of the number itself, you can also provide a [PII token created with Stripe.js](https://stripe.com/docs/js/tokens_sources/create_token?type=pii).
+         */
+        id_number?: string;
+
+        /**
+         * The government-issued secondary ID number of the individual, as appropriate for the representative's country, will be used for enhanced verification checks. In Thailand, this would be the laser code found on the back of an ID card. Instead of the number itself, you can also provide a [PII token created with Stripe.js](https://stripe.com/docs/js/tokens_sources/create_token?type=pii).
+         */
+        id_number_secondary?: string;
+
+        /**
+         * The individual's last name.
+         */
+        last_name?: string;
+
+        /**
+         * The Kana variation of the individual's last name (Japan only).
+         */
+        last_name_kana?: string;
+
+        /**
+         * The Kanji variation of the individual's last name (Japan only).
+         */
+        last_name_kanji?: string;
+
+        /**
+         * The individual's maiden name.
+         */
+        maiden_name?: string;
+
+        /**
+         * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+         */
+        metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
+
+        /**
+         * The individual's phone number.
+         */
+        phone?: string;
+
+        /**
+         * Indicates if the person or any of their representatives, family members, or other closely related persons, declares that they hold or have held an important public job or function, in any jurisdiction.
+         */
+        political_exposure?: Individual.PoliticalExposure;
+
+        /**
+         * The individual's registered address.
+         */
+        registered_address?: Stripe.AddressParam;
+
+        /**
+         * The last four digits of the individual's Social Security Number (U.S. only).
+         */
+        ssn_last_4?: string;
+
+        /**
+         * The individual's verification document information.
+         */
+        verification?: Individual.Verification;
+      }
+
+      export interface Settings {
+        /**
+         * Settings used to apply the account's branding to email receipts, invoices, Checkout, and other products.
+         */
+        branding?: Settings.Branding;
+
+        /**
+         * Settings specific to the account's use of the Card Issuing product.
+         */
+        card_issuing?: Settings.CardIssuing;
+
+        /**
+         * Settings specific to card charging on the account.
+         */
+        card_payments?: Settings.CardPayments;
+
+        /**
+         * Settings that apply across payment methods for charging on the account.
+         */
+        payments?: Settings.Payments;
+
+        /**
+         * Settings specific to the account's payouts.
+         */
+        payouts?: Settings.Payouts;
+
+        /**
+         * Settings specific to the account's Treasury FinancialAccounts.
+         */
+        treasury?: Settings.Treasury;
+      }
+
+      export interface TosAcceptance {
+        /**
+         * The Unix timestamp marking when the account representative accepted their service agreement.
+         */
+        date?: number;
+
+        /**
+         * The IP address from which the account representative accepted their service agreement.
+         */
+        ip?: string;
+
+        /**
+         * The user's service agreement type.
+         */
+        service_agreement?: string;
+
+        /**
+         * The user agent of the browser from which the account representative accepted their service agreement.
+         */
+        user_agent?: string;
+      }
+
+      export type Type = 'custom' | 'express' | 'standard';
+
+      namespace Capabilities {
+        export interface AcssDebitPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface AffirmPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface AfterpayClearpayPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface AuBecsDebitPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface BacsDebitPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface BancontactPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface BankTransferPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface BlikPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface BoletoPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface CardIssuing {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface CardPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface CartesBancairesPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface EpsPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface FpxPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface GiropayPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface GrabpayPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface IdealPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface JcbPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface KlarnaPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface KonbiniPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface LegacyPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface LinkPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface OxxoPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface P24Payments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface PaynowPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface PromptpayPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface SepaDebitPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface SofortPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface TaxReportingUs1099K {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface TaxReportingUs1099Misc {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface Transfers {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface Treasury {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface UsBankAccountAchPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+      }
+
+      namespace Company {
+        export interface OwnershipDeclaration {
+          /**
+           * The Unix timestamp marking when the beneficial owner attestation was made.
+           */
+          date?: number;
+
+          /**
+           * The IP address from which the beneficial owner attestation was made.
+           */
+          ip?: string;
+
+          /**
+           * The user agent of the browser from which the beneficial owner attestation was made.
+           */
+          user_agent?: string;
+        }
+
+        export type Structure =
+          | 'free_zone_establishment'
+          | 'free_zone_llc'
+          | 'government_instrumentality'
+          | 'governmental_unit'
+          | 'incorporated_non_profit'
+          | 'limited_liability_partnership'
+          | 'llc'
+          | 'multi_member_llc'
+          | 'private_company'
+          | 'private_corporation'
+          | 'private_partnership'
+          | 'public_company'
+          | 'public_corporation'
+          | 'public_partnership'
+          | 'single_member_llc'
+          | 'sole_establishment'
+          | 'sole_proprietorship'
+          | 'tax_exempt_government_instrumentality'
+          | 'unincorporated_association'
+          | 'unincorporated_non_profit';
+
+        export interface Verification {
+          /**
+           * A document verifying the business.
+           */
+          document?: Verification.Document;
+        }
+
+        namespace Verification {
+          export interface Document {
+            /**
+             * The back of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+             */
+            back?: string;
+
+            /**
+             * The front of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+             */
+            front?: string;
+          }
+        }
+      }
+
+      namespace Documents {
+        export interface BankAccountOwnershipVerification {
+          /**
+           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
+           */
+          files?: Array<string>;
+        }
+
+        export interface CompanyLicense {
+          /**
+           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
+           */
+          files?: Array<string>;
+        }
+
+        export interface CompanyMemorandumOfAssociation {
+          /**
+           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
+           */
+          files?: Array<string>;
+        }
+
+        export interface CompanyMinisterialDecree {
+          /**
+           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
+           */
+          files?: Array<string>;
+        }
+
+        export interface CompanyRegistrationVerification {
+          /**
+           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
+           */
+          files?: Array<string>;
+        }
+
+        export interface CompanyTaxIdVerification {
+          /**
+           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
+           */
+          files?: Array<string>;
+        }
+
+        export interface ProofOfRegistration {
+          /**
+           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
+           */
+          files?: Array<string>;
+        }
+      }
+
+      namespace Individual {
+        export interface Dob {
+          /**
+           * The day of birth, between 1 and 31.
+           */
+          day: number;
+
+          /**
+           * The month of birth, between 1 and 12.
+           */
+          month: number;
+
+          /**
+           * The four-digit year of birth.
+           */
+          year: number;
+        }
+
+        export type PoliticalExposure = 'existing' | 'none';
+
+        export interface Verification {
+          /**
+           * A document showing address, either a passport, local ID card, or utility bill from a well-known utility company.
+           */
+          additional_document?: Verification.AdditionalDocument;
+
+          /**
+           * An identifying document, either a passport or local ID card.
+           */
+          document?: Verification.Document;
+        }
+
+        namespace Verification {
+          export interface AdditionalDocument {
+            /**
+             * The back of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+             */
+            back?: string;
+
+            /**
+             * The front of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+             */
+            front?: string;
+          }
+
+          export interface Document {
+            /**
+             * The back of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+             */
+            back?: string;
+
+            /**
+             * The front of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+             */
+            front?: string;
+          }
+        }
+      }
+
+      namespace Settings {
+        export interface Branding {
+          /**
+           * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) An icon for the account. Must be square and at least 128px x 128px.
+           */
+          icon?: string;
+
+          /**
+           * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) A logo for the account that will be used in Checkout instead of the icon and without the account's name next to it if provided. Must be at least 128px x 128px.
+           */
+          logo?: string;
+
+          /**
+           * A CSS hex color value representing the primary branding color for this account.
+           */
+          primary_color?: string;
+
+          /**
+           * A CSS hex color value representing the secondary branding color for this account.
+           */
+          secondary_color?: string;
+        }
+
+        export interface CardIssuing {
+          /**
+           * Details on the account's acceptance of the [Stripe Issuing Terms and Disclosures](https://stripe.com/docs/issuing/connect/tos_acceptance).
+           */
+          tos_acceptance?: CardIssuing.TosAcceptance;
+        }
+
+        export interface CardPayments {
+          /**
+           * Automatically declines certain charge types regardless of whether the card issuer accepted or declined the charge.
+           */
+          decline_on?: CardPayments.DeclineOn;
+
+          /**
+           * The default text that appears on credit card statements when a charge is made. This field prefixes any dynamic `statement_descriptor` specified on the charge. `statement_descriptor_prefix` is useful for maximizing descriptor space for the dynamic portion.
+           */
+          statement_descriptor_prefix?: string;
+
+          /**
+           * The Kana variation of the default text that appears on credit card statements when a charge is made (Japan only). This field prefixes any dynamic `statement_descriptor_suffix_kana` specified on the charge. `statement_descriptor_prefix_kana` is useful for maximizing descriptor space for the dynamic portion.
+           */
+          statement_descriptor_prefix_kana?: Stripe.Emptyable<string>;
+
+          /**
+           * The Kanji variation of the default text that appears on credit card statements when a charge is made (Japan only). This field prefixes any dynamic `statement_descriptor_suffix_kanji` specified on the charge. `statement_descriptor_prefix_kanji` is useful for maximizing descriptor space for the dynamic portion.
+           */
+          statement_descriptor_prefix_kanji?: Stripe.Emptyable<string>;
+        }
+
+        export interface Payments {
+          /**
+           * The default text that appears on credit card statements when a charge is made. This field prefixes any dynamic `statement_descriptor` specified on the charge.
+           */
+          statement_descriptor?: string;
+
+          /**
+           * The Kana variation of the default text that appears on credit card statements when a charge is made (Japan only).
+           */
+          statement_descriptor_kana?: string;
+
+          /**
+           * The Kanji variation of the default text that appears on credit card statements when a charge is made (Japan only).
+           */
+          statement_descriptor_kanji?: string;
+        }
+
+        export interface Payouts {
+          /**
+           * A Boolean indicating whether Stripe should try to reclaim negative balances from an attached bank account. For details, see [Understanding Connect Account Balances](https://stripe.com/docs/connect/account-balances).
+           */
+          debit_negative_balances?: boolean;
+
+          /**
+           * Details on when funds from charges are available, and when they are paid out to an external account. For details, see our [Setting Bank and Debit Card Payouts](https://stripe.com/docs/connect/bank-transfers#payout-information) documentation.
+           */
+          schedule?: Payouts.Schedule;
+
+          /**
+           * The text that appears on the bank account statement for payouts. If not set, this defaults to the platform's bank descriptor as set in the Dashboard.
+           */
+          statement_descriptor?: string;
+        }
+
+        export interface Treasury {
+          /**
+           * Details on the account's acceptance of the Stripe Treasury Services Agreement.
+           */
+          tos_acceptance?: Treasury.TosAcceptance;
+        }
+
+        namespace CardIssuing {
+          export interface TosAcceptance {
+            /**
+             * The Unix timestamp marking when the account representative accepted the service agreement.
+             */
+            date?: number;
+
+            /**
+             * The IP address from which the account representative accepted the service agreement.
+             */
+            ip?: string;
+
+            /**
+             * The user agent of the browser from which the account representative accepted the service agreement.
+             */
+            user_agent?: string;
+          }
+        }
+
+        namespace CardPayments {
+          export interface DeclineOn {
+            /**
+             * Whether Stripe automatically declines charges with an incorrect ZIP or postal code. This setting only applies when a ZIP or postal code is provided and they fail bank verification.
+             */
+            avs_failure?: boolean;
+
+            /**
+             * Whether Stripe automatically declines charges with an incorrect CVC. This setting only applies when a CVC is provided and it fails bank verification.
+             */
+            cvc_failure?: boolean;
+          }
+        }
+
+        namespace Payouts {
+          export interface Schedule {
+            /**
+             * The number of days charge funds are held before being paid out. May also be set to `minimum`, representing the lowest available value for the account country. Default is `minimum`. The `delay_days` parameter does not apply when the `interval` is `manual`.
+             */
+            delay_days?: 'minimum' | number;
+
+            /**
+             * How frequently available funds are paid out. One of: `daily`, `manual`, `weekly`, or `monthly`. Default is `daily`.
+             */
+            interval?: Schedule.Interval;
+
+            /**
+             * The day of the month when available funds are paid out, specified as a number between 1--31. Payouts nominally scheduled between the 29th and 31st of the month are instead sent on the last day of a shorter month. Required and applicable only if `interval` is `monthly`.
+             */
+            monthly_anchor?: number;
+
+            /**
+             * The day of the week when available funds are paid out, specified as `monday`, `tuesday`, etc. (required and applicable only if `interval` is `weekly`.)
+             */
+            weekly_anchor?: Schedule.WeeklyAnchor;
+          }
+
+          namespace Schedule {
+            export type Interval = 'daily' | 'manual' | 'monthly' | 'weekly';
+
+            export type WeeklyAnchor =
+              | 'friday'
+              | 'monday'
+              | 'saturday'
+              | 'sunday'
+              | 'thursday'
+              | 'tuesday'
+              | 'wednesday';
+          }
+        }
+
+        namespace Treasury {
+          export interface TosAcceptance {
+            /**
+             * The Unix timestamp marking when the account representative accepted the service agreement.
+             */
+            date?: number;
+
+            /**
+             * The IP address from which the account representative accepted the service agreement.
+             */
+            ip?: string;
+
+            /**
+             * The user agent of the browser from which the account representative accepted the service agreement.
+             */
+            user_agent?: string;
+          }
+        }
+      }
+    }
+
+    export interface AccountCreateParams {
       /**
        * An [account token](https://stripe.com/docs/api#create_account_token), used to securely provide details to the account.
        */
@@ -1222,8 +2362,15 @@ declare module 'stripe' {
       type?: AccountCreateParams.Type;
     }
 
-    namespace AccountCreateParams {
-      interface BusinessProfile {
+    export interface AccountRetrieveParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+    }
+
+    namespace AccountUpdateParams {
+      export interface BusinessProfile {
         /**
          * [The merchant category code for the account](https://stripe.com/docs/connect/setting-mcc). MCCs are used to classify businesses based on the goods or services they provide.
          */
@@ -1265,13 +2412,13 @@ declare module 'stripe' {
         url?: string;
       }
 
-      type BusinessType =
+      export type BusinessType =
         | 'company'
         | 'government_entity'
         | 'individual'
         | 'non_profit';
 
-      interface Capabilities {
+      export interface Capabilities {
         /**
          * The acss_debit_payments capability.
          */
@@ -1438,240 +2585,7 @@ declare module 'stripe' {
         us_bank_account_ach_payments?: Capabilities.UsBankAccountAchPayments;
       }
 
-      namespace Capabilities {
-        interface AcssDebitPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface AffirmPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface AfterpayClearpayPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface AuBecsDebitPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface BacsDebitPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface BancontactPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface BankTransferPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface BlikPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface BoletoPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface CardIssuing {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface CardPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface CartesBancairesPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface EpsPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface FpxPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface GiropayPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface GrabpayPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface IdealPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface JcbPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface KlarnaPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface KonbiniPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface LegacyPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface LinkPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface OxxoPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface P24Payments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface PaynowPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface PromptpayPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface SepaDebitPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface SofortPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface TaxReportingUs1099K {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface TaxReportingUs1099Misc {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface Transfers {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface Treasury {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface UsBankAccountAchPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-      }
-
-      interface Company {
+      export interface Company {
         /**
          * The company's primary address.
          */
@@ -1758,69 +2672,7 @@ declare module 'stripe' {
         verification?: Company.Verification;
       }
 
-      namespace Company {
-        interface OwnershipDeclaration {
-          /**
-           * The Unix timestamp marking when the beneficial owner attestation was made.
-           */
-          date?: number;
-
-          /**
-           * The IP address from which the beneficial owner attestation was made.
-           */
-          ip?: string;
-
-          /**
-           * The user agent of the browser from which the beneficial owner attestation was made.
-           */
-          user_agent?: string;
-        }
-
-        type Structure =
-          | 'free_zone_establishment'
-          | 'free_zone_llc'
-          | 'government_instrumentality'
-          | 'governmental_unit'
-          | 'incorporated_non_profit'
-          | 'limited_liability_partnership'
-          | 'llc'
-          | 'multi_member_llc'
-          | 'private_company'
-          | 'private_corporation'
-          | 'private_partnership'
-          | 'public_company'
-          | 'public_corporation'
-          | 'public_partnership'
-          | 'single_member_llc'
-          | 'sole_establishment'
-          | 'sole_proprietorship'
-          | 'tax_exempt_government_instrumentality'
-          | 'unincorporated_association'
-          | 'unincorporated_non_profit';
-
-        interface Verification {
-          /**
-           * A document verifying the business.
-           */
-          document?: Verification.Document;
-        }
-
-        namespace Verification {
-          interface Document {
-            /**
-             * The back of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
-             */
-            back?: string;
-
-            /**
-             * The front of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
-             */
-            front?: string;
-          }
-        }
-      }
-
-      interface Documents {
+      export interface Documents {
         /**
          * One or more documents that support the [Bank account ownership verification](https://support.stripe.com/questions/bank-account-ownership-verification) requirement. Must be a document associated with the account's primary active bank account that displays the last 4 digits of the account number, either a statement or a voided check.
          */
@@ -1857,95 +2709,7 @@ declare module 'stripe' {
         proof_of_registration?: Documents.ProofOfRegistration;
       }
 
-      namespace Documents {
-        interface BankAccountOwnershipVerification {
-          /**
-           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
-           */
-          files?: Array<string>;
-        }
-
-        interface CompanyLicense {
-          /**
-           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
-           */
-          files?: Array<string>;
-        }
-
-        interface CompanyMemorandumOfAssociation {
-          /**
-           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
-           */
-          files?: Array<string>;
-        }
-
-        interface CompanyMinisterialDecree {
-          /**
-           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
-           */
-          files?: Array<string>;
-        }
-
-        interface CompanyRegistrationVerification {
-          /**
-           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
-           */
-          files?: Array<string>;
-        }
-
-        interface CompanyTaxIdVerification {
-          /**
-           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
-           */
-          files?: Array<string>;
-        }
-
-        interface ProofOfRegistration {
-          /**
-           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
-           */
-          files?: Array<string>;
-        }
-      }
-
-      interface ExternalAccount {
-        /**
-         * The type of external account. Should be bank_account.
-         */
-        object: string;
-
-        /**
-         * The country in which the bank account is located.
-         */
-        country: string;
-
-        /**
-         * The currency the bank account is in. This must be a country/currency pairing that [Stripe supports](https://stripe.com/docs/payouts).
-         */
-        currency: string;
-
-        /**
-         * The name of the person or business that owns the bank account. This field is required when attaching the bank account to a Customer object.
-         */
-        account_holder_name?: string;
-
-        /**
-         * The type of entity that holds the account. This can be either individual or company. This field is required when attaching the bank account to a Customer object.
-         */
-        account_holder_type?: string;
-
-        /**
-         * The routing number, sort code, or other country-appropriate institution number for the bank account. For US bank accounts, this is required and should be the ACH routing number, not the wire routing number. If you are providing an IBAN for account_number, this field is not required.
-         */
-        routing_number?: string;
-
-        /**
-         * The account number for the bank account, in string form. Must be a checking account.
-         */
-        account_number: string;
-      }
-
-      interface Individual {
+      export interface Individual {
         /**
          * The individual's primary address.
          */
@@ -2057,66 +2821,7 @@ declare module 'stripe' {
         verification?: Individual.Verification;
       }
 
-      namespace Individual {
-        interface Dob {
-          /**
-           * The day of birth, between 1 and 31.
-           */
-          day: number;
-
-          /**
-           * The month of birth, between 1 and 12.
-           */
-          month: number;
-
-          /**
-           * The four-digit year of birth.
-           */
-          year: number;
-        }
-
-        type PoliticalExposure = 'existing' | 'none';
-
-        interface Verification {
-          /**
-           * A document showing address, either a passport, local ID card, or utility bill from a well-known utility company.
-           */
-          additional_document?: Verification.AdditionalDocument;
-
-          /**
-           * An identifying document, either a passport or local ID card.
-           */
-          document?: Verification.Document;
-        }
-
-        namespace Verification {
-          interface AdditionalDocument {
-            /**
-             * The back of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
-             */
-            back?: string;
-
-            /**
-             * The front of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
-             */
-            front?: string;
-          }
-
-          interface Document {
-            /**
-             * The back of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
-             */
-            back?: string;
-
-            /**
-             * The front of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
-             */
-            front?: string;
-          }
-        }
-      }
-
-      interface Settings {
+      export interface Settings {
         /**
          * Settings used to apply the account's branding to email receipts, invoices, Checkout, and other products.
          */
@@ -2148,8 +2853,435 @@ declare module 'stripe' {
         treasury?: Settings.Treasury;
       }
 
+      export interface TosAcceptance {
+        /**
+         * The Unix timestamp marking when the account representative accepted their service agreement.
+         */
+        date?: number;
+
+        /**
+         * The IP address from which the account representative accepted their service agreement.
+         */
+        ip?: string;
+
+        /**
+         * The user's service agreement type.
+         */
+        service_agreement?: string;
+
+        /**
+         * The user agent of the browser from which the account representative accepted their service agreement.
+         */
+        user_agent?: string;
+      }
+
+      namespace Capabilities {
+        export interface AcssDebitPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface AffirmPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface AfterpayClearpayPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface AuBecsDebitPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface BacsDebitPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface BancontactPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface BankTransferPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface BlikPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface BoletoPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface CardIssuing {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface CardPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface CartesBancairesPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface EpsPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface FpxPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface GiropayPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface GrabpayPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface IdealPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface JcbPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface KlarnaPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface KonbiniPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface LegacyPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface LinkPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface OxxoPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface P24Payments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface PaynowPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface PromptpayPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface SepaDebitPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface SofortPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface TaxReportingUs1099K {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface TaxReportingUs1099Misc {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface Transfers {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface Treasury {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+
+        export interface UsBankAccountAchPayments {
+          /**
+           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
+           */
+          requested?: boolean;
+        }
+      }
+
+      namespace Company {
+        export interface OwnershipDeclaration {
+          /**
+           * The Unix timestamp marking when the beneficial owner attestation was made.
+           */
+          date?: number;
+
+          /**
+           * The IP address from which the beneficial owner attestation was made.
+           */
+          ip?: string;
+
+          /**
+           * The user agent of the browser from which the beneficial owner attestation was made.
+           */
+          user_agent?: string;
+        }
+
+        export type Structure =
+          | 'free_zone_establishment'
+          | 'free_zone_llc'
+          | 'government_instrumentality'
+          | 'governmental_unit'
+          | 'incorporated_non_profit'
+          | 'limited_liability_partnership'
+          | 'llc'
+          | 'multi_member_llc'
+          | 'private_company'
+          | 'private_corporation'
+          | 'private_partnership'
+          | 'public_company'
+          | 'public_corporation'
+          | 'public_partnership'
+          | 'single_member_llc'
+          | 'sole_establishment'
+          | 'sole_proprietorship'
+          | 'tax_exempt_government_instrumentality'
+          | 'unincorporated_association'
+          | 'unincorporated_non_profit';
+
+        export interface Verification {
+          /**
+           * A document verifying the business.
+           */
+          document?: Verification.Document;
+        }
+
+        namespace Verification {
+          export interface Document {
+            /**
+             * The back of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+             */
+            back?: string;
+
+            /**
+             * The front of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+             */
+            front?: string;
+          }
+        }
+      }
+
+      namespace Documents {
+        export interface BankAccountOwnershipVerification {
+          /**
+           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
+           */
+          files?: Array<string>;
+        }
+
+        export interface CompanyLicense {
+          /**
+           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
+           */
+          files?: Array<string>;
+        }
+
+        export interface CompanyMemorandumOfAssociation {
+          /**
+           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
+           */
+          files?: Array<string>;
+        }
+
+        export interface CompanyMinisterialDecree {
+          /**
+           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
+           */
+          files?: Array<string>;
+        }
+
+        export interface CompanyRegistrationVerification {
+          /**
+           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
+           */
+          files?: Array<string>;
+        }
+
+        export interface CompanyTaxIdVerification {
+          /**
+           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
+           */
+          files?: Array<string>;
+        }
+
+        export interface ProofOfRegistration {
+          /**
+           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
+           */
+          files?: Array<string>;
+        }
+      }
+
+      namespace Individual {
+        export interface Dob {
+          /**
+           * The day of birth, between 1 and 31.
+           */
+          day: number;
+
+          /**
+           * The month of birth, between 1 and 12.
+           */
+          month: number;
+
+          /**
+           * The four-digit year of birth.
+           */
+          year: number;
+        }
+
+        export type PoliticalExposure = 'existing' | 'none';
+
+        export interface Verification {
+          /**
+           * A document showing address, either a passport, local ID card, or utility bill from a well-known utility company.
+           */
+          additional_document?: Verification.AdditionalDocument;
+
+          /**
+           * An identifying document, either a passport or local ID card.
+           */
+          document?: Verification.Document;
+        }
+
+        namespace Verification {
+          export interface AdditionalDocument {
+            /**
+             * The back of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+             */
+            back?: string;
+
+            /**
+             * The front of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+             */
+            front?: string;
+          }
+
+          export interface Document {
+            /**
+             * The back of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+             */
+            back?: string;
+
+            /**
+             * The front of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
+             */
+            front?: string;
+          }
+        }
+      }
+
       namespace Settings {
-        interface Branding {
+        export interface Branding {
           /**
            * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) An icon for the account. Must be square and at least 128px x 128px.
            */
@@ -2171,33 +3303,14 @@ declare module 'stripe' {
           secondary_color?: string;
         }
 
-        interface CardIssuing {
+        export interface CardIssuing {
           /**
            * Details on the account's acceptance of the [Stripe Issuing Terms and Disclosures](https://stripe.com/docs/issuing/connect/tos_acceptance).
            */
           tos_acceptance?: CardIssuing.TosAcceptance;
         }
 
-        namespace CardIssuing {
-          interface TosAcceptance {
-            /**
-             * The Unix timestamp marking when the account representative accepted the service agreement.
-             */
-            date?: number;
-
-            /**
-             * The IP address from which the account representative accepted the service agreement.
-             */
-            ip?: string;
-
-            /**
-             * The user agent of the browser from which the account representative accepted the service agreement.
-             */
-            user_agent?: string;
-          }
-        }
-
-        interface CardPayments {
+        export interface CardPayments {
           /**
            * Automatically declines certain charge types regardless of whether the card issuer accepted or declined the charge.
            */
@@ -2219,21 +3332,7 @@ declare module 'stripe' {
           statement_descriptor_prefix_kanji?: Stripe.Emptyable<string>;
         }
 
-        namespace CardPayments {
-          interface DeclineOn {
-            /**
-             * Whether Stripe automatically declines charges with an incorrect ZIP or postal code. This setting only applies when a ZIP or postal code is provided and they fail bank verification.
-             */
-            avs_failure?: boolean;
-
-            /**
-             * Whether Stripe automatically declines charges with an incorrect CVC. This setting only applies when a CVC is provided and it fails bank verification.
-             */
-            cvc_failure?: boolean;
-          }
-        }
-
-        interface Payments {
+        export interface Payments {
           /**
            * The default text that appears on credit card statements when a charge is made. This field prefixes any dynamic `statement_descriptor` specified on the charge.
            */
@@ -2250,7 +3349,7 @@ declare module 'stripe' {
           statement_descriptor_kanji?: string;
         }
 
-        interface Payouts {
+        export interface Payouts {
           /**
            * A Boolean indicating whether Stripe should try to reclaim negative balances from an attached bank account. For details, see [Understanding Connect Account Balances](https://stripe.com/docs/connect/account-balances).
            */
@@ -2267,8 +3366,48 @@ declare module 'stripe' {
           statement_descriptor?: string;
         }
 
+        export interface Treasury {
+          /**
+           * Details on the account's acceptance of the Stripe Treasury Services Agreement.
+           */
+          tos_acceptance?: Treasury.TosAcceptance;
+        }
+
+        namespace CardIssuing {
+          export interface TosAcceptance {
+            /**
+             * The Unix timestamp marking when the account representative accepted the service agreement.
+             */
+            date?: number;
+
+            /**
+             * The IP address from which the account representative accepted the service agreement.
+             */
+            ip?: string;
+
+            /**
+             * The user agent of the browser from which the account representative accepted the service agreement.
+             */
+            user_agent?: string;
+          }
+        }
+
+        namespace CardPayments {
+          export interface DeclineOn {
+            /**
+             * Whether Stripe automatically declines charges with an incorrect ZIP or postal code. This setting only applies when a ZIP or postal code is provided and they fail bank verification.
+             */
+            avs_failure?: boolean;
+
+            /**
+             * Whether Stripe automatically declines charges with an incorrect CVC. This setting only applies when a CVC is provided and it fails bank verification.
+             */
+            cvc_failure?: boolean;
+          }
+        }
+
         namespace Payouts {
-          interface Schedule {
+          export interface Schedule {
             /**
              * The number of days charge funds are held before being paid out. May also be set to `minimum`, representing the lowest available value for the account country. Default is `minimum`. The `delay_days` parameter does not apply when the `interval` is `manual`.
              */
@@ -2291,9 +3430,9 @@ declare module 'stripe' {
           }
 
           namespace Schedule {
-            type Interval = 'daily' | 'manual' | 'monthly' | 'weekly';
+            export type Interval = 'daily' | 'manual' | 'monthly' | 'weekly';
 
-            type WeeklyAnchor =
+            export type WeeklyAnchor =
               | 'friday'
               | 'monday'
               | 'saturday'
@@ -2304,15 +3443,8 @@ declare module 'stripe' {
           }
         }
 
-        interface Treasury {
-          /**
-           * Details on the account's acceptance of the Stripe Treasury Services Agreement.
-           */
-          tos_acceptance?: Treasury.TosAcceptance;
-        }
-
         namespace Treasury {
-          interface TosAcceptance {
+          export interface TosAcceptance {
             /**
              * The Unix timestamp marking when the account representative accepted the service agreement.
              */
@@ -2330,40 +3462,9 @@ declare module 'stripe' {
           }
         }
       }
-
-      interface TosAcceptance {
-        /**
-         * The Unix timestamp marking when the account representative accepted their service agreement.
-         */
-        date?: number;
-
-        /**
-         * The IP address from which the account representative accepted their service agreement.
-         */
-        ip?: string;
-
-        /**
-         * The user's service agreement type.
-         */
-        service_agreement?: string;
-
-        /**
-         * The user agent of the browser from which the account representative accepted their service agreement.
-         */
-        user_agent?: string;
-      }
-
-      type Type = 'custom' | 'express' | 'standard';
     }
 
-    interface AccountRetrieveParams {
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-    }
-
-    interface AccountUpdateParams {
+    export interface AccountUpdateParams {
       /**
        * An [account token](https://stripe.com/docs/api#create_account_token), used to securely provide details to the account.
        */
@@ -2437,1102 +3538,7 @@ declare module 'stripe' {
       tos_acceptance?: AccountUpdateParams.TosAcceptance;
     }
 
-    namespace AccountUpdateParams {
-      interface BusinessProfile {
-        /**
-         * [The merchant category code for the account](https://stripe.com/docs/connect/setting-mcc). MCCs are used to classify businesses based on the goods or services they provide.
-         */
-        mcc?: string;
-
-        /**
-         * The customer-facing business name.
-         */
-        name?: string;
-
-        /**
-         * Internal-only description of the product sold by, or service provided by, the business. Used by Stripe for risk and underwriting purposes.
-         */
-        product_description?: string;
-
-        /**
-         * A publicly available mailing address for sending support issues to.
-         */
-        support_address?: Stripe.AddressParam;
-
-        /**
-         * A publicly available email address for sending support issues to.
-         */
-        support_email?: string;
-
-        /**
-         * A publicly available phone number to call with support issues.
-         */
-        support_phone?: string;
-
-        /**
-         * A publicly available website for handling support issues.
-         */
-        support_url?: Stripe.Emptyable<string>;
-
-        /**
-         * The business's publicly available website.
-         */
-        url?: string;
-      }
-
-      type BusinessType =
-        | 'company'
-        | 'government_entity'
-        | 'individual'
-        | 'non_profit';
-
-      interface Capabilities {
-        /**
-         * The acss_debit_payments capability.
-         */
-        acss_debit_payments?: Capabilities.AcssDebitPayments;
-
-        /**
-         * The affirm_payments capability.
-         */
-        affirm_payments?: Capabilities.AffirmPayments;
-
-        /**
-         * The afterpay_clearpay_payments capability.
-         */
-        afterpay_clearpay_payments?: Capabilities.AfterpayClearpayPayments;
-
-        /**
-         * The au_becs_debit_payments capability.
-         */
-        au_becs_debit_payments?: Capabilities.AuBecsDebitPayments;
-
-        /**
-         * The bacs_debit_payments capability.
-         */
-        bacs_debit_payments?: Capabilities.BacsDebitPayments;
-
-        /**
-         * The bancontact_payments capability.
-         */
-        bancontact_payments?: Capabilities.BancontactPayments;
-
-        /**
-         * The bank_transfer_payments capability.
-         */
-        bank_transfer_payments?: Capabilities.BankTransferPayments;
-
-        /**
-         * The blik_payments capability.
-         */
-        blik_payments?: Capabilities.BlikPayments;
-
-        /**
-         * The boleto_payments capability.
-         */
-        boleto_payments?: Capabilities.BoletoPayments;
-
-        /**
-         * The card_issuing capability.
-         */
-        card_issuing?: Capabilities.CardIssuing;
-
-        /**
-         * The card_payments capability.
-         */
-        card_payments?: Capabilities.CardPayments;
-
-        /**
-         * The cartes_bancaires_payments capability.
-         */
-        cartes_bancaires_payments?: Capabilities.CartesBancairesPayments;
-
-        /**
-         * The eps_payments capability.
-         */
-        eps_payments?: Capabilities.EpsPayments;
-
-        /**
-         * The fpx_payments capability.
-         */
-        fpx_payments?: Capabilities.FpxPayments;
-
-        /**
-         * The giropay_payments capability.
-         */
-        giropay_payments?: Capabilities.GiropayPayments;
-
-        /**
-         * The grabpay_payments capability.
-         */
-        grabpay_payments?: Capabilities.GrabpayPayments;
-
-        /**
-         * The ideal_payments capability.
-         */
-        ideal_payments?: Capabilities.IdealPayments;
-
-        /**
-         * The jcb_payments capability.
-         */
-        jcb_payments?: Capabilities.JcbPayments;
-
-        /**
-         * The klarna_payments capability.
-         */
-        klarna_payments?: Capabilities.KlarnaPayments;
-
-        /**
-         * The konbini_payments capability.
-         */
-        konbini_payments?: Capabilities.KonbiniPayments;
-
-        /**
-         * The legacy_payments capability.
-         */
-        legacy_payments?: Capabilities.LegacyPayments;
-
-        /**
-         * The link_payments capability.
-         */
-        link_payments?: Capabilities.LinkPayments;
-
-        /**
-         * The oxxo_payments capability.
-         */
-        oxxo_payments?: Capabilities.OxxoPayments;
-
-        /**
-         * The p24_payments capability.
-         */
-        p24_payments?: Capabilities.P24Payments;
-
-        /**
-         * The paynow_payments capability.
-         */
-        paynow_payments?: Capabilities.PaynowPayments;
-
-        /**
-         * The promptpay_payments capability.
-         */
-        promptpay_payments?: Capabilities.PromptpayPayments;
-
-        /**
-         * The sepa_debit_payments capability.
-         */
-        sepa_debit_payments?: Capabilities.SepaDebitPayments;
-
-        /**
-         * The sofort_payments capability.
-         */
-        sofort_payments?: Capabilities.SofortPayments;
-
-        /**
-         * The tax_reporting_us_1099_k capability.
-         */
-        tax_reporting_us_1099_k?: Capabilities.TaxReportingUs1099K;
-
-        /**
-         * The tax_reporting_us_1099_misc capability.
-         */
-        tax_reporting_us_1099_misc?: Capabilities.TaxReportingUs1099Misc;
-
-        /**
-         * The transfers capability.
-         */
-        transfers?: Capabilities.Transfers;
-
-        /**
-         * The treasury capability.
-         */
-        treasury?: Capabilities.Treasury;
-
-        /**
-         * The us_bank_account_ach_payments capability.
-         */
-        us_bank_account_ach_payments?: Capabilities.UsBankAccountAchPayments;
-      }
-
-      namespace Capabilities {
-        interface AcssDebitPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface AffirmPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface AfterpayClearpayPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface AuBecsDebitPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface BacsDebitPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface BancontactPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface BankTransferPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface BlikPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface BoletoPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface CardIssuing {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface CardPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface CartesBancairesPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface EpsPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface FpxPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface GiropayPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface GrabpayPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface IdealPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface JcbPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface KlarnaPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface KonbiniPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface LegacyPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface LinkPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface OxxoPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface P24Payments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface PaynowPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface PromptpayPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface SepaDebitPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface SofortPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface TaxReportingUs1099K {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface TaxReportingUs1099Misc {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface Transfers {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface Treasury {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-
-        interface UsBankAccountAchPayments {
-          /**
-           * Passing true requests the capability for the account, if it is not already requested. A requested capability may not immediately become active. Any requirements to activate the capability are returned in the `requirements` arrays.
-           */
-          requested?: boolean;
-        }
-      }
-
-      interface Company {
-        /**
-         * The company's primary address.
-         */
-        address?: Stripe.AddressParam;
-
-        /**
-         * The Kana variation of the company's primary address (Japan only).
-         */
-        address_kana?: Stripe.JapanAddressParam;
-
-        /**
-         * The Kanji variation of the company's primary address (Japan only).
-         */
-        address_kanji?: Stripe.JapanAddressParam;
-
-        /**
-         * Whether the company's directors have been provided. Set this Boolean to `true` after creating all the company's directors with [the Persons API](https://stripe.com/docs/api/persons) for accounts with a `relationship.director` requirement. This value is not automatically set to `true` after creating directors, so it needs to be updated to indicate all directors have been provided.
-         */
-        directors_provided?: boolean;
-
-        /**
-         * Whether the company's executives have been provided. Set this Boolean to `true` after creating all the company's executives with [the Persons API](https://stripe.com/docs/api/persons) for accounts with a `relationship.executive` requirement.
-         */
-        executives_provided?: boolean;
-
-        /**
-         * The company's legal name.
-         */
-        name?: string;
-
-        /**
-         * The Kana variation of the company's legal name (Japan only).
-         */
-        name_kana?: string;
-
-        /**
-         * The Kanji variation of the company's legal name (Japan only).
-         */
-        name_kanji?: string;
-
-        /**
-         * Whether the company's owners have been provided. Set this Boolean to `true` after creating all the company's owners with [the Persons API](https://stripe.com/docs/api/persons) for accounts with a `relationship.owner` requirement.
-         */
-        owners_provided?: boolean;
-
-        /**
-         * This hash is used to attest that the beneficial owner information provided to Stripe is both current and correct.
-         */
-        ownership_declaration?: Company.OwnershipDeclaration;
-
-        /**
-         * The company's phone number (used for verification).
-         */
-        phone?: string;
-
-        /**
-         * The identification number given to a company when it is registered or incorporated, if distinct from the identification number used for filing taxes. (Examples are the CIN for companies and LLP IN for partnerships in India, and the Company Registration Number in Hong Kong).
-         */
-        registration_number?: string;
-
-        /**
-         * The category identifying the legal structure of the company or legal entity. See [Business structure](https://stripe.com/docs/connect/identity-verification#business-structure) for more details.
-         */
-        structure?: Stripe.Emptyable<Company.Structure>;
-
-        /**
-         * The business ID number of the company, as appropriate for the company's country. (Examples are an Employer ID Number in the U.S., a Business Number in Canada, or a Company Number in the UK.)
-         */
-        tax_id?: string;
-
-        /**
-         * The jurisdiction in which the `tax_id` is registered (Germany-based companies only).
-         */
-        tax_id_registrar?: string;
-
-        /**
-         * The VAT number of the company.
-         */
-        vat_id?: string;
-
-        /**
-         * Information on the verification state of the company.
-         */
-        verification?: Company.Verification;
-      }
-
-      namespace Company {
-        interface OwnershipDeclaration {
-          /**
-           * The Unix timestamp marking when the beneficial owner attestation was made.
-           */
-          date?: number;
-
-          /**
-           * The IP address from which the beneficial owner attestation was made.
-           */
-          ip?: string;
-
-          /**
-           * The user agent of the browser from which the beneficial owner attestation was made.
-           */
-          user_agent?: string;
-        }
-
-        type Structure =
-          | 'free_zone_establishment'
-          | 'free_zone_llc'
-          | 'government_instrumentality'
-          | 'governmental_unit'
-          | 'incorporated_non_profit'
-          | 'limited_liability_partnership'
-          | 'llc'
-          | 'multi_member_llc'
-          | 'private_company'
-          | 'private_corporation'
-          | 'private_partnership'
-          | 'public_company'
-          | 'public_corporation'
-          | 'public_partnership'
-          | 'single_member_llc'
-          | 'sole_establishment'
-          | 'sole_proprietorship'
-          | 'tax_exempt_government_instrumentality'
-          | 'unincorporated_association'
-          | 'unincorporated_non_profit';
-
-        interface Verification {
-          /**
-           * A document verifying the business.
-           */
-          document?: Verification.Document;
-        }
-
-        namespace Verification {
-          interface Document {
-            /**
-             * The back of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
-             */
-            back?: string;
-
-            /**
-             * The front of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `additional_verification`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
-             */
-            front?: string;
-          }
-        }
-      }
-
-      interface Documents {
-        /**
-         * One or more documents that support the [Bank account ownership verification](https://support.stripe.com/questions/bank-account-ownership-verification) requirement. Must be a document associated with the account's primary active bank account that displays the last 4 digits of the account number, either a statement or a voided check.
-         */
-        bank_account_ownership_verification?: Documents.BankAccountOwnershipVerification;
-
-        /**
-         * One or more documents that demonstrate proof of a company's license to operate.
-         */
-        company_license?: Documents.CompanyLicense;
-
-        /**
-         * One or more documents showing the company's Memorandum of Association.
-         */
-        company_memorandum_of_association?: Documents.CompanyMemorandumOfAssociation;
-
-        /**
-         * (Certain countries only) One or more documents showing the ministerial decree legalizing the company's establishment.
-         */
-        company_ministerial_decree?: Documents.CompanyMinisterialDecree;
-
-        /**
-         * One or more documents that demonstrate proof of a company's registration with the appropriate local authorities.
-         */
-        company_registration_verification?: Documents.CompanyRegistrationVerification;
-
-        /**
-         * One or more documents that demonstrate proof of a company's tax ID.
-         */
-        company_tax_id_verification?: Documents.CompanyTaxIdVerification;
-
-        /**
-         * One or more documents showing the company's proof of registration with the national business registry.
-         */
-        proof_of_registration?: Documents.ProofOfRegistration;
-      }
-
-      namespace Documents {
-        interface BankAccountOwnershipVerification {
-          /**
-           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
-           */
-          files?: Array<string>;
-        }
-
-        interface CompanyLicense {
-          /**
-           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
-           */
-          files?: Array<string>;
-        }
-
-        interface CompanyMemorandumOfAssociation {
-          /**
-           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
-           */
-          files?: Array<string>;
-        }
-
-        interface CompanyMinisterialDecree {
-          /**
-           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
-           */
-          files?: Array<string>;
-        }
-
-        interface CompanyRegistrationVerification {
-          /**
-           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
-           */
-          files?: Array<string>;
-        }
-
-        interface CompanyTaxIdVerification {
-          /**
-           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
-           */
-          files?: Array<string>;
-        }
-
-        interface ProofOfRegistration {
-          /**
-           * One or more document ids returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `account_requirement`.
-           */
-          files?: Array<string>;
-        }
-      }
-
-      interface Individual {
-        /**
-         * The individual's primary address.
-         */
-        address?: Stripe.AddressParam;
-
-        /**
-         * The Kana variation of the the individual's primary address (Japan only).
-         */
-        address_kana?: Stripe.JapanAddressParam;
-
-        /**
-         * The Kanji variation of the the individual's primary address (Japan only).
-         */
-        address_kanji?: Stripe.JapanAddressParam;
-
-        /**
-         * The individual's date of birth.
-         */
-        dob?: Stripe.Emptyable<Individual.Dob>;
-
-        /**
-         * The individual's email address.
-         */
-        email?: string;
-
-        /**
-         * The individual's first name.
-         */
-        first_name?: string;
-
-        /**
-         * The Kana variation of the the individual's first name (Japan only).
-         */
-        first_name_kana?: string;
-
-        /**
-         * The Kanji variation of the individual's first name (Japan only).
-         */
-        first_name_kanji?: string;
-
-        /**
-         * A list of alternate names or aliases that the individual is known by.
-         */
-        full_name_aliases?: Stripe.Emptyable<Array<string>>;
-
-        /**
-         * The individual's gender (International regulations require either "male" or "female").
-         */
-        gender?: string;
-
-        /**
-         * The government-issued ID number of the individual, as appropriate for the representative's country. (Examples are a Social Security Number in the U.S., or a Social Insurance Number in Canada). Instead of the number itself, you can also provide a [PII token created with Stripe.js](https://stripe.com/docs/js/tokens_sources/create_token?type=pii).
-         */
-        id_number?: string;
-
-        /**
-         * The government-issued secondary ID number of the individual, as appropriate for the representative's country, will be used for enhanced verification checks. In Thailand, this would be the laser code found on the back of an ID card. Instead of the number itself, you can also provide a [PII token created with Stripe.js](https://stripe.com/docs/js/tokens_sources/create_token?type=pii).
-         */
-        id_number_secondary?: string;
-
-        /**
-         * The individual's last name.
-         */
-        last_name?: string;
-
-        /**
-         * The Kana variation of the individual's last name (Japan only).
-         */
-        last_name_kana?: string;
-
-        /**
-         * The Kanji variation of the individual's last name (Japan only).
-         */
-        last_name_kanji?: string;
-
-        /**
-         * The individual's maiden name.
-         */
-        maiden_name?: string;
-
-        /**
-         * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
-         */
-        metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
-
-        /**
-         * The individual's phone number.
-         */
-        phone?: string;
-
-        /**
-         * Indicates if the person or any of their representatives, family members, or other closely related persons, declares that they hold or have held an important public job or function, in any jurisdiction.
-         */
-        political_exposure?: Individual.PoliticalExposure;
-
-        /**
-         * The individual's registered address.
-         */
-        registered_address?: Stripe.AddressParam;
-
-        /**
-         * The last four digits of the individual's Social Security Number (U.S. only).
-         */
-        ssn_last_4?: string;
-
-        /**
-         * The individual's verification document information.
-         */
-        verification?: Individual.Verification;
-      }
-
-      namespace Individual {
-        interface Dob {
-          /**
-           * The day of birth, between 1 and 31.
-           */
-          day: number;
-
-          /**
-           * The month of birth, between 1 and 12.
-           */
-          month: number;
-
-          /**
-           * The four-digit year of birth.
-           */
-          year: number;
-        }
-
-        type PoliticalExposure = 'existing' | 'none';
-
-        interface Verification {
-          /**
-           * A document showing address, either a passport, local ID card, or utility bill from a well-known utility company.
-           */
-          additional_document?: Verification.AdditionalDocument;
-
-          /**
-           * An identifying document, either a passport or local ID card.
-           */
-          document?: Verification.Document;
-        }
-
-        namespace Verification {
-          interface AdditionalDocument {
-            /**
-             * The back of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
-             */
-            back?: string;
-
-            /**
-             * The front of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
-             */
-            front?: string;
-          }
-
-          interface Document {
-            /**
-             * The back of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
-             */
-            back?: string;
-
-            /**
-             * The front of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`. The uploaded file needs to be a color image (smaller than 8,000px by 8,000px), in JPG, PNG, or PDF format, and less than 10 MB in size.
-             */
-            front?: string;
-          }
-        }
-      }
-
-      interface Settings {
-        /**
-         * Settings used to apply the account's branding to email receipts, invoices, Checkout, and other products.
-         */
-        branding?: Settings.Branding;
-
-        /**
-         * Settings specific to the account's use of the Card Issuing product.
-         */
-        card_issuing?: Settings.CardIssuing;
-
-        /**
-         * Settings specific to card charging on the account.
-         */
-        card_payments?: Settings.CardPayments;
-
-        /**
-         * Settings that apply across payment methods for charging on the account.
-         */
-        payments?: Settings.Payments;
-
-        /**
-         * Settings specific to the account's payouts.
-         */
-        payouts?: Settings.Payouts;
-
-        /**
-         * Settings specific to the account's Treasury FinancialAccounts.
-         */
-        treasury?: Settings.Treasury;
-      }
-
-      namespace Settings {
-        interface Branding {
-          /**
-           * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) An icon for the account. Must be square and at least 128px x 128px.
-           */
-          icon?: string;
-
-          /**
-           * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) A logo for the account that will be used in Checkout instead of the icon and without the account's name next to it if provided. Must be at least 128px x 128px.
-           */
-          logo?: string;
-
-          /**
-           * A CSS hex color value representing the primary branding color for this account.
-           */
-          primary_color?: string;
-
-          /**
-           * A CSS hex color value representing the secondary branding color for this account.
-           */
-          secondary_color?: string;
-        }
-
-        interface CardIssuing {
-          /**
-           * Details on the account's acceptance of the [Stripe Issuing Terms and Disclosures](https://stripe.com/docs/issuing/connect/tos_acceptance).
-           */
-          tos_acceptance?: CardIssuing.TosAcceptance;
-        }
-
-        namespace CardIssuing {
-          interface TosAcceptance {
-            /**
-             * The Unix timestamp marking when the account representative accepted the service agreement.
-             */
-            date?: number;
-
-            /**
-             * The IP address from which the account representative accepted the service agreement.
-             */
-            ip?: string;
-
-            /**
-             * The user agent of the browser from which the account representative accepted the service agreement.
-             */
-            user_agent?: string;
-          }
-        }
-
-        interface CardPayments {
-          /**
-           * Automatically declines certain charge types regardless of whether the card issuer accepted or declined the charge.
-           */
-          decline_on?: CardPayments.DeclineOn;
-
-          /**
-           * The default text that appears on credit card statements when a charge is made. This field prefixes any dynamic `statement_descriptor` specified on the charge. `statement_descriptor_prefix` is useful for maximizing descriptor space for the dynamic portion.
-           */
-          statement_descriptor_prefix?: string;
-
-          /**
-           * The Kana variation of the default text that appears on credit card statements when a charge is made (Japan only). This field prefixes any dynamic `statement_descriptor_suffix_kana` specified on the charge. `statement_descriptor_prefix_kana` is useful for maximizing descriptor space for the dynamic portion.
-           */
-          statement_descriptor_prefix_kana?: Stripe.Emptyable<string>;
-
-          /**
-           * The Kanji variation of the default text that appears on credit card statements when a charge is made (Japan only). This field prefixes any dynamic `statement_descriptor_suffix_kanji` specified on the charge. `statement_descriptor_prefix_kanji` is useful for maximizing descriptor space for the dynamic portion.
-           */
-          statement_descriptor_prefix_kanji?: Stripe.Emptyable<string>;
-        }
-
-        namespace CardPayments {
-          interface DeclineOn {
-            /**
-             * Whether Stripe automatically declines charges with an incorrect ZIP or postal code. This setting only applies when a ZIP or postal code is provided and they fail bank verification.
-             */
-            avs_failure?: boolean;
-
-            /**
-             * Whether Stripe automatically declines charges with an incorrect CVC. This setting only applies when a CVC is provided and it fails bank verification.
-             */
-            cvc_failure?: boolean;
-          }
-        }
-
-        interface Payments {
-          /**
-           * The default text that appears on credit card statements when a charge is made. This field prefixes any dynamic `statement_descriptor` specified on the charge.
-           */
-          statement_descriptor?: string;
-
-          /**
-           * The Kana variation of the default text that appears on credit card statements when a charge is made (Japan only).
-           */
-          statement_descriptor_kana?: string;
-
-          /**
-           * The Kanji variation of the default text that appears on credit card statements when a charge is made (Japan only).
-           */
-          statement_descriptor_kanji?: string;
-        }
-
-        interface Payouts {
-          /**
-           * A Boolean indicating whether Stripe should try to reclaim negative balances from an attached bank account. For details, see [Understanding Connect Account Balances](https://stripe.com/docs/connect/account-balances).
-           */
-          debit_negative_balances?: boolean;
-
-          /**
-           * Details on when funds from charges are available, and when they are paid out to an external account. For details, see our [Setting Bank and Debit Card Payouts](https://stripe.com/docs/connect/bank-transfers#payout-information) documentation.
-           */
-          schedule?: Payouts.Schedule;
-
-          /**
-           * The text that appears on the bank account statement for payouts. If not set, this defaults to the platform's bank descriptor as set in the Dashboard.
-           */
-          statement_descriptor?: string;
-        }
-
-        namespace Payouts {
-          interface Schedule {
-            /**
-             * The number of days charge funds are held before being paid out. May also be set to `minimum`, representing the lowest available value for the account country. Default is `minimum`. The `delay_days` parameter does not apply when the `interval` is `manual`.
-             */
-            delay_days?: 'minimum' | number;
-
-            /**
-             * How frequently available funds are paid out. One of: `daily`, `manual`, `weekly`, or `monthly`. Default is `daily`.
-             */
-            interval?: Schedule.Interval;
-
-            /**
-             * The day of the month when available funds are paid out, specified as a number between 1--31. Payouts nominally scheduled between the 29th and 31st of the month are instead sent on the last day of a shorter month. Required and applicable only if `interval` is `monthly`.
-             */
-            monthly_anchor?: number;
-
-            /**
-             * The day of the week when available funds are paid out, specified as `monday`, `tuesday`, etc. (required and applicable only if `interval` is `weekly`.)
-             */
-            weekly_anchor?: Schedule.WeeklyAnchor;
-          }
-
-          namespace Schedule {
-            type Interval = 'daily' | 'manual' | 'monthly' | 'weekly';
-
-            type WeeklyAnchor =
-              | 'friday'
-              | 'monday'
-              | 'saturday'
-              | 'sunday'
-              | 'thursday'
-              | 'tuesday'
-              | 'wednesday';
-          }
-        }
-
-        interface Treasury {
-          /**
-           * Details on the account's acceptance of the Stripe Treasury Services Agreement.
-           */
-          tos_acceptance?: Treasury.TosAcceptance;
-        }
-
-        namespace Treasury {
-          interface TosAcceptance {
-            /**
-             * The Unix timestamp marking when the account representative accepted the service agreement.
-             */
-            date?: number;
-
-            /**
-             * The IP address from which the account representative accepted the service agreement.
-             */
-            ip?: string;
-
-            /**
-             * The user agent of the browser from which the account representative accepted the service agreement.
-             */
-            user_agent?: string;
-          }
-        }
-      }
-
-      interface TosAcceptance {
-        /**
-         * The Unix timestamp marking when the account representative accepted their service agreement.
-         */
-        date?: number;
-
-        /**
-         * The IP address from which the account representative accepted their service agreement.
-         */
-        ip?: string;
-
-        /**
-         * The user's service agreement type.
-         */
-        service_agreement?: string;
-
-        /**
-         * The user agent of the browser from which the account representative accepted their service agreement.
-         */
-        user_agent?: string;
-      }
-    }
-
-    interface AccountListParams extends PaginationParams {
+    export interface AccountListParams extends PaginationParams {
       created?: Stripe.RangeQueryParam | number;
 
       /**
@@ -3541,9 +3547,9 @@ declare module 'stripe' {
       expand?: Array<string>;
     }
 
-    interface AccountDeleteParams {}
+    export interface AccountDeleteParams {}
 
-    interface AccountRejectParams {
+    export interface AccountRejectParams {
       /**
        * The reason for rejecting the account. Can be `fraud`, `terms_of_service`, or `other`.
        */

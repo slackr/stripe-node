@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Apps {
-      /**
+      export /**
        * Secret Store is an API that allows Stripe Apps developers to securely persist secrets for use by UI Extensions and app backends.
        *
        * The primary resource in Secret Store is a `secret`. Other apps can't view secrets created by an app. Additionally, secrets are scoped to provide further permission control.
@@ -59,7 +59,7 @@ declare module 'stripe' {
       }
 
       namespace Secret {
-        interface Scope {
+        export interface Scope {
           /**
            * The secret scope type.
            */
@@ -72,11 +72,11 @@ declare module 'stripe' {
         }
 
         namespace Scope {
-          type Type = 'account' | 'user';
+          export type Type = 'account' | 'user';
         }
       }
 
-      interface SecretCreateParams {
+      export interface SecretCreateParams {
         /**
          * A name for the secret that's unique within the scope.
          */
@@ -104,7 +104,7 @@ declare module 'stripe' {
       }
 
       namespace SecretCreateParams {
-        interface Scope {
+        export interface Scope {
           /**
            * The secret scope type.
            */
@@ -117,11 +117,11 @@ declare module 'stripe' {
         }
 
         namespace Scope {
-          type Type = 'account' | 'user';
+          export type Type = 'account' | 'user';
         }
       }
 
-      interface SecretListParams extends PaginationParams {
+      export interface SecretListParams extends PaginationParams {
         /**
          * Specifies the scoping of the secret. Requests originating from UI extensions can only access account-scoped secrets or secrets scoped to their own user.
          */
@@ -134,7 +134,7 @@ declare module 'stripe' {
       }
 
       namespace SecretListParams {
-        interface Scope {
+        export interface Scope {
           /**
            * The secret scope type.
            */
@@ -147,11 +147,11 @@ declare module 'stripe' {
         }
 
         namespace Scope {
-          type Type = 'account' | 'user';
+          export type Type = 'account' | 'user';
         }
       }
 
-      interface SecretDeleteWhereParams {
+      export interface SecretDeleteWhereParams {
         /**
          * A name for the secret that's unique within the scope.
          */
@@ -169,7 +169,7 @@ declare module 'stripe' {
       }
 
       namespace SecretDeleteWhereParams {
-        interface Scope {
+        export interface Scope {
           /**
            * The secret scope type.
            */
@@ -182,11 +182,11 @@ declare module 'stripe' {
         }
 
         namespace Scope {
-          type Type = 'account' | 'user';
+          export type Type = 'account' | 'user';
         }
       }
 
-      interface SecretFindParams {
+      export interface SecretFindParams {
         /**
          * A name for the secret that's unique within the scope.
          */
@@ -204,7 +204,7 @@ declare module 'stripe' {
       }
 
       namespace SecretFindParams {
-        interface Scope {
+        export interface Scope {
           /**
            * The secret scope type.
            */
@@ -217,7 +217,7 @@ declare module 'stripe' {
         }
 
         namespace Scope {
-          type Type = 'account' | 'user';
+          export type Type = 'account' | 'user';
         }
       }
 

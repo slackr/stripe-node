@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Treasury {
-      /**
+      export /**
        * Use OutboundPayments to send funds to another party's external bank account or [FinancialAccount](https://stripe.com/docs/api#financial_accounts). To send money to an account belonging to the same user, use an [OutboundTransfer](https://stripe.com/docs/api#outbound_transfers).
        *
        * Simulate OutboundPayment state changes with the `/v1/test_helpers/treasury/outbound_payments` endpoints. These methods can only be called on test mode objects.
@@ -113,7 +113,7 @@ declare module 'stripe' {
       }
 
       namespace OutboundPayment {
-        interface DestinationPaymentMethodDetails {
+        export interface DestinationPaymentMethodDetails {
           billing_details: DestinationPaymentMethodDetails.BillingDetails;
 
           financial_account?: DestinationPaymentMethodDetails.FinancialAccount;
@@ -126,8 +126,61 @@ declare module 'stripe' {
           us_bank_account?: DestinationPaymentMethodDetails.UsBankAccount;
         }
 
+        export interface EndUserDetails {
+          /**
+           * IP address of the user initiating the OutboundPayment. Set if `present` is set to `true`. IP address collection is required for risk and compliance reasons. This will be used to help determine if the OutboundPayment is authorized or should be blocked.
+           */
+          ip_address: string | null;
+
+          /**
+           * `true`` if the OutboundPayment creation request is being made on behalf of an end user by a platform. Otherwise, `false`.
+           */
+          present: boolean;
+        }
+
+        export interface ReturnedDetails {
+          /**
+           * Reason for the return.
+           */
+          code: ReturnedDetails.Code;
+
+          /**
+           * The Transaction associated with this object.
+           */
+          transaction: string | Stripe.Treasury.Transaction;
+        }
+
+        export type Status =
+          | 'canceled'
+          | 'failed'
+          | 'posted'
+          | 'processing'
+          | 'returned';
+
+        export interface StatusTransitions {
+          /**
+           * Timestamp describing when an OutboundPayment changed status to `canceled`.
+           */
+          canceled_at: number | null;
+
+          /**
+           * Timestamp describing when an OutboundPayment changed status to `failed`.
+           */
+          failed_at: number | null;
+
+          /**
+           * Timestamp describing when an OutboundPayment changed status to `posted`.
+           */
+          posted_at: number | null;
+
+          /**
+           * Timestamp describing when an OutboundPayment changed status to `returned`.
+           */
+          returned_at: number | null;
+        }
+
         namespace DestinationPaymentMethodDetails {
-          interface BillingDetails {
+          export interface BillingDetails {
             address: Stripe.Address;
 
             /**
@@ -141,7 +194,7 @@ declare module 'stripe' {
             name: string | null;
           }
 
-          interface FinancialAccount {
+          export interface FinancialAccount {
             /**
              * Token of the FinancialAccount.
              */
@@ -153,9 +206,9 @@ declare module 'stripe' {
             network: 'stripe';
           }
 
-          type Type = 'financial_account' | 'us_bank_account';
+          export type Type = 'financial_account' | 'us_bank_account';
 
-          interface UsBankAccount {
+          export interface UsBankAccount {
             /**
              * Account holder type: individual or company.
              */
@@ -193,40 +246,16 @@ declare module 'stripe' {
           }
 
           namespace UsBankAccount {
-            type AccountHolderType = 'company' | 'individual';
+            export type AccountHolderType = 'company' | 'individual';
 
-            type AccountType = 'checking' | 'savings';
+            export type AccountType = 'checking' | 'savings';
 
-            type Network = 'ach' | 'us_domestic_wire';
+            export type Network = 'ach' | 'us_domestic_wire';
           }
         }
 
-        interface EndUserDetails {
-          /**
-           * IP address of the user initiating the OutboundPayment. Set if `present` is set to `true`. IP address collection is required for risk and compliance reasons. This will be used to help determine if the OutboundPayment is authorized or should be blocked.
-           */
-          ip_address: string | null;
-
-          /**
-           * `true`` if the OutboundPayment creation request is being made on behalf of an end user by a platform. Otherwise, `false`.
-           */
-          present: boolean;
-        }
-
-        interface ReturnedDetails {
-          /**
-           * Reason for the return.
-           */
-          code: ReturnedDetails.Code;
-
-          /**
-           * The Transaction associated with this object.
-           */
-          transaction: string | Stripe.Treasury.Transaction;
-        }
-
         namespace ReturnedDetails {
-          type Code =
+          export type Code =
             | 'account_closed'
             | 'account_frozen'
             | 'bank_account_restricted'
@@ -238,38 +267,9 @@ declare module 'stripe' {
             | 'no_account'
             | 'other';
         }
-
-        type Status =
-          | 'canceled'
-          | 'failed'
-          | 'posted'
-          | 'processing'
-          | 'returned';
-
-        interface StatusTransitions {
-          /**
-           * Timestamp describing when an OutboundPayment changed status to `canceled`.
-           */
-          canceled_at: number | null;
-
-          /**
-           * Timestamp describing when an OutboundPayment changed status to `failed`.
-           */
-          failed_at: number | null;
-
-          /**
-           * Timestamp describing when an OutboundPayment changed status to `posted`.
-           */
-          posted_at: number | null;
-
-          /**
-           * Timestamp describing when an OutboundPayment changed status to `returned`.
-           */
-          returned_at: number | null;
-        }
       }
 
-      interface OutboundPaymentCreateParams {
+      export interface OutboundPaymentCreateParams {
         /**
          * Amount (in cents) to be transferred.
          */
@@ -332,7 +332,7 @@ declare module 'stripe' {
       }
 
       namespace OutboundPaymentCreateParams {
-        interface DestinationPaymentMethodData {
+        export interface DestinationPaymentMethodData {
           /**
            * Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
            */
@@ -359,8 +359,29 @@ declare module 'stripe' {
           us_bank_account?: DestinationPaymentMethodData.UsBankAccount;
         }
 
+        export interface DestinationPaymentMethodOptions {
+          /**
+           * Optional fields for `us_bank_account`.
+           */
+          us_bank_account?: Stripe.Emptyable<
+            DestinationPaymentMethodOptions.UsBankAccount
+          >;
+        }
+
+        export interface EndUserDetails {
+          /**
+           * IP address of the user initiating the OutboundPayment. Must be supplied if `present` is set to `true`.
+           */
+          ip_address?: string;
+
+          /**
+           * `True` if the OutboundPayment creation request is being made on behalf of an end user by a platform. Otherwise, `false`.
+           */
+          present: boolean;
+        }
+
         namespace DestinationPaymentMethodData {
-          interface BillingDetails {
+          export interface BillingDetails {
             /**
              * Billing address.
              */
@@ -382,9 +403,9 @@ declare module 'stripe' {
             phone?: string;
           }
 
-          type Type = 'financial_account' | 'us_bank_account';
+          export type Type = 'financial_account' | 'us_bank_account';
 
-          interface UsBankAccount {
+          export interface UsBankAccount {
             /**
              * Account holder type: individual or company.
              */
@@ -412,23 +433,14 @@ declare module 'stripe' {
           }
 
           namespace UsBankAccount {
-            type AccountHolderType = 'company' | 'individual';
+            export type AccountHolderType = 'company' | 'individual';
 
-            type AccountType = 'checking' | 'savings';
+            export type AccountType = 'checking' | 'savings';
           }
         }
 
-        interface DestinationPaymentMethodOptions {
-          /**
-           * Optional fields for `us_bank_account`.
-           */
-          us_bank_account?: Stripe.Emptyable<
-            DestinationPaymentMethodOptions.UsBankAccount
-          >;
-        }
-
         namespace DestinationPaymentMethodOptions {
-          interface UsBankAccount {
+          export interface UsBankAccount {
             /**
              * The US bank account network that must be used for this OutboundPayment. If not set, we will default to the PaymentMethod's preferred network.
              */
@@ -436,31 +448,19 @@ declare module 'stripe' {
           }
 
           namespace UsBankAccount {
-            type Network = 'ach' | 'us_domestic_wire';
+            export type Network = 'ach' | 'us_domestic_wire';
           }
-        }
-
-        interface EndUserDetails {
-          /**
-           * IP address of the user initiating the OutboundPayment. Must be supplied if `present` is set to `true`.
-           */
-          ip_address?: string;
-
-          /**
-           * `True` if the OutboundPayment creation request is being made on behalf of an end user by a platform. Otherwise, `false`.
-           */
-          present: boolean;
         }
       }
 
-      interface OutboundPaymentRetrieveParams {
+      export interface OutboundPaymentRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface OutboundPaymentListParams extends PaginationParams {
+      export interface OutboundPaymentListParams extends PaginationParams {
         /**
          * Returns objects associated with this FinancialAccount.
          */
@@ -483,7 +483,7 @@ declare module 'stripe' {
       }
 
       namespace OutboundPaymentListParams {
-        type Status =
+        export type Status =
           | 'canceled'
           | 'failed'
           | 'posted'
@@ -491,7 +491,7 @@ declare module 'stripe' {
           | 'returned';
       }
 
-      interface OutboundPaymentCancelParams {
+      export interface OutboundPaymentCancelParams {
         /**
          * Specifies which fields in the response should be expanded.
          */

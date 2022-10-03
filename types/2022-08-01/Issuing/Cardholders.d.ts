@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Issuing {
-      /**
+      export /**
        * An Issuing `Cardholder` object represents an individual or business entity who is [issued](https://stripe.com/docs/issuing) cards.
        *
        * Related guide: [How to create a Cardholder](https://stripe.com/docs/issuing/cards#create-cardholder)
@@ -80,18 +80,18 @@ declare module 'stripe' {
       }
 
       namespace Cardholder {
-        interface Billing {
+        export interface Billing {
           address: Stripe.Address;
         }
 
-        interface Company {
+        export interface Company {
           /**
            * Whether the company's business ID number was provided.
            */
           tax_id_provided: boolean;
         }
 
-        interface Individual {
+        export interface Individual {
           /**
            * The date of birth of this cardholder.
            */
@@ -113,47 +113,7 @@ declare module 'stripe' {
           verification: Individual.Verification | null;
         }
 
-        namespace Individual {
-          interface Dob {
-            /**
-             * The day of birth, between 1 and 31.
-             */
-            day: number | null;
-
-            /**
-             * The month of birth, between 1 and 12.
-             */
-            month: number | null;
-
-            /**
-             * The four-digit year of birth.
-             */
-            year: number | null;
-          }
-
-          interface Verification {
-            /**
-             * An identifying document, either a passport or local ID card.
-             */
-            document: Verification.Document | null;
-          }
-
-          namespace Verification {
-            interface Document {
-              /**
-               * The back of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`.
-               */
-              back: string | Stripe.File | null;
-
-              /**
-               * The front of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`.
-               */
-              front: string | Stripe.File | null;
-            }
-          }
-        }
-
-        interface Requirements {
+        export interface Requirements {
           /**
            * If `disabled_reason` is present, all cards will decline authorizations with `cardholder_verification_required` reason.
            */
@@ -165,20 +125,7 @@ declare module 'stripe' {
           past_due: Array<Requirements.PastDue> | null;
         }
 
-        namespace Requirements {
-          type DisabledReason = 'listed' | 'rejected.listed' | 'under_review';
-
-          type PastDue =
-            | 'company.tax_id'
-            | 'individual.dob.day'
-            | 'individual.dob.month'
-            | 'individual.dob.year'
-            | 'individual.first_name'
-            | 'individual.last_name'
-            | 'individual.verification.document';
-        }
-
-        interface SpendingControls {
+        export interface SpendingControls {
           /**
            * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to allow. All other categories will be blocked. Cannot be set with `blocked_categories`.
            */
@@ -200,8 +147,68 @@ declare module 'stripe' {
           spending_limits_currency: string | null;
         }
 
+        export type Status = 'active' | 'blocked' | 'inactive';
+
+        export type Type = 'company' | 'individual';
+
+        namespace Individual {
+          export interface Dob {
+            /**
+             * The day of birth, between 1 and 31.
+             */
+            day: number | null;
+
+            /**
+             * The month of birth, between 1 and 12.
+             */
+            month: number | null;
+
+            /**
+             * The four-digit year of birth.
+             */
+            year: number | null;
+          }
+
+          export interface Verification {
+            /**
+             * An identifying document, either a passport or local ID card.
+             */
+            document: Verification.Document | null;
+          }
+
+          namespace Verification {
+            export interface Document {
+              /**
+               * The back of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`.
+               */
+              back: string | Stripe.File | null;
+
+              /**
+               * The front of a document returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`.
+               */
+              front: string | Stripe.File | null;
+            }
+          }
+        }
+
+        namespace Requirements {
+          export type DisabledReason =
+            | 'listed'
+            | 'rejected.listed'
+            | 'under_review';
+
+          export type PastDue =
+            | 'company.tax_id'
+            | 'individual.dob.day'
+            | 'individual.dob.month'
+            | 'individual.dob.year'
+            | 'individual.first_name'
+            | 'individual.last_name'
+            | 'individual.verification.document';
+        }
+
         namespace SpendingControls {
-          type AllowedCategory =
+          export type AllowedCategory =
             | 'ac_refrigeration_repair'
             | 'accounting_bookkeeping_services'
             | 'advertising_services'
@@ -491,7 +498,7 @@ declare module 'stripe' {
             | 'womens_ready_to_wear_stores'
             | 'wrecking_and_salvage_yards';
 
-          type BlockedCategory =
+          export type BlockedCategory =
             | 'ac_refrigeration_repair'
             | 'accounting_bookkeeping_services'
             | 'advertising_services'
@@ -781,7 +788,7 @@ declare module 'stripe' {
             | 'womens_ready_to_wear_stores'
             | 'wrecking_and_salvage_yards';
 
-          interface SpendingLimit {
+          export interface SpendingLimit {
             /**
              * Maximum amount allowed to spend per interval. This amount is in the card's currency and in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
              */
@@ -799,7 +806,7 @@ declare module 'stripe' {
           }
 
           namespace SpendingLimit {
-            type Category =
+            export type Category =
               | 'ac_refrigeration_repair'
               | 'accounting_bookkeeping_services'
               | 'advertising_services'
@@ -1089,7 +1096,7 @@ declare module 'stripe' {
               | 'womens_ready_to_wear_stores'
               | 'wrecking_and_salvage_yards';
 
-            type Interval =
+            export type Interval =
               | 'all_time'
               | 'daily'
               | 'monthly'
@@ -1098,13 +1105,9 @@ declare module 'stripe' {
               | 'yearly';
           }
         }
-
-        type Status = 'active' | 'blocked' | 'inactive';
-
-        type Type = 'company' | 'individual';
       }
 
-      interface CardholderCreateParams {
+      export interface CardholderCreateParams {
         /**
          * The cardholder's billing address.
          */
@@ -1162,15 +1165,70 @@ declare module 'stripe' {
       }
 
       namespace CardholderCreateParams {
-        interface Billing {
+        export interface Billing {
           /**
            * The cardholder's billing address.
            */
           address: Billing.Address;
         }
 
+        export type Type = 'company' | 'individual';
+
+        export interface Company {
+          /**
+           * The entity's business ID number.
+           */
+          tax_id?: string;
+        }
+
+        export interface Individual {
+          /**
+           * The date of birth of this cardholder.
+           */
+          dob?: Individual.Dob;
+
+          /**
+           * The first name of this cardholder. This field cannot contain any special characters or numbers.
+           */
+          first_name: string;
+
+          /**
+           * The last name of this cardholder. This field cannot contain any special characters or numbers.
+           */
+          last_name: string;
+
+          /**
+           * Government-issued ID document for this cardholder.
+           */
+          verification?: Individual.Verification;
+        }
+
+        export interface SpendingControls {
+          /**
+           * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to allow. All other categories will be blocked. Cannot be set with `blocked_categories`.
+           */
+          allowed_categories?: Array<SpendingControls.AllowedCategory>;
+
+          /**
+           * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to decline. All other categories will be allowed. Cannot be set with `allowed_categories`.
+           */
+          blocked_categories?: Array<SpendingControls.BlockedCategory>;
+
+          /**
+           * Limit spending with amount-based rules that apply across this cardholder's cards.
+           */
+          spending_limits?: Array<SpendingControls.SpendingLimit>;
+
+          /**
+           * Currency of amounts within `spending_limits`. Defaults to your merchant country's currency.
+           */
+          spending_limits_currency?: string;
+        }
+
+        export type Status = 'active' | 'inactive';
+
         namespace Billing {
-          interface Address {
+          export interface Address {
             /**
              * City, district, suburb, town, or village.
              */
@@ -1203,37 +1261,8 @@ declare module 'stripe' {
           }
         }
 
-        interface Company {
-          /**
-           * The entity's business ID number.
-           */
-          tax_id?: string;
-        }
-
-        interface Individual {
-          /**
-           * The date of birth of this cardholder.
-           */
-          dob?: Individual.Dob;
-
-          /**
-           * The first name of this cardholder. This field cannot contain any special characters or numbers.
-           */
-          first_name: string;
-
-          /**
-           * The last name of this cardholder. This field cannot contain any special characters or numbers.
-           */
-          last_name: string;
-
-          /**
-           * Government-issued ID document for this cardholder.
-           */
-          verification?: Individual.Verification;
-        }
-
         namespace Individual {
-          interface Dob {
+          export interface Dob {
             /**
              * The day of birth, between 1 and 31.
              */
@@ -1250,7 +1279,7 @@ declare module 'stripe' {
             year: number;
           }
 
-          interface Verification {
+          export interface Verification {
             /**
              * An identifying document, either a passport or local ID card.
              */
@@ -1258,7 +1287,7 @@ declare module 'stripe' {
           }
 
           namespace Verification {
-            interface Document {
+            export interface Document {
               /**
                * The back of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`.
                */
@@ -1272,30 +1301,8 @@ declare module 'stripe' {
           }
         }
 
-        interface SpendingControls {
-          /**
-           * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to allow. All other categories will be blocked. Cannot be set with `blocked_categories`.
-           */
-          allowed_categories?: Array<SpendingControls.AllowedCategory>;
-
-          /**
-           * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to decline. All other categories will be allowed. Cannot be set with `allowed_categories`.
-           */
-          blocked_categories?: Array<SpendingControls.BlockedCategory>;
-
-          /**
-           * Limit spending with amount-based rules that apply across this cardholder's cards.
-           */
-          spending_limits?: Array<SpendingControls.SpendingLimit>;
-
-          /**
-           * Currency of amounts within `spending_limits`. Defaults to your merchant country's currency.
-           */
-          spending_limits_currency?: string;
-        }
-
         namespace SpendingControls {
-          type AllowedCategory =
+          export type AllowedCategory =
             | 'ac_refrigeration_repair'
             | 'accounting_bookkeeping_services'
             | 'advertising_services'
@@ -1585,7 +1592,7 @@ declare module 'stripe' {
             | 'womens_ready_to_wear_stores'
             | 'wrecking_and_salvage_yards';
 
-          type BlockedCategory =
+          export type BlockedCategory =
             | 'ac_refrigeration_repair'
             | 'accounting_bookkeeping_services'
             | 'advertising_services'
@@ -1875,7 +1882,7 @@ declare module 'stripe' {
             | 'womens_ready_to_wear_stores'
             | 'wrecking_and_salvage_yards';
 
-          interface SpendingLimit {
+          export interface SpendingLimit {
             /**
              * Maximum amount allowed to spend per interval.
              */
@@ -1893,7 +1900,7 @@ declare module 'stripe' {
           }
 
           namespace SpendingLimit {
-            type Category =
+            export type Category =
               | 'ac_refrigeration_repair'
               | 'accounting_bookkeeping_services'
               | 'advertising_services'
@@ -2183,7 +2190,7 @@ declare module 'stripe' {
               | 'womens_ready_to_wear_stores'
               | 'wrecking_and_salvage_yards';
 
-            type Interval =
+            export type Interval =
               | 'all_time'
               | 'daily'
               | 'monthly'
@@ -2192,20 +2199,16 @@ declare module 'stripe' {
               | 'yearly';
           }
         }
-
-        type Status = 'active' | 'inactive';
-
-        type Type = 'company' | 'individual';
       }
 
-      interface CardholderRetrieveParams {
+      export interface CardholderRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface CardholderUpdateParams {
+      export interface CardholderUpdateParams {
         /**
          * The cardholder's billing address.
          */
@@ -2253,15 +2256,68 @@ declare module 'stripe' {
       }
 
       namespace CardholderUpdateParams {
-        interface Billing {
+        export interface Billing {
           /**
            * The cardholder's billing address.
            */
           address: Billing.Address;
         }
 
+        export interface Company {
+          /**
+           * The entity's business ID number.
+           */
+          tax_id?: string;
+        }
+
+        export interface Individual {
+          /**
+           * The date of birth of this cardholder.
+           */
+          dob?: Individual.Dob;
+
+          /**
+           * The first name of this cardholder. This field cannot contain any special characters or numbers.
+           */
+          first_name: string;
+
+          /**
+           * The last name of this cardholder. This field cannot contain any special characters or numbers.
+           */
+          last_name: string;
+
+          /**
+           * Government-issued ID document for this cardholder.
+           */
+          verification?: Individual.Verification;
+        }
+
+        export interface SpendingControls {
+          /**
+           * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to allow. All other categories will be blocked. Cannot be set with `blocked_categories`.
+           */
+          allowed_categories?: Array<SpendingControls.AllowedCategory>;
+
+          /**
+           * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to decline. All other categories will be allowed. Cannot be set with `allowed_categories`.
+           */
+          blocked_categories?: Array<SpendingControls.BlockedCategory>;
+
+          /**
+           * Limit spending with amount-based rules that apply across this cardholder's cards.
+           */
+          spending_limits?: Array<SpendingControls.SpendingLimit>;
+
+          /**
+           * Currency of amounts within `spending_limits`. Defaults to your merchant country's currency.
+           */
+          spending_limits_currency?: string;
+        }
+
+        export type Status = 'active' | 'inactive';
+
         namespace Billing {
-          interface Address {
+          export interface Address {
             /**
              * City, district, suburb, town, or village.
              */
@@ -2294,37 +2350,8 @@ declare module 'stripe' {
           }
         }
 
-        interface Company {
-          /**
-           * The entity's business ID number.
-           */
-          tax_id?: string;
-        }
-
-        interface Individual {
-          /**
-           * The date of birth of this cardholder.
-           */
-          dob?: Individual.Dob;
-
-          /**
-           * The first name of this cardholder. This field cannot contain any special characters or numbers.
-           */
-          first_name: string;
-
-          /**
-           * The last name of this cardholder. This field cannot contain any special characters or numbers.
-           */
-          last_name: string;
-
-          /**
-           * Government-issued ID document for this cardholder.
-           */
-          verification?: Individual.Verification;
-        }
-
         namespace Individual {
-          interface Dob {
+          export interface Dob {
             /**
              * The day of birth, between 1 and 31.
              */
@@ -2341,7 +2368,7 @@ declare module 'stripe' {
             year: number;
           }
 
-          interface Verification {
+          export interface Verification {
             /**
              * An identifying document, either a passport or local ID card.
              */
@@ -2349,7 +2376,7 @@ declare module 'stripe' {
           }
 
           namespace Verification {
-            interface Document {
+            export interface Document {
               /**
                * The back of an ID returned by a [file upload](https://stripe.com/docs/api#create_file) with a `purpose` value of `identity_document`.
                */
@@ -2363,30 +2390,8 @@ declare module 'stripe' {
           }
         }
 
-        interface SpendingControls {
-          /**
-           * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to allow. All other categories will be blocked. Cannot be set with `blocked_categories`.
-           */
-          allowed_categories?: Array<SpendingControls.AllowedCategory>;
-
-          /**
-           * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to decline. All other categories will be allowed. Cannot be set with `allowed_categories`.
-           */
-          blocked_categories?: Array<SpendingControls.BlockedCategory>;
-
-          /**
-           * Limit spending with amount-based rules that apply across this cardholder's cards.
-           */
-          spending_limits?: Array<SpendingControls.SpendingLimit>;
-
-          /**
-           * Currency of amounts within `spending_limits`. Defaults to your merchant country's currency.
-           */
-          spending_limits_currency?: string;
-        }
-
         namespace SpendingControls {
-          type AllowedCategory =
+          export type AllowedCategory =
             | 'ac_refrigeration_repair'
             | 'accounting_bookkeeping_services'
             | 'advertising_services'
@@ -2676,7 +2681,7 @@ declare module 'stripe' {
             | 'womens_ready_to_wear_stores'
             | 'wrecking_and_salvage_yards';
 
-          type BlockedCategory =
+          export type BlockedCategory =
             | 'ac_refrigeration_repair'
             | 'accounting_bookkeeping_services'
             | 'advertising_services'
@@ -2966,7 +2971,7 @@ declare module 'stripe' {
             | 'womens_ready_to_wear_stores'
             | 'wrecking_and_salvage_yards';
 
-          interface SpendingLimit {
+          export interface SpendingLimit {
             /**
              * Maximum amount allowed to spend per interval.
              */
@@ -2984,7 +2989,7 @@ declare module 'stripe' {
           }
 
           namespace SpendingLimit {
-            type Category =
+            export type Category =
               | 'ac_refrigeration_repair'
               | 'accounting_bookkeeping_services'
               | 'advertising_services'
@@ -3274,7 +3279,7 @@ declare module 'stripe' {
               | 'womens_ready_to_wear_stores'
               | 'wrecking_and_salvage_yards';
 
-            type Interval =
+            export type Interval =
               | 'all_time'
               | 'daily'
               | 'monthly'
@@ -3283,11 +3288,9 @@ declare module 'stripe' {
               | 'yearly';
           }
         }
-
-        type Status = 'active' | 'inactive';
       }
 
-      interface CardholderListParams extends PaginationParams {
+      export interface CardholderListParams extends PaginationParams {
         /**
          * Only return cardholders that were created during the given date interval.
          */
@@ -3320,9 +3323,9 @@ declare module 'stripe' {
       }
 
       namespace CardholderListParams {
-        type Status = 'active' | 'blocked' | 'inactive';
+        export type Status = 'active' | 'blocked' | 'inactive';
 
-        type Type = 'company' | 'individual';
+        export type Type = 'company' | 'individual';
       }
 
       class CardholdersResource {

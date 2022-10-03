@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace BillingPortal {
-      /**
+      export /**
        * The Billing customer portal is a Stripe-hosted UI for subscription and
        * billing management.
        *
@@ -72,7 +72,7 @@ declare module 'stripe' {
       }
 
       namespace Session {
-        type Locale =
+        export type Locale =
           | 'auto'
           | 'bg'
           | 'cs'
@@ -122,7 +122,7 @@ declare module 'stripe' {
           | 'zh-TW';
       }
 
-      interface SessionCreateParams {
+      export interface SessionCreateParams {
         /**
          * The ID of an existing customer.
          */
@@ -155,7 +155,7 @@ declare module 'stripe' {
       }
 
       namespace SessionCreateParams {
-        type Locale =
+        export type Locale =
           | 'auto'
           | 'bg'
           | 'cs'

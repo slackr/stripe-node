@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Treasury {
-      /**
+      export /**
        * ReceivedCredits represent funds sent to a [FinancialAccount](https://stripe.com/docs/api#financial_accounts) (for example, via ACH or wire). These money movements are not initiated from the FinancialAccount.
        */
       interface ReceivedCredit {
@@ -83,9 +83,9 @@ declare module 'stripe' {
       }
 
       namespace ReceivedCredit {
-        type FailureCode = 'account_closed' | 'account_frozen' | 'other';
+        export type FailureCode = 'account_closed' | 'account_frozen' | 'other';
 
-        interface InitiatingPaymentMethodDetails {
+        export interface InitiatingPaymentMethodDetails {
           /**
            * Set when `type` is `balance`.
            */
@@ -108,59 +108,7 @@ declare module 'stripe' {
           us_bank_account?: InitiatingPaymentMethodDetails.UsBankAccount;
         }
 
-        namespace InitiatingPaymentMethodDetails {
-          interface BillingDetails {
-            address: Stripe.Address;
-
-            /**
-             * Email address.
-             */
-            email: string | null;
-
-            /**
-             * Full name.
-             */
-            name: string | null;
-          }
-
-          interface FinancialAccount {
-            /**
-             * The FinancialAccount ID.
-             */
-            id: string;
-
-            /**
-             * The rails the ReceivedCredit was sent over. A FinancialAccount can only send funds over `stripe`.
-             */
-            network: 'stripe';
-          }
-
-          type Type =
-            | 'balance'
-            | 'financial_account'
-            | 'issuing_card'
-            | 'stripe'
-            | 'us_bank_account';
-
-          interface UsBankAccount {
-            /**
-             * Bank name.
-             */
-            bank_name: string | null;
-
-            /**
-             * The last four digits of the bank account number.
-             */
-            last4: string | null;
-
-            /**
-             * The routing number for the bank account.
-             */
-            routing_number: string | null;
-          }
-        }
-
-        interface LinkedFlows {
+        export interface LinkedFlows {
           /**
            * The CreditReversal created as a result of this ReceivedCredit being reversed.
            */
@@ -192,8 +140,76 @@ declare module 'stripe' {
           source_flow_type: string | null;
         }
 
+        export type Network = 'ach' | 'card' | 'stripe' | 'us_domestic_wire';
+
+        export interface ReversalDetails {
+          /**
+           * Time before which a ReceivedCredit can be reversed.
+           */
+          deadline: number | null;
+
+          /**
+           * Set if a ReceivedCredit cannot be reversed.
+           */
+          restricted_reason: ReversalDetails.RestrictedReason | null;
+        }
+
+        export type Status = 'failed' | 'succeeded';
+
+        namespace InitiatingPaymentMethodDetails {
+          export interface BillingDetails {
+            address: Stripe.Address;
+
+            /**
+             * Email address.
+             */
+            email: string | null;
+
+            /**
+             * Full name.
+             */
+            name: string | null;
+          }
+
+          export interface FinancialAccount {
+            /**
+             * The FinancialAccount ID.
+             */
+            id: string;
+
+            /**
+             * The rails the ReceivedCredit was sent over. A FinancialAccount can only send funds over `stripe`.
+             */
+            network: 'stripe';
+          }
+
+          export type Type =
+            | 'balance'
+            | 'financial_account'
+            | 'issuing_card'
+            | 'stripe'
+            | 'us_bank_account';
+
+          export interface UsBankAccount {
+            /**
+             * Bank name.
+             */
+            bank_name: string | null;
+
+            /**
+             * The last four digits of the bank account number.
+             */
+            last4: string | null;
+
+            /**
+             * The routing number for the bank account.
+             */
+            routing_number: string | null;
+          }
+        }
+
         namespace LinkedFlows {
-          interface SourceFlowDetails {
+          export interface SourceFlowDetails {
             /**
              * You can reverse some [ReceivedCredits](https://stripe.com/docs/api#received_credits) depending on their network and source flow. Reversing a ReceivedCredit leads to the creation of a new object known as a CreditReversal.
              */
@@ -225,7 +241,7 @@ declare module 'stripe' {
           }
 
           namespace SourceFlowDetails {
-            type Type =
+            export type Type =
               | 'credit_reversal'
               | 'other'
               | 'outbound_payment'
@@ -233,40 +249,24 @@ declare module 'stripe' {
           }
         }
 
-        type Network = 'ach' | 'card' | 'stripe' | 'us_domestic_wire';
-
-        interface ReversalDetails {
-          /**
-           * Time before which a ReceivedCredit can be reversed.
-           */
-          deadline: number | null;
-
-          /**
-           * Set if a ReceivedCredit cannot be reversed.
-           */
-          restricted_reason: ReversalDetails.RestrictedReason | null;
-        }
-
         namespace ReversalDetails {
-          type RestrictedReason =
+          export type RestrictedReason =
             | 'already_reversed'
             | 'deadline_passed'
             | 'network_restricted'
             | 'other'
             | 'source_flow_restricted';
         }
-
-        type Status = 'failed' | 'succeeded';
       }
 
-      interface ReceivedCreditRetrieveParams {
+      export interface ReceivedCreditRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface ReceivedCreditListParams extends PaginationParams {
+      export interface ReceivedCreditListParams extends PaginationParams {
         /**
          * The FinancialAccount that received the funds.
          */
@@ -289,22 +289,22 @@ declare module 'stripe' {
       }
 
       namespace ReceivedCreditListParams {
-        interface LinkedFlows {
+        export interface LinkedFlows {
           /**
            * The source flow type.
            */
           source_flow_type: LinkedFlows.SourceFlowType;
         }
 
+        export type Status = 'failed' | 'succeeded';
+
         namespace LinkedFlows {
-          type SourceFlowType =
+          export type SourceFlowType =
             | 'credit_reversal'
             | 'other'
             | 'outbound_payment'
             | 'payout';
         }
-
-        type Status = 'failed' | 'succeeded';
       }
 
       class ReceivedCreditsResource {

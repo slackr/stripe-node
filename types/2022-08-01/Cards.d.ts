@@ -2,7 +2,11 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace Card {
+      export type AvailablePayoutMethod = 'instant' | 'standard';
+    }
+
+    export /**
      * You can store multiple cards on a customer in order to charge the customer
      * later. You can also store multiple debit cards on a recipient in order to
      * transfer to those cards later.
@@ -170,11 +174,7 @@ declare module 'stripe' {
       tokenization_method: string | null;
     }
 
-    namespace Card {
-      type AvailablePayoutMethod = 'instant' | 'standard';
-    }
-
-    /**
+    export /**
      * The DeletedCard object.
      */
     interface DeletedCard {

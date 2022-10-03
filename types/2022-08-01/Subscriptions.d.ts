@@ -2,7 +2,343 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace Subscription {
+      export interface AutomaticTax {
+        /**
+         * Whether Stripe automatically computes tax on this subscription.
+         */
+        enabled: boolean;
+      }
+
+      export interface BillingThresholds {
+        /**
+         * Monetary threshold that triggers the subscription to create an invoice
+         */
+        amount_gte: number | null;
+
+        /**
+         * Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged. This value may not be `true` if the subscription contains items with plans that have `aggregate_usage=last_ever`.
+         */
+        reset_billing_cycle_anchor: boolean | null;
+      }
+
+      export type CollectionMethod = 'charge_automatically' | 'send_invoice';
+
+      export interface PauseCollection {
+        /**
+         * The payment collection behavior for this subscription while paused. One of `keep_as_draft`, `mark_uncollectible`, or `void`.
+         */
+        behavior: PauseCollection.Behavior;
+
+        /**
+         * The time after which the subscription will resume collecting payments.
+         */
+        resumes_at: number | null;
+      }
+
+      export interface PaymentSettings {
+        /**
+         * Payment-method-specific configuration to provide to invoices created by the subscription.
+         */
+        payment_method_options: PaymentSettings.PaymentMethodOptions | null;
+
+        /**
+         * The list of payment method types to provide to every invoice created by the subscription. If not set, Stripe attempts to automatically determine the types to use by looking at the invoice's default payment method, the subscription's default payment method, the customer's default payment method, and your [invoice template settings](https://dashboard.stripe.com/settings/billing/invoice).
+         */
+        payment_method_types: Array<PaymentSettings.PaymentMethodType> | null;
+
+        /**
+         * Either `off`, or `on_subscription`. With `on_subscription` Stripe updates `subscription.default_payment_method` when a subscription payment succeeds.
+         */
+        save_default_payment_method: PaymentSettings.SaveDefaultPaymentMethod | null;
+      }
+
+      export interface PendingInvoiceItemInterval {
+        /**
+         * Specifies invoicing frequency. Either `day`, `week`, `month` or `year`.
+         */
+        interval: PendingInvoiceItemInterval.Interval;
+
+        /**
+         * The number of intervals between invoices. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
+         */
+        interval_count: number;
+      }
+
+      export interface PendingUpdate {
+        /**
+         * If the update is applied, determines the date of the first full invoice, and, for plans with `month` or `year` intervals, the day of the month for subsequent invoices. The timestamp is in UTC format.
+         */
+        billing_cycle_anchor: number | null;
+
+        /**
+         * The point after which the changes reflected by this update will be discarded and no longer applied.
+         */
+        expires_at: number;
+
+        /**
+         * List of subscription items, each with an attached plan, that will be set if the update is applied.
+         */
+        subscription_items: Array<Stripe.SubscriptionItem> | null;
+
+        /**
+         * Unix timestamp representing the end of the trial period the customer will get before being charged for the first time, if the update is applied.
+         */
+        trial_end: number | null;
+
+        /**
+         * Indicates if a plan's `trial_period_days` should be applied to the subscription. Setting `trial_end` per subscription is preferred, and this defaults to `false`. Setting this flag to `true` together with `trial_end` is not allowed. See [Using trial periods on subscriptions](https://stripe.com/docs/billing/subscriptions/trials) to learn more.
+         */
+        trial_from_plan: boolean | null;
+      }
+
+      export type Status =
+        | 'active'
+        | 'canceled'
+        | 'incomplete'
+        | 'incomplete_expired'
+        | 'past_due'
+        | 'trialing'
+        | 'unpaid';
+
+      export interface TransferData {
+        /**
+         * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+         */
+        amount_percent: number | null;
+
+        /**
+         * The account where funds from the payment will be transferred to upon payment success.
+         */
+        destination: string | Stripe.Account;
+      }
+
+      namespace PauseCollection {
+        export type Behavior = 'keep_as_draft' | 'mark_uncollectible' | 'void';
+      }
+
+      namespace PaymentSettings {
+        export interface PaymentMethodOptions {
+          /**
+           * This sub-hash contains details about the Canadian pre-authorized debit payment method options to pass to invoices created by the subscription.
+           */
+          acss_debit: PaymentMethodOptions.AcssDebit | null;
+
+          /**
+           * This sub-hash contains details about the Bancontact payment method options to pass to invoices created by the subscription.
+           */
+          bancontact: PaymentMethodOptions.Bancontact | null;
+
+          /**
+           * This sub-hash contains details about the Card payment method options to pass to invoices created by the subscription.
+           */
+          card: PaymentMethodOptions.Card | null;
+
+          /**
+           * This sub-hash contains details about the Bank transfer payment method options to pass to invoices created by the subscription.
+           */
+          customer_balance: PaymentMethodOptions.CustomerBalance | null;
+
+          /**
+           * This sub-hash contains details about the Konbini payment method options to pass to invoices created by the subscription.
+           */
+          konbini: PaymentMethodOptions.Konbini | null;
+
+          /**
+           * This sub-hash contains details about the ACH direct debit payment method options to pass to invoices created by the subscription.
+           */
+          us_bank_account: PaymentMethodOptions.UsBankAccount | null;
+        }
+
+        export type PaymentMethodType =
+          | 'ach_credit_transfer'
+          | 'ach_debit'
+          | 'acss_debit'
+          | 'au_becs_debit'
+          | 'bacs_debit'
+          | 'bancontact'
+          | 'boleto'
+          | 'card'
+          | 'customer_balance'
+          | 'fpx'
+          | 'giropay'
+          | 'grabpay'
+          | 'ideal'
+          | 'konbini'
+          | 'link'
+          | 'paynow'
+          | 'promptpay'
+          | 'sepa_credit_transfer'
+          | 'sepa_debit'
+          | 'sofort'
+          | 'us_bank_account'
+          | 'wechat_pay';
+
+        export type SaveDefaultPaymentMethod = 'off' | 'on_subscription';
+
+        namespace PaymentMethodOptions {
+          export interface AcssDebit {
+            mandate_options?: AcssDebit.MandateOptions;
+
+            /**
+             * Bank account verification method.
+             */
+            verification_method?: AcssDebit.VerificationMethod;
+          }
+
+          export interface Bancontact {
+            /**
+             * Preferred language of the Bancontact authorization page that the customer is redirected to.
+             */
+            preferred_language: Bancontact.PreferredLanguage;
+          }
+
+          export interface Card {
+            mandate_options?: Card.MandateOptions;
+
+            /**
+             * Selected network to process this Subscription on. Depends on the available networks of the card attached to the Subscription. Can be only set confirm-time.
+             */
+            network: Card.Network | null;
+
+            /**
+             * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+             */
+            request_three_d_secure: Card.RequestThreeDSecure | null;
+          }
+
+          export interface CustomerBalance {
+            bank_transfer?: CustomerBalance.BankTransfer;
+
+            /**
+             * The funding method type to be used when there are not enough funds in the customer balance. Permitted values include: `bank_transfer`.
+             */
+            funding_type: 'bank_transfer' | null;
+          }
+
+          export interface Konbini {}
+
+          export interface UsBankAccount {
+            financial_connections?: UsBankAccount.FinancialConnections;
+
+            /**
+             * Bank account verification method.
+             */
+            verification_method?: UsBankAccount.VerificationMethod;
+          }
+
+          namespace AcssDebit {
+            export interface MandateOptions {
+              /**
+               * Transaction type of the mandate.
+               */
+              transaction_type: MandateOptions.TransactionType | null;
+            }
+
+            export type VerificationMethod =
+              | 'automatic'
+              | 'instant'
+              | 'microdeposits';
+
+            namespace MandateOptions {
+              export type TransactionType = 'business' | 'personal';
+            }
+          }
+
+          namespace Bancontact {
+            export type PreferredLanguage = 'de' | 'en' | 'fr' | 'nl';
+          }
+
+          namespace Card {
+            export interface MandateOptions {
+              /**
+               * Amount to be charged for future payments.
+               */
+              amount: number | null;
+
+              /**
+               * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+               */
+              amount_type: MandateOptions.AmountType | null;
+
+              /**
+               * A description of the mandate or subscription that is meant to be displayed to the customer.
+               */
+              description: string | null;
+            }
+
+            export type Network =
+              | 'amex'
+              | 'cartes_bancaires'
+              | 'diners'
+              | 'discover'
+              | 'interac'
+              | 'jcb'
+              | 'mastercard'
+              | 'unionpay'
+              | 'unknown'
+              | 'visa';
+
+            export type RequestThreeDSecure = 'any' | 'automatic';
+
+            namespace MandateOptions {
+              export type AmountType = 'fixed' | 'maximum';
+            }
+          }
+
+          namespace CustomerBalance {
+            export interface BankTransfer {
+              eu_bank_transfer?: BankTransfer.EuBankTransfer;
+
+              /**
+               * The bank transfer type that can be used for funding. Permitted values include: `eu_bank_transfer`, `gb_bank_transfer`, `jp_bank_transfer`, or `mx_bank_transfer`.
+               */
+              type: string | null;
+            }
+
+            namespace BankTransfer {
+              export interface EuBankTransfer {
+                /**
+                 * The desired country code of the bank account information. Permitted values include: `DE`, `ES`, `FR`, `IE`, or `NL`.
+                 */
+                country: EuBankTransfer.Country;
+              }
+
+              namespace EuBankTransfer {
+                export type Country = 'DE' | 'ES' | 'FR' | 'IE' | 'NL';
+              }
+            }
+          }
+
+          namespace UsBankAccount {
+            export interface FinancialConnections {
+              /**
+               * The list of permissions to request. The `payment_method` permission must be included.
+               */
+              permissions?: Array<FinancialConnections.Permission>;
+            }
+
+            export type VerificationMethod =
+              | 'automatic'
+              | 'instant'
+              | 'microdeposits';
+
+            namespace FinancialConnections {
+              export type Permission =
+                | 'balances'
+                | 'payment_method'
+                | 'transactions';
+            }
+          }
+        }
+      }
+
+      namespace PendingInvoiceItemInterval {
+        export type Interval = 'day' | 'month' | 'week' | 'year';
+      }
+    }
+
+    export /**
      * Subscriptions allow you to charge a customer on a recurring basis.
      *
      * Related guide: [Creating Subscriptions](https://stripe.com/docs/billing/subscriptions/creating).
@@ -218,242 +554,273 @@ declare module 'stripe' {
       trial_start: number | null;
     }
 
-    namespace Subscription {
-      interface AutomaticTax {
+    namespace SubscriptionCreateParams {
+      export interface AddInvoiceItem {
         /**
-         * Whether Stripe automatically computes tax on this subscription.
+         * The ID of the price object.
+         */
+        price?: string;
+
+        /**
+         * Data used to generate a new [Price](https://stripe.com/docs/api/prices) object inline.
+         */
+        price_data?: AddInvoiceItem.PriceData;
+
+        /**
+         * Quantity for this item. Defaults to 1.
+         */
+        quantity?: number;
+
+        /**
+         * The tax rates which apply to the item. When set, the `default_tax_rates` do not apply to this item.
+         */
+        tax_rates?: Stripe.Emptyable<Array<string>>;
+      }
+
+      export interface AutomaticTax {
+        /**
+         * Enabled automatic tax calculation which will automatically compute tax rates on all invoices generated by the subscription.
          */
         enabled: boolean;
       }
 
-      interface BillingThresholds {
+      export interface BillingThresholds {
         /**
-         * Monetary threshold that triggers the subscription to create an invoice
+         * Monetary threshold that triggers the subscription to advance to a new billing period
          */
-        amount_gte: number | null;
+        amount_gte?: number;
 
         /**
-         * Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged. This value may not be `true` if the subscription contains items with plans that have `aggregate_usage=last_ever`.
+         * Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged.
          */
-        reset_billing_cycle_anchor: boolean | null;
+        reset_billing_cycle_anchor?: boolean;
       }
 
-      type CollectionMethod = 'charge_automatically' | 'send_invoice';
+      export type CollectionMethod = 'charge_automatically' | 'send_invoice';
 
-      interface PauseCollection {
+      export interface Item {
         /**
-         * The payment collection behavior for this subscription while paused. One of `keep_as_draft`, `mark_uncollectible`, or `void`.
+         * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period. When updating, pass an empty string to remove previously-defined thresholds.
          */
-        behavior: PauseCollection.Behavior;
+        billing_thresholds?: Stripe.Emptyable<Item.BillingThresholds>;
 
         /**
-         * The time after which the subscription will resume collecting payments.
+         * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
          */
-        resumes_at: number | null;
+        metadata?: Stripe.MetadataParam;
+
+        /**
+         * Plan ID for this item, as a string.
+         */
+        plan?: string;
+
+        /**
+         * The ID of the price object.
+         */
+        price?: string;
+
+        /**
+         * Data used to generate a new [Price](https://stripe.com/docs/api/prices) object inline.
+         */
+        price_data?: Item.PriceData;
+
+        /**
+         * Quantity for this item.
+         */
+        quantity?: number;
+
+        /**
+         * A list of [Tax Rate](https://stripe.com/docs/api/tax_rates) ids. These Tax Rates will override the [`default_tax_rates`](https://stripe.com/docs/api/subscriptions/create#create_subscription-default_tax_rates) on the Subscription. When updating, pass an empty string to remove previously-defined tax rates.
+         */
+        tax_rates?: Stripe.Emptyable<Array<string>>;
       }
 
-      namespace PauseCollection {
-        type Behavior = 'keep_as_draft' | 'mark_uncollectible' | 'void';
-      }
+      export type PaymentBehavior =
+        | 'allow_incomplete'
+        | 'default_incomplete'
+        | 'error_if_incomplete'
+        | 'pending_if_incomplete';
 
-      interface PaymentSettings {
+      export interface PaymentSettings {
         /**
          * Payment-method-specific configuration to provide to invoices created by the subscription.
          */
-        payment_method_options: PaymentSettings.PaymentMethodOptions | null;
+        payment_method_options?: PaymentSettings.PaymentMethodOptions;
 
         /**
-         * The list of payment method types to provide to every invoice created by the subscription. If not set, Stripe attempts to automatically determine the types to use by looking at the invoice's default payment method, the subscription's default payment method, the customer's default payment method, and your [invoice template settings](https://dashboard.stripe.com/settings/billing/invoice).
+         * The list of payment method types (e.g. card) to provide to the invoice's PaymentIntent. If not set, Stripe attempts to automatically determine the types to use by looking at the invoice's default payment method, the subscription's default payment method, the customer's default payment method, and your [invoice template settings](https://dashboard.stripe.com/settings/billing/invoice).
          */
-        payment_method_types: Array<PaymentSettings.PaymentMethodType> | null;
+        payment_method_types?: Stripe.Emptyable<
+          Array<PaymentSettings.PaymentMethodType>
+        >;
 
         /**
          * Either `off`, or `on_subscription`. With `on_subscription` Stripe updates `subscription.default_payment_method` when a subscription payment succeeds.
          */
-        save_default_payment_method: PaymentSettings.SaveDefaultPaymentMethod | null;
+        save_default_payment_method?: PaymentSettings.SaveDefaultPaymentMethod;
+      }
+
+      export interface PendingInvoiceItemInterval {
+        /**
+         * Specifies invoicing frequency. Either `day`, `week`, `month` or `year`.
+         */
+        interval: PendingInvoiceItemInterval.Interval;
+
+        /**
+         * The number of intervals between invoices. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
+         */
+        interval_count?: number;
+      }
+
+      export type ProrationBehavior =
+        | 'always_invoice'
+        | 'create_prorations'
+        | 'none';
+
+      export interface TransferData {
+        /**
+         * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+         */
+        amount_percent?: number;
+
+        /**
+         * ID of an existing, connected Stripe account.
+         */
+        destination: string;
+      }
+
+      namespace AddInvoiceItem {
+        export interface PriceData {
+          /**
+           * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+           */
+          currency: string;
+
+          /**
+           * The ID of the product that this price will belong to.
+           */
+          product: string;
+
+          /**
+           * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+           */
+          tax_behavior?: PriceData.TaxBehavior;
+
+          /**
+           * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+           */
+          unit_amount?: number;
+
+          /**
+           * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
+           */
+          unit_amount_decimal?: string;
+        }
+
+        namespace PriceData {
+          export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+        }
+      }
+
+      namespace Item {
+        export interface BillingThresholds {
+          /**
+           * Usage threshold that triggers the subscription to advance to a new billing period
+           */
+          usage_gte: number;
+        }
+
+        export interface PriceData {
+          /**
+           * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+           */
+          currency: string;
+
+          /**
+           * The ID of the product that this price will belong to.
+           */
+          product: string;
+
+          /**
+           * The recurring components of a price such as `interval` and `interval_count`.
+           */
+          recurring: PriceData.Recurring;
+
+          /**
+           * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+           */
+          tax_behavior?: PriceData.TaxBehavior;
+
+          /**
+           * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+           */
+          unit_amount?: number;
+
+          /**
+           * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
+           */
+          unit_amount_decimal?: string;
+        }
+
+        namespace PriceData {
+          export interface Recurring {
+            /**
+             * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
+             */
+            interval: Recurring.Interval;
+
+            /**
+             * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
+             */
+            interval_count?: number;
+          }
+
+          export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+
+          namespace Recurring {
+            export type Interval = 'day' | 'month' | 'week' | 'year';
+          }
+        }
       }
 
       namespace PaymentSettings {
-        interface PaymentMethodOptions {
+        export interface PaymentMethodOptions {
           /**
-           * This sub-hash contains details about the Canadian pre-authorized debit payment method options to pass to invoices created by the subscription.
+           * This sub-hash contains details about the Canadian pre-authorized debit payment method options to pass to the invoice's PaymentIntent.
            */
-          acss_debit: PaymentMethodOptions.AcssDebit | null;
+          acss_debit?: Stripe.Emptyable<PaymentMethodOptions.AcssDebit>;
 
           /**
-           * This sub-hash contains details about the Bancontact payment method options to pass to invoices created by the subscription.
+           * This sub-hash contains details about the Bancontact payment method options to pass to the invoice's PaymentIntent.
            */
-          bancontact: PaymentMethodOptions.Bancontact | null;
+          bancontact?: Stripe.Emptyable<PaymentMethodOptions.Bancontact>;
 
           /**
-           * This sub-hash contains details about the Card payment method options to pass to invoices created by the subscription.
+           * This sub-hash contains details about the Card payment method options to pass to the invoice's PaymentIntent.
            */
-          card: PaymentMethodOptions.Card | null;
+          card?: Stripe.Emptyable<PaymentMethodOptions.Card>;
 
           /**
-           * This sub-hash contains details about the Bank transfer payment method options to pass to invoices created by the subscription.
+           * This sub-hash contains details about the Bank transfer payment method options to pass to the invoice's PaymentIntent.
            */
-          customer_balance: PaymentMethodOptions.CustomerBalance | null;
+          customer_balance?: Stripe.Emptyable<
+            PaymentMethodOptions.CustomerBalance
+          >;
 
           /**
-           * This sub-hash contains details about the Konbini payment method options to pass to invoices created by the subscription.
+           * This sub-hash contains details about the Konbini payment method options to pass to the invoice's PaymentIntent.
            */
-          konbini: PaymentMethodOptions.Konbini | null;
+          konbini?: Stripe.Emptyable<PaymentMethodOptions.Konbini>;
 
           /**
-           * This sub-hash contains details about the ACH direct debit payment method options to pass to invoices created by the subscription.
+           * This sub-hash contains details about the ACH direct debit payment method options to pass to the invoice's PaymentIntent.
            */
-          us_bank_account: PaymentMethodOptions.UsBankAccount | null;
+          us_bank_account?: Stripe.Emptyable<
+            PaymentMethodOptions.UsBankAccount
+          >;
         }
 
-        namespace PaymentMethodOptions {
-          interface AcssDebit {
-            mandate_options?: AcssDebit.MandateOptions;
-
-            /**
-             * Bank account verification method.
-             */
-            verification_method?: AcssDebit.VerificationMethod;
-          }
-
-          namespace AcssDebit {
-            interface MandateOptions {
-              /**
-               * Transaction type of the mandate.
-               */
-              transaction_type: MandateOptions.TransactionType | null;
-            }
-
-            namespace MandateOptions {
-              type TransactionType = 'business' | 'personal';
-            }
-
-            type VerificationMethod = 'automatic' | 'instant' | 'microdeposits';
-          }
-
-          interface Bancontact {
-            /**
-             * Preferred language of the Bancontact authorization page that the customer is redirected to.
-             */
-            preferred_language: Bancontact.PreferredLanguage;
-          }
-
-          namespace Bancontact {
-            type PreferredLanguage = 'de' | 'en' | 'fr' | 'nl';
-          }
-
-          interface Card {
-            mandate_options?: Card.MandateOptions;
-
-            /**
-             * Selected network to process this Subscription on. Depends on the available networks of the card attached to the Subscription. Can be only set confirm-time.
-             */
-            network: Card.Network | null;
-
-            /**
-             * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
-             */
-            request_three_d_secure: Card.RequestThreeDSecure | null;
-          }
-
-          namespace Card {
-            interface MandateOptions {
-              /**
-               * Amount to be charged for future payments.
-               */
-              amount: number | null;
-
-              /**
-               * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
-               */
-              amount_type: MandateOptions.AmountType | null;
-
-              /**
-               * A description of the mandate or subscription that is meant to be displayed to the customer.
-               */
-              description: string | null;
-            }
-
-            namespace MandateOptions {
-              type AmountType = 'fixed' | 'maximum';
-            }
-
-            type Network =
-              | 'amex'
-              | 'cartes_bancaires'
-              | 'diners'
-              | 'discover'
-              | 'interac'
-              | 'jcb'
-              | 'mastercard'
-              | 'unionpay'
-              | 'unknown'
-              | 'visa';
-
-            type RequestThreeDSecure = 'any' | 'automatic';
-          }
-
-          interface CustomerBalance {
-            bank_transfer?: CustomerBalance.BankTransfer;
-
-            /**
-             * The funding method type to be used when there are not enough funds in the customer balance. Permitted values include: `bank_transfer`.
-             */
-            funding_type: 'bank_transfer' | null;
-          }
-
-          namespace CustomerBalance {
-            interface BankTransfer {
-              eu_bank_transfer?: BankTransfer.EuBankTransfer;
-
-              /**
-               * The bank transfer type that can be used for funding. Permitted values include: `eu_bank_transfer`, `gb_bank_transfer`, `jp_bank_transfer`, or `mx_bank_transfer`.
-               */
-              type: string | null;
-            }
-
-            namespace BankTransfer {
-              interface EuBankTransfer {
-                /**
-                 * The desired country code of the bank account information. Permitted values include: `DE`, `ES`, `FR`, `IE`, or `NL`.
-                 */
-                country: EuBankTransfer.Country;
-              }
-
-              namespace EuBankTransfer {
-                type Country = 'DE' | 'ES' | 'FR' | 'IE' | 'NL';
-              }
-            }
-          }
-
-          interface Konbini {}
-
-          interface UsBankAccount {
-            financial_connections?: UsBankAccount.FinancialConnections;
-
-            /**
-             * Bank account verification method.
-             */
-            verification_method?: UsBankAccount.VerificationMethod;
-          }
-
-          namespace UsBankAccount {
-            interface FinancialConnections {
-              /**
-               * The list of permissions to request. The `payment_method` permission must be included.
-               */
-              permissions?: Array<FinancialConnections.Permission>;
-            }
-
-            namespace FinancialConnections {
-              type Permission = 'balances' | 'payment_method' | 'transactions';
-            }
-
-            type VerificationMethod = 'automatic' | 'instant' | 'microdeposits';
-          }
-        }
-
-        type PaymentMethodType =
+        export type PaymentMethodType =
           | 'ach_credit_transfer'
           | 'ach_debit'
           | 'acss_debit'
@@ -477,75 +844,183 @@ declare module 'stripe' {
           | 'us_bank_account'
           | 'wechat_pay';
 
-        type SaveDefaultPaymentMethod = 'off' | 'on_subscription';
-      }
+        export type SaveDefaultPaymentMethod = 'off' | 'on_subscription';
 
-      interface PendingInvoiceItemInterval {
-        /**
-         * Specifies invoicing frequency. Either `day`, `week`, `month` or `year`.
-         */
-        interval: PendingInvoiceItemInterval.Interval;
+        namespace PaymentMethodOptions {
+          export interface AcssDebit {
+            /**
+             * Additional fields for Mandate creation
+             */
+            mandate_options?: AcssDebit.MandateOptions;
 
-        /**
-         * The number of intervals between invoices. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
-         */
-        interval_count: number;
+            /**
+             * Verification method for the intent
+             */
+            verification_method?: AcssDebit.VerificationMethod;
+          }
+
+          export interface Bancontact {
+            /**
+             * Preferred language of the Bancontact authorization page that the customer is redirected to.
+             */
+            preferred_language?: Bancontact.PreferredLanguage;
+          }
+
+          export interface Card {
+            /**
+             * Configuration options for setting up an eMandate for cards issued in India.
+             */
+            mandate_options?: Card.MandateOptions;
+
+            /**
+             * Selected network to process this Subscription on. Depends on the available networks of the card attached to the Subscription. Can be only set confirm-time.
+             */
+            network?: Card.Network;
+
+            /**
+             * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+             */
+            request_three_d_secure?: Card.RequestThreeDSecure;
+          }
+
+          export interface CustomerBalance {
+            /**
+             * Configuration for the bank transfer funding type, if the `funding_type` is set to `bank_transfer`.
+             */
+            bank_transfer?: CustomerBalance.BankTransfer;
+
+            /**
+             * The funding method type to be used when there are not enough funds in the customer balance. Permitted values include: `bank_transfer`.
+             */
+            funding_type?: string;
+          }
+
+          export interface Konbini {}
+
+          export interface UsBankAccount {
+            /**
+             * Additional fields for Financial Connections Session creation
+             */
+            financial_connections?: UsBankAccount.FinancialConnections;
+
+            /**
+             * Verification method for the intent
+             */
+            verification_method?: UsBankAccount.VerificationMethod;
+          }
+
+          namespace AcssDebit {
+            export interface MandateOptions {
+              /**
+               * Transaction type of the mandate.
+               */
+              transaction_type?: MandateOptions.TransactionType;
+            }
+
+            export type VerificationMethod =
+              | 'automatic'
+              | 'instant'
+              | 'microdeposits';
+
+            namespace MandateOptions {
+              export type TransactionType = 'business' | 'personal';
+            }
+          }
+
+          namespace Bancontact {
+            export type PreferredLanguage = 'de' | 'en' | 'fr' | 'nl';
+          }
+
+          namespace Card {
+            export interface MandateOptions {
+              /**
+               * Amount to be charged for future payments.
+               */
+              amount?: number;
+
+              /**
+               * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+               */
+              amount_type?: MandateOptions.AmountType;
+
+              /**
+               * A description of the mandate or subscription that is meant to be displayed to the customer.
+               */
+              description?: string;
+            }
+
+            export type Network =
+              | 'amex'
+              | 'cartes_bancaires'
+              | 'diners'
+              | 'discover'
+              | 'interac'
+              | 'jcb'
+              | 'mastercard'
+              | 'unionpay'
+              | 'unknown'
+              | 'visa';
+
+            export type RequestThreeDSecure = 'any' | 'automatic';
+
+            namespace MandateOptions {
+              export type AmountType = 'fixed' | 'maximum';
+            }
+          }
+
+          namespace CustomerBalance {
+            export interface BankTransfer {
+              /**
+               * Configuration for eu_bank_transfer funding type.
+               */
+              eu_bank_transfer?: BankTransfer.EuBankTransfer;
+
+              /**
+               * The bank transfer type that can be used for funding. Permitted values include: `eu_bank_transfer`, `gb_bank_transfer`, `jp_bank_transfer`, or `mx_bank_transfer`.
+               */
+              type?: string;
+            }
+
+            namespace BankTransfer {
+              export interface EuBankTransfer {
+                /**
+                 * The desired country code of the bank account information. Permitted values include: `DE`, `ES`, `FR`, `IE`, or `NL`.
+                 */
+                country: string;
+              }
+            }
+          }
+
+          namespace UsBankAccount {
+            export interface FinancialConnections {
+              /**
+               * The list of permissions to request. If this parameter is passed, the `payment_method` permission must be included. Valid permissions include: `balances`, `ownership`, `payment_method`, and `transactions`.
+               */
+              permissions?: Array<FinancialConnections.Permission>;
+            }
+
+            export type VerificationMethod =
+              | 'automatic'
+              | 'instant'
+              | 'microdeposits';
+
+            namespace FinancialConnections {
+              export type Permission =
+                | 'balances'
+                | 'ownership'
+                | 'payment_method'
+                | 'transactions';
+            }
+          }
+        }
       }
 
       namespace PendingInvoiceItemInterval {
-        type Interval = 'day' | 'month' | 'week' | 'year';
-      }
-
-      interface PendingUpdate {
-        /**
-         * If the update is applied, determines the date of the first full invoice, and, for plans with `month` or `year` intervals, the day of the month for subsequent invoices. The timestamp is in UTC format.
-         */
-        billing_cycle_anchor: number | null;
-
-        /**
-         * The point after which the changes reflected by this update will be discarded and no longer applied.
-         */
-        expires_at: number;
-
-        /**
-         * List of subscription items, each with an attached plan, that will be set if the update is applied.
-         */
-        subscription_items: Array<Stripe.SubscriptionItem> | null;
-
-        /**
-         * Unix timestamp representing the end of the trial period the customer will get before being charged for the first time, if the update is applied.
-         */
-        trial_end: number | null;
-
-        /**
-         * Indicates if a plan's `trial_period_days` should be applied to the subscription. Setting `trial_end` per subscription is preferred, and this defaults to `false`. Setting this flag to `true` together with `trial_end` is not allowed. See [Using trial periods on subscriptions](https://stripe.com/docs/billing/subscriptions/trials) to learn more.
-         */
-        trial_from_plan: boolean | null;
-      }
-
-      type Status =
-        | 'active'
-        | 'canceled'
-        | 'incomplete'
-        | 'incomplete_expired'
-        | 'past_due'
-        | 'trialing'
-        | 'unpaid';
-
-      interface TransferData {
-        /**
-         * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
-         */
-        amount_percent: number | null;
-
-        /**
-         * The account where funds from the payment will be transferred to upon payment success.
-         */
-        destination: string | Stripe.Account;
+        export type Interval = 'day' | 'month' | 'week' | 'year';
       }
     }
 
-    interface SubscriptionCreateParams {
+    export interface SubscriptionCreateParams {
       /**
        * The identifier of the customer to subscribe.
        */
@@ -707,8 +1182,15 @@ declare module 'stripe' {
       trial_period_days?: number;
     }
 
-    namespace SubscriptionCreateParams {
-      interface AddInvoiceItem {
+    export interface SubscriptionRetrieveParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+    }
+
+    namespace SubscriptionUpdateParams {
+      export interface AddInvoiceItem {
         /**
          * The ID of the price object.
          */
@@ -730,8 +1212,149 @@ declare module 'stripe' {
         tax_rates?: Stripe.Emptyable<Array<string>>;
       }
 
+      export interface AutomaticTax {
+        /**
+         * Enabled automatic tax calculation which will automatically compute tax rates on all invoices generated by the subscription.
+         */
+        enabled: boolean;
+      }
+
+      export type BillingCycleAnchor = 'now' | 'unchanged';
+
+      export interface BillingThresholds {
+        /**
+         * Monetary threshold that triggers the subscription to advance to a new billing period
+         */
+        amount_gte?: number;
+
+        /**
+         * Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged.
+         */
+        reset_billing_cycle_anchor?: boolean;
+      }
+
+      export type CollectionMethod = 'charge_automatically' | 'send_invoice';
+
+      export interface Item {
+        /**
+         * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period. When updating, pass an empty string to remove previously-defined thresholds.
+         */
+        billing_thresholds?: Stripe.Emptyable<Item.BillingThresholds>;
+
+        /**
+         * Delete all usage for a given subscription item. Allowed only when `deleted` is set to `true` and the current plan's `usage_type` is `metered`.
+         */
+        clear_usage?: boolean;
+
+        /**
+         * A flag that, if set to `true`, will delete the specified item.
+         */
+        deleted?: boolean;
+
+        /**
+         * Subscription item to update.
+         */
+        id?: string;
+
+        /**
+         * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+         */
+        metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
+
+        /**
+         * Plan ID for this item, as a string.
+         */
+        plan?: string;
+
+        /**
+         * The ID of the price object. When changing a subscription item's price, `quantity` is set to 1 unless a `quantity` parameter is provided.
+         */
+        price?: string;
+
+        /**
+         * Data used to generate a new [Price](https://stripe.com/docs/api/prices) object inline.
+         */
+        price_data?: Item.PriceData;
+
+        /**
+         * Quantity for this item.
+         */
+        quantity?: number;
+
+        /**
+         * A list of [Tax Rate](https://stripe.com/docs/api/tax_rates) ids. These Tax Rates will override the [`default_tax_rates`](https://stripe.com/docs/api/subscriptions/create#create_subscription-default_tax_rates) on the Subscription. When updating, pass an empty string to remove previously-defined tax rates.
+         */
+        tax_rates?: Stripe.Emptyable<Array<string>>;
+      }
+
+      export interface PauseCollection {
+        /**
+         * The payment collection behavior for this subscription while paused. One of `keep_as_draft`, `mark_uncollectible`, or `void`.
+         */
+        behavior: PauseCollection.Behavior;
+
+        /**
+         * The time after which the subscription will resume collecting payments.
+         */
+        resumes_at?: number;
+      }
+
+      export type PaymentBehavior =
+        | 'allow_incomplete'
+        | 'default_incomplete'
+        | 'error_if_incomplete'
+        | 'pending_if_incomplete';
+
+      export interface PaymentSettings {
+        /**
+         * Payment-method-specific configuration to provide to invoices created by the subscription.
+         */
+        payment_method_options?: PaymentSettings.PaymentMethodOptions;
+
+        /**
+         * The list of payment method types (e.g. card) to provide to the invoice's PaymentIntent. If not set, Stripe attempts to automatically determine the types to use by looking at the invoice's default payment method, the subscription's default payment method, the customer's default payment method, and your [invoice template settings](https://dashboard.stripe.com/settings/billing/invoice).
+         */
+        payment_method_types?: Stripe.Emptyable<
+          Array<PaymentSettings.PaymentMethodType>
+        >;
+
+        /**
+         * Either `off`, or `on_subscription`. With `on_subscription` Stripe updates `subscription.default_payment_method` when a subscription payment succeeds.
+         */
+        save_default_payment_method?: PaymentSettings.SaveDefaultPaymentMethod;
+      }
+
+      export interface PendingInvoiceItemInterval {
+        /**
+         * Specifies invoicing frequency. Either `day`, `week`, `month` or `year`.
+         */
+        interval: PendingInvoiceItemInterval.Interval;
+
+        /**
+         * The number of intervals between invoices. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
+         */
+        interval_count?: number;
+      }
+
+      export type ProrationBehavior =
+        | 'always_invoice'
+        | 'create_prorations'
+        | 'none';
+
+      export interface TransferData {
+        /**
+         * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+         */
+        amount_percent?: number;
+
+        /**
+         * ID of an existing, connected Stripe account.
+         */
+        destination: string;
+      }
+
       namespace AddInvoiceItem {
-        interface PriceData {
+        export interface PriceData {
           /**
            * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
            */
@@ -759,77 +1382,19 @@ declare module 'stripe' {
         }
 
         namespace PriceData {
-          type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+          export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
         }
       }
 
-      interface AutomaticTax {
-        /**
-         * Enabled automatic tax calculation which will automatically compute tax rates on all invoices generated by the subscription.
-         */
-        enabled: boolean;
-      }
-
-      interface BillingThresholds {
-        /**
-         * Monetary threshold that triggers the subscription to advance to a new billing period
-         */
-        amount_gte?: number;
-
-        /**
-         * Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged.
-         */
-        reset_billing_cycle_anchor?: boolean;
-      }
-
-      type CollectionMethod = 'charge_automatically' | 'send_invoice';
-
-      interface Item {
-        /**
-         * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period. When updating, pass an empty string to remove previously-defined thresholds.
-         */
-        billing_thresholds?: Stripe.Emptyable<Item.BillingThresholds>;
-
-        /**
-         * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
-         */
-        metadata?: Stripe.MetadataParam;
-
-        /**
-         * Plan ID for this item, as a string.
-         */
-        plan?: string;
-
-        /**
-         * The ID of the price object.
-         */
-        price?: string;
-
-        /**
-         * Data used to generate a new [Price](https://stripe.com/docs/api/prices) object inline.
-         */
-        price_data?: Item.PriceData;
-
-        /**
-         * Quantity for this item.
-         */
-        quantity?: number;
-
-        /**
-         * A list of [Tax Rate](https://stripe.com/docs/api/tax_rates) ids. These Tax Rates will override the [`default_tax_rates`](https://stripe.com/docs/api/subscriptions/create#create_subscription-default_tax_rates) on the Subscription. When updating, pass an empty string to remove previously-defined tax rates.
-         */
-        tax_rates?: Stripe.Emptyable<Array<string>>;
-      }
-
       namespace Item {
-        interface BillingThresholds {
+        export interface BillingThresholds {
           /**
            * Usage threshold that triggers the subscription to advance to a new billing period
            */
           usage_gte: number;
         }
 
-        interface PriceData {
+        export interface PriceData {
           /**
            * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
            */
@@ -862,7 +1427,7 @@ declare module 'stripe' {
         }
 
         namespace PriceData {
-          interface Recurring {
+          export interface Recurring {
             /**
              * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
              */
@@ -874,41 +1439,20 @@ declare module 'stripe' {
             interval_count?: number;
           }
 
-          namespace Recurring {
-            type Interval = 'day' | 'month' | 'week' | 'year';
-          }
+          export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
 
-          type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+          namespace Recurring {
+            export type Interval = 'day' | 'month' | 'week' | 'year';
+          }
         }
       }
 
-      type PaymentBehavior =
-        | 'allow_incomplete'
-        | 'default_incomplete'
-        | 'error_if_incomplete'
-        | 'pending_if_incomplete';
-
-      interface PaymentSettings {
-        /**
-         * Payment-method-specific configuration to provide to invoices created by the subscription.
-         */
-        payment_method_options?: PaymentSettings.PaymentMethodOptions;
-
-        /**
-         * The list of payment method types (e.g. card) to provide to the invoice's PaymentIntent. If not set, Stripe attempts to automatically determine the types to use by looking at the invoice's default payment method, the subscription's default payment method, the customer's default payment method, and your [invoice template settings](https://dashboard.stripe.com/settings/billing/invoice).
-         */
-        payment_method_types?: Stripe.Emptyable<
-          Array<PaymentSettings.PaymentMethodType>
-        >;
-
-        /**
-         * Either `off`, or `on_subscription`. With `on_subscription` Stripe updates `subscription.default_payment_method` when a subscription payment succeeds.
-         */
-        save_default_payment_method?: PaymentSettings.SaveDefaultPaymentMethod;
+      namespace PauseCollection {
+        export type Behavior = 'keep_as_draft' | 'mark_uncollectible' | 'void';
       }
 
       namespace PaymentSettings {
-        interface PaymentMethodOptions {
+        export interface PaymentMethodOptions {
           /**
            * This sub-hash contains details about the Canadian pre-authorized debit payment method options to pass to the invoice's PaymentIntent.
            */
@@ -944,169 +1488,7 @@ declare module 'stripe' {
           >;
         }
 
-        namespace PaymentMethodOptions {
-          interface AcssDebit {
-            /**
-             * Additional fields for Mandate creation
-             */
-            mandate_options?: AcssDebit.MandateOptions;
-
-            /**
-             * Verification method for the intent
-             */
-            verification_method?: AcssDebit.VerificationMethod;
-          }
-
-          namespace AcssDebit {
-            interface MandateOptions {
-              /**
-               * Transaction type of the mandate.
-               */
-              transaction_type?: MandateOptions.TransactionType;
-            }
-
-            namespace MandateOptions {
-              type TransactionType = 'business' | 'personal';
-            }
-
-            type VerificationMethod = 'automatic' | 'instant' | 'microdeposits';
-          }
-
-          interface Bancontact {
-            /**
-             * Preferred language of the Bancontact authorization page that the customer is redirected to.
-             */
-            preferred_language?: Bancontact.PreferredLanguage;
-          }
-
-          namespace Bancontact {
-            type PreferredLanguage = 'de' | 'en' | 'fr' | 'nl';
-          }
-
-          interface Card {
-            /**
-             * Configuration options for setting up an eMandate for cards issued in India.
-             */
-            mandate_options?: Card.MandateOptions;
-
-            /**
-             * Selected network to process this Subscription on. Depends on the available networks of the card attached to the Subscription. Can be only set confirm-time.
-             */
-            network?: Card.Network;
-
-            /**
-             * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
-             */
-            request_three_d_secure?: Card.RequestThreeDSecure;
-          }
-
-          namespace Card {
-            interface MandateOptions {
-              /**
-               * Amount to be charged for future payments.
-               */
-              amount?: number;
-
-              /**
-               * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
-               */
-              amount_type?: MandateOptions.AmountType;
-
-              /**
-               * A description of the mandate or subscription that is meant to be displayed to the customer.
-               */
-              description?: string;
-            }
-
-            namespace MandateOptions {
-              type AmountType = 'fixed' | 'maximum';
-            }
-
-            type Network =
-              | 'amex'
-              | 'cartes_bancaires'
-              | 'diners'
-              | 'discover'
-              | 'interac'
-              | 'jcb'
-              | 'mastercard'
-              | 'unionpay'
-              | 'unknown'
-              | 'visa';
-
-            type RequestThreeDSecure = 'any' | 'automatic';
-          }
-
-          interface CustomerBalance {
-            /**
-             * Configuration for the bank transfer funding type, if the `funding_type` is set to `bank_transfer`.
-             */
-            bank_transfer?: CustomerBalance.BankTransfer;
-
-            /**
-             * The funding method type to be used when there are not enough funds in the customer balance. Permitted values include: `bank_transfer`.
-             */
-            funding_type?: string;
-          }
-
-          namespace CustomerBalance {
-            interface BankTransfer {
-              /**
-               * Configuration for eu_bank_transfer funding type.
-               */
-              eu_bank_transfer?: BankTransfer.EuBankTransfer;
-
-              /**
-               * The bank transfer type that can be used for funding. Permitted values include: `eu_bank_transfer`, `gb_bank_transfer`, `jp_bank_transfer`, or `mx_bank_transfer`.
-               */
-              type?: string;
-            }
-
-            namespace BankTransfer {
-              interface EuBankTransfer {
-                /**
-                 * The desired country code of the bank account information. Permitted values include: `DE`, `ES`, `FR`, `IE`, or `NL`.
-                 */
-                country: string;
-              }
-            }
-          }
-
-          interface Konbini {}
-
-          interface UsBankAccount {
-            /**
-             * Additional fields for Financial Connections Session creation
-             */
-            financial_connections?: UsBankAccount.FinancialConnections;
-
-            /**
-             * Verification method for the intent
-             */
-            verification_method?: UsBankAccount.VerificationMethod;
-          }
-
-          namespace UsBankAccount {
-            interface FinancialConnections {
-              /**
-               * The list of permissions to request. If this parameter is passed, the `payment_method` permission must be included. Valid permissions include: `balances`, `ownership`, `payment_method`, and `transactions`.
-               */
-              permissions?: Array<FinancialConnections.Permission>;
-            }
-
-            namespace FinancialConnections {
-              type Permission =
-                | 'balances'
-                | 'ownership'
-                | 'payment_method'
-                | 'transactions';
-            }
-
-            type VerificationMethod = 'automatic' | 'instant' | 'microdeposits';
-          }
-        }
-
-        type PaymentMethodType =
+        export type PaymentMethodType =
           | 'ach_credit_transfer'
           | 'ach_debit'
           | 'acss_debit'
@@ -1130,48 +1512,183 @@ declare module 'stripe' {
           | 'us_bank_account'
           | 'wechat_pay';
 
-        type SaveDefaultPaymentMethod = 'off' | 'on_subscription';
-      }
+        export type SaveDefaultPaymentMethod = 'off' | 'on_subscription';
 
-      interface PendingInvoiceItemInterval {
-        /**
-         * Specifies invoicing frequency. Either `day`, `week`, `month` or `year`.
-         */
-        interval: PendingInvoiceItemInterval.Interval;
+        namespace PaymentMethodOptions {
+          export interface AcssDebit {
+            /**
+             * Additional fields for Mandate creation
+             */
+            mandate_options?: AcssDebit.MandateOptions;
 
-        /**
-         * The number of intervals between invoices. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
-         */
-        interval_count?: number;
+            /**
+             * Verification method for the intent
+             */
+            verification_method?: AcssDebit.VerificationMethod;
+          }
+
+          export interface Bancontact {
+            /**
+             * Preferred language of the Bancontact authorization page that the customer is redirected to.
+             */
+            preferred_language?: Bancontact.PreferredLanguage;
+          }
+
+          export interface Card {
+            /**
+             * Configuration options for setting up an eMandate for cards issued in India.
+             */
+            mandate_options?: Card.MandateOptions;
+
+            /**
+             * Selected network to process this Subscription on. Depends on the available networks of the card attached to the Subscription. Can be only set confirm-time.
+             */
+            network?: Card.Network;
+
+            /**
+             * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
+             */
+            request_three_d_secure?: Card.RequestThreeDSecure;
+          }
+
+          export interface CustomerBalance {
+            /**
+             * Configuration for the bank transfer funding type, if the `funding_type` is set to `bank_transfer`.
+             */
+            bank_transfer?: CustomerBalance.BankTransfer;
+
+            /**
+             * The funding method type to be used when there are not enough funds in the customer balance. Permitted values include: `bank_transfer`.
+             */
+            funding_type?: string;
+          }
+
+          export interface Konbini {}
+
+          export interface UsBankAccount {
+            /**
+             * Additional fields for Financial Connections Session creation
+             */
+            financial_connections?: UsBankAccount.FinancialConnections;
+
+            /**
+             * Verification method for the intent
+             */
+            verification_method?: UsBankAccount.VerificationMethod;
+          }
+
+          namespace AcssDebit {
+            export interface MandateOptions {
+              /**
+               * Transaction type of the mandate.
+               */
+              transaction_type?: MandateOptions.TransactionType;
+            }
+
+            export type VerificationMethod =
+              | 'automatic'
+              | 'instant'
+              | 'microdeposits';
+
+            namespace MandateOptions {
+              export type TransactionType = 'business' | 'personal';
+            }
+          }
+
+          namespace Bancontact {
+            export type PreferredLanguage = 'de' | 'en' | 'fr' | 'nl';
+          }
+
+          namespace Card {
+            export interface MandateOptions {
+              /**
+               * Amount to be charged for future payments.
+               */
+              amount?: number;
+
+              /**
+               * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
+               */
+              amount_type?: MandateOptions.AmountType;
+
+              /**
+               * A description of the mandate or subscription that is meant to be displayed to the customer.
+               */
+              description?: string;
+            }
+
+            export type Network =
+              | 'amex'
+              | 'cartes_bancaires'
+              | 'diners'
+              | 'discover'
+              | 'interac'
+              | 'jcb'
+              | 'mastercard'
+              | 'unionpay'
+              | 'unknown'
+              | 'visa';
+
+            export type RequestThreeDSecure = 'any' | 'automatic';
+
+            namespace MandateOptions {
+              export type AmountType = 'fixed' | 'maximum';
+            }
+          }
+
+          namespace CustomerBalance {
+            export interface BankTransfer {
+              /**
+               * Configuration for eu_bank_transfer funding type.
+               */
+              eu_bank_transfer?: BankTransfer.EuBankTransfer;
+
+              /**
+               * The bank transfer type that can be used for funding. Permitted values include: `eu_bank_transfer`, `gb_bank_transfer`, `jp_bank_transfer`, or `mx_bank_transfer`.
+               */
+              type?: string;
+            }
+
+            namespace BankTransfer {
+              export interface EuBankTransfer {
+                /**
+                 * The desired country code of the bank account information. Permitted values include: `DE`, `ES`, `FR`, `IE`, or `NL`.
+                 */
+                country: string;
+              }
+            }
+          }
+
+          namespace UsBankAccount {
+            export interface FinancialConnections {
+              /**
+               * The list of permissions to request. If this parameter is passed, the `payment_method` permission must be included. Valid permissions include: `balances`, `ownership`, `payment_method`, and `transactions`.
+               */
+              permissions?: Array<FinancialConnections.Permission>;
+            }
+
+            export type VerificationMethod =
+              | 'automatic'
+              | 'instant'
+              | 'microdeposits';
+
+            namespace FinancialConnections {
+              export type Permission =
+                | 'balances'
+                | 'ownership'
+                | 'payment_method'
+                | 'transactions';
+            }
+          }
+        }
       }
 
       namespace PendingInvoiceItemInterval {
-        type Interval = 'day' | 'month' | 'week' | 'year';
-      }
-
-      type ProrationBehavior = 'always_invoice' | 'create_prorations' | 'none';
-
-      interface TransferData {
-        /**
-         * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
-         */
-        amount_percent?: number;
-
-        /**
-         * ID of an existing, connected Stripe account.
-         */
-        destination: string;
+        export type Interval = 'day' | 'month' | 'week' | 'year';
       }
     }
 
-    interface SubscriptionRetrieveParams {
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-    }
-
-    interface SubscriptionUpdateParams {
+    export interface SubscriptionUpdateParams {
       /**
        * A list of prices and quantities that will generate invoice items appended to the next invoice for this subscription. You may pass up to 20 items.
        */
@@ -1325,497 +1842,22 @@ declare module 'stripe' {
       trial_from_plan?: boolean;
     }
 
-    namespace SubscriptionUpdateParams {
-      interface AddInvoiceItem {
-        /**
-         * The ID of the price object.
-         */
-        price?: string;
-
-        /**
-         * Data used to generate a new [Price](https://stripe.com/docs/api/prices) object inline.
-         */
-        price_data?: AddInvoiceItem.PriceData;
-
-        /**
-         * Quantity for this item. Defaults to 1.
-         */
-        quantity?: number;
-
-        /**
-         * The tax rates which apply to the item. When set, the `default_tax_rates` do not apply to this item.
-         */
-        tax_rates?: Stripe.Emptyable<Array<string>>;
-      }
-
-      namespace AddInvoiceItem {
-        interface PriceData {
-          /**
-           * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-           */
-          currency: string;
-
-          /**
-           * The ID of the product that this price will belong to.
-           */
-          product: string;
-
-          /**
-           * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
-           */
-          tax_behavior?: PriceData.TaxBehavior;
-
-          /**
-           * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
-           */
-          unit_amount?: number;
-
-          /**
-           * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
-           */
-          unit_amount_decimal?: string;
-        }
-
-        namespace PriceData {
-          type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
-        }
-      }
-
-      interface AutomaticTax {
-        /**
-         * Enabled automatic tax calculation which will automatically compute tax rates on all invoices generated by the subscription.
-         */
-        enabled: boolean;
-      }
-
-      type BillingCycleAnchor = 'now' | 'unchanged';
-
-      interface BillingThresholds {
-        /**
-         * Monetary threshold that triggers the subscription to advance to a new billing period
-         */
-        amount_gte?: number;
-
-        /**
-         * Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged.
-         */
-        reset_billing_cycle_anchor?: boolean;
-      }
-
-      type CollectionMethod = 'charge_automatically' | 'send_invoice';
-
-      interface Item {
-        /**
-         * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period. When updating, pass an empty string to remove previously-defined thresholds.
-         */
-        billing_thresholds?: Stripe.Emptyable<Item.BillingThresholds>;
-
-        /**
-         * Delete all usage for a given subscription item. Allowed only when `deleted` is set to `true` and the current plan's `usage_type` is `metered`.
-         */
-        clear_usage?: boolean;
-
-        /**
-         * A flag that, if set to `true`, will delete the specified item.
-         */
-        deleted?: boolean;
-
-        /**
-         * Subscription item to update.
-         */
-        id?: string;
-
-        /**
-         * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
-         */
-        metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
-
-        /**
-         * Plan ID for this item, as a string.
-         */
-        plan?: string;
-
-        /**
-         * The ID of the price object. When changing a subscription item's price, `quantity` is set to 1 unless a `quantity` parameter is provided.
-         */
-        price?: string;
-
-        /**
-         * Data used to generate a new [Price](https://stripe.com/docs/api/prices) object inline.
-         */
-        price_data?: Item.PriceData;
-
-        /**
-         * Quantity for this item.
-         */
-        quantity?: number;
-
-        /**
-         * A list of [Tax Rate](https://stripe.com/docs/api/tax_rates) ids. These Tax Rates will override the [`default_tax_rates`](https://stripe.com/docs/api/subscriptions/create#create_subscription-default_tax_rates) on the Subscription. When updating, pass an empty string to remove previously-defined tax rates.
-         */
-        tax_rates?: Stripe.Emptyable<Array<string>>;
-      }
-
-      namespace Item {
-        interface BillingThresholds {
-          /**
-           * Usage threshold that triggers the subscription to advance to a new billing period
-           */
-          usage_gte: number;
-        }
-
-        interface PriceData {
-          /**
-           * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-           */
-          currency: string;
-
-          /**
-           * The ID of the product that this price will belong to.
-           */
-          product: string;
-
-          /**
-           * The recurring components of a price such as `interval` and `interval_count`.
-           */
-          recurring: PriceData.Recurring;
-
-          /**
-           * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
-           */
-          tax_behavior?: PriceData.TaxBehavior;
-
-          /**
-           * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
-           */
-          unit_amount?: number;
-
-          /**
-           * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
-           */
-          unit_amount_decimal?: string;
-        }
-
-        namespace PriceData {
-          interface Recurring {
-            /**
-             * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
-             */
-            interval: Recurring.Interval;
-
-            /**
-             * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
-             */
-            interval_count?: number;
-          }
-
-          namespace Recurring {
-            type Interval = 'day' | 'month' | 'week' | 'year';
-          }
-
-          type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
-        }
-      }
-
-      interface PauseCollection {
-        /**
-         * The payment collection behavior for this subscription while paused. One of `keep_as_draft`, `mark_uncollectible`, or `void`.
-         */
-        behavior: PauseCollection.Behavior;
-
-        /**
-         * The time after which the subscription will resume collecting payments.
-         */
-        resumes_at?: number;
-      }
-
-      namespace PauseCollection {
-        type Behavior = 'keep_as_draft' | 'mark_uncollectible' | 'void';
-      }
-
-      type PaymentBehavior =
-        | 'allow_incomplete'
-        | 'default_incomplete'
-        | 'error_if_incomplete'
-        | 'pending_if_incomplete';
-
-      interface PaymentSettings {
-        /**
-         * Payment-method-specific configuration to provide to invoices created by the subscription.
-         */
-        payment_method_options?: PaymentSettings.PaymentMethodOptions;
-
-        /**
-         * The list of payment method types (e.g. card) to provide to the invoice's PaymentIntent. If not set, Stripe attempts to automatically determine the types to use by looking at the invoice's default payment method, the subscription's default payment method, the customer's default payment method, and your [invoice template settings](https://dashboard.stripe.com/settings/billing/invoice).
-         */
-        payment_method_types?: Stripe.Emptyable<
-          Array<PaymentSettings.PaymentMethodType>
-        >;
-
-        /**
-         * Either `off`, or `on_subscription`. With `on_subscription` Stripe updates `subscription.default_payment_method` when a subscription payment succeeds.
-         */
-        save_default_payment_method?: PaymentSettings.SaveDefaultPaymentMethod;
-      }
-
-      namespace PaymentSettings {
-        interface PaymentMethodOptions {
-          /**
-           * This sub-hash contains details about the Canadian pre-authorized debit payment method options to pass to the invoice's PaymentIntent.
-           */
-          acss_debit?: Stripe.Emptyable<PaymentMethodOptions.AcssDebit>;
-
-          /**
-           * This sub-hash contains details about the Bancontact payment method options to pass to the invoice's PaymentIntent.
-           */
-          bancontact?: Stripe.Emptyable<PaymentMethodOptions.Bancontact>;
-
-          /**
-           * This sub-hash contains details about the Card payment method options to pass to the invoice's PaymentIntent.
-           */
-          card?: Stripe.Emptyable<PaymentMethodOptions.Card>;
-
-          /**
-           * This sub-hash contains details about the Bank transfer payment method options to pass to the invoice's PaymentIntent.
-           */
-          customer_balance?: Stripe.Emptyable<
-            PaymentMethodOptions.CustomerBalance
-          >;
-
-          /**
-           * This sub-hash contains details about the Konbini payment method options to pass to the invoice's PaymentIntent.
-           */
-          konbini?: Stripe.Emptyable<PaymentMethodOptions.Konbini>;
-
-          /**
-           * This sub-hash contains details about the ACH direct debit payment method options to pass to the invoice's PaymentIntent.
-           */
-          us_bank_account?: Stripe.Emptyable<
-            PaymentMethodOptions.UsBankAccount
-          >;
-        }
-
-        namespace PaymentMethodOptions {
-          interface AcssDebit {
-            /**
-             * Additional fields for Mandate creation
-             */
-            mandate_options?: AcssDebit.MandateOptions;
-
-            /**
-             * Verification method for the intent
-             */
-            verification_method?: AcssDebit.VerificationMethod;
-          }
-
-          namespace AcssDebit {
-            interface MandateOptions {
-              /**
-               * Transaction type of the mandate.
-               */
-              transaction_type?: MandateOptions.TransactionType;
-            }
-
-            namespace MandateOptions {
-              type TransactionType = 'business' | 'personal';
-            }
-
-            type VerificationMethod = 'automatic' | 'instant' | 'microdeposits';
-          }
-
-          interface Bancontact {
-            /**
-             * Preferred language of the Bancontact authorization page that the customer is redirected to.
-             */
-            preferred_language?: Bancontact.PreferredLanguage;
-          }
-
-          namespace Bancontact {
-            type PreferredLanguage = 'de' | 'en' | 'fr' | 'nl';
-          }
-
-          interface Card {
-            /**
-             * Configuration options for setting up an eMandate for cards issued in India.
-             */
-            mandate_options?: Card.MandateOptions;
-
-            /**
-             * Selected network to process this Subscription on. Depends on the available networks of the card attached to the Subscription. Can be only set confirm-time.
-             */
-            network?: Card.Network;
-
-            /**
-             * We strongly recommend that you rely on our SCA Engine to automatically prompt your customers for authentication based on risk level and [other requirements](https://stripe.com/docs/strong-customer-authentication). However, if you wish to request 3D Secure based on logic from your own fraud engine, provide this option. Read our guide on [manually requesting 3D Secure](https://stripe.com/docs/payments/3d-secure#manual-three-ds) for more information on how this configuration interacts with Radar and our SCA Engine.
-             */
-            request_three_d_secure?: Card.RequestThreeDSecure;
-          }
-
-          namespace Card {
-            interface MandateOptions {
-              /**
-               * Amount to be charged for future payments.
-               */
-              amount?: number;
-
-              /**
-               * One of `fixed` or `maximum`. If `fixed`, the `amount` param refers to the exact amount to be charged in future payments. If `maximum`, the amount charged can be up to the value passed for the `amount` param.
-               */
-              amount_type?: MandateOptions.AmountType;
-
-              /**
-               * A description of the mandate or subscription that is meant to be displayed to the customer.
-               */
-              description?: string;
-            }
-
-            namespace MandateOptions {
-              type AmountType = 'fixed' | 'maximum';
-            }
-
-            type Network =
-              | 'amex'
-              | 'cartes_bancaires'
-              | 'diners'
-              | 'discover'
-              | 'interac'
-              | 'jcb'
-              | 'mastercard'
-              | 'unionpay'
-              | 'unknown'
-              | 'visa';
-
-            type RequestThreeDSecure = 'any' | 'automatic';
-          }
-
-          interface CustomerBalance {
-            /**
-             * Configuration for the bank transfer funding type, if the `funding_type` is set to `bank_transfer`.
-             */
-            bank_transfer?: CustomerBalance.BankTransfer;
-
-            /**
-             * The funding method type to be used when there are not enough funds in the customer balance. Permitted values include: `bank_transfer`.
-             */
-            funding_type?: string;
-          }
-
-          namespace CustomerBalance {
-            interface BankTransfer {
-              /**
-               * Configuration for eu_bank_transfer funding type.
-               */
-              eu_bank_transfer?: BankTransfer.EuBankTransfer;
-
-              /**
-               * The bank transfer type that can be used for funding. Permitted values include: `eu_bank_transfer`, `gb_bank_transfer`, `jp_bank_transfer`, or `mx_bank_transfer`.
-               */
-              type?: string;
-            }
-
-            namespace BankTransfer {
-              interface EuBankTransfer {
-                /**
-                 * The desired country code of the bank account information. Permitted values include: `DE`, `ES`, `FR`, `IE`, or `NL`.
-                 */
-                country: string;
-              }
-            }
-          }
-
-          interface Konbini {}
-
-          interface UsBankAccount {
-            /**
-             * Additional fields for Financial Connections Session creation
-             */
-            financial_connections?: UsBankAccount.FinancialConnections;
-
-            /**
-             * Verification method for the intent
-             */
-            verification_method?: UsBankAccount.VerificationMethod;
-          }
-
-          namespace UsBankAccount {
-            interface FinancialConnections {
-              /**
-               * The list of permissions to request. If this parameter is passed, the `payment_method` permission must be included. Valid permissions include: `balances`, `ownership`, `payment_method`, and `transactions`.
-               */
-              permissions?: Array<FinancialConnections.Permission>;
-            }
-
-            namespace FinancialConnections {
-              type Permission =
-                | 'balances'
-                | 'ownership'
-                | 'payment_method'
-                | 'transactions';
-            }
-
-            type VerificationMethod = 'automatic' | 'instant' | 'microdeposits';
-          }
-        }
-
-        type PaymentMethodType =
-          | 'ach_credit_transfer'
-          | 'ach_debit'
-          | 'acss_debit'
-          | 'au_becs_debit'
-          | 'bacs_debit'
-          | 'bancontact'
-          | 'boleto'
-          | 'card'
-          | 'customer_balance'
-          | 'fpx'
-          | 'giropay'
-          | 'grabpay'
-          | 'ideal'
-          | 'konbini'
-          | 'link'
-          | 'paynow'
-          | 'promptpay'
-          | 'sepa_credit_transfer'
-          | 'sepa_debit'
-          | 'sofort'
-          | 'us_bank_account'
-          | 'wechat_pay';
-
-        type SaveDefaultPaymentMethod = 'off' | 'on_subscription';
-      }
-
-      interface PendingInvoiceItemInterval {
-        /**
-         * Specifies invoicing frequency. Either `day`, `week`, `month` or `year`.
-         */
-        interval: PendingInvoiceItemInterval.Interval;
-
-        /**
-         * The number of intervals between invoices. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
-         */
-        interval_count?: number;
-      }
-
-      namespace PendingInvoiceItemInterval {
-        type Interval = 'day' | 'month' | 'week' | 'year';
-      }
-
-      type ProrationBehavior = 'always_invoice' | 'create_prorations' | 'none';
-
-      interface TransferData {
-        /**
-         * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
-         */
-        amount_percent?: number;
-
-        /**
-         * ID of an existing, connected Stripe account.
-         */
-        destination: string;
-      }
+    namespace SubscriptionListParams {
+      export type CollectionMethod = 'charge_automatically' | 'send_invoice';
+
+      export type Status =
+        | 'active'
+        | 'all'
+        | 'canceled'
+        | 'ended'
+        | 'incomplete'
+        | 'incomplete_expired'
+        | 'past_due'
+        | 'trialing'
+        | 'unpaid';
     }
 
-    interface SubscriptionListParams extends PaginationParams {
+    export interface SubscriptionListParams extends PaginationParams {
       /**
        * The collection method of the subscriptions to retrieve. Either `charge_automatically` or `send_invoice`.
        */
@@ -1858,22 +1900,7 @@ declare module 'stripe' {
       test_clock?: string;
     }
 
-    namespace SubscriptionListParams {
-      type CollectionMethod = 'charge_automatically' | 'send_invoice';
-
-      type Status =
-        | 'active'
-        | 'all'
-        | 'canceled'
-        | 'ended'
-        | 'incomplete'
-        | 'incomplete_expired'
-        | 'past_due'
-        | 'trialing'
-        | 'unpaid';
-    }
-
-    interface SubscriptionCancelParams {
+    export interface SubscriptionCancelParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
@@ -1890,7 +1917,7 @@ declare module 'stripe' {
       prorate?: boolean;
     }
 
-    interface SubscriptionDeleteParams {
+    export interface SubscriptionDeleteParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
@@ -1907,9 +1934,9 @@ declare module 'stripe' {
       prorate?: boolean;
     }
 
-    interface SubscriptionDeleteDiscountParams {}
+    export interface SubscriptionDeleteDiscountParams {}
 
-    interface SubscriptionSearchParams {
+    export interface SubscriptionSearchParams {
       /**
        * The search query string. See [search query language](https://stripe.com/docs/search#search-query-language) and the list of supported [query fields for subscriptions](https://stripe.com/docs/search#query-fields-for-subscriptions).
        */

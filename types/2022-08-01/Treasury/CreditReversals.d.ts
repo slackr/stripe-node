@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Treasury {
-      /**
+      export /**
        * You can reverse some [ReceivedCredits](https://stripe.com/docs/api#received_credits) depending on their network and source flow. Reversing a ReceivedCredit leads to the creation of a new object known as a CreditReversal.
        */
       interface CreditReversal {
@@ -76,11 +76,11 @@ declare module 'stripe' {
       }
 
       namespace CreditReversal {
-        type Network = 'ach' | 'stripe';
+        export type Network = 'ach' | 'stripe';
 
-        type Status = 'canceled' | 'posted' | 'processing';
+        export type Status = 'canceled' | 'posted' | 'processing';
 
-        interface StatusTransitions {
+        export interface StatusTransitions {
           /**
            * Timestamp describing when the CreditReversal changed status to `posted`
            */
@@ -88,7 +88,7 @@ declare module 'stripe' {
         }
       }
 
-      interface CreditReversalCreateParams {
+      export interface CreditReversalCreateParams {
         /**
          * The ReceivedCredit to reverse.
          */
@@ -105,14 +105,14 @@ declare module 'stripe' {
         metadata?: Stripe.MetadataParam;
       }
 
-      interface CreditReversalRetrieveParams {
+      export interface CreditReversalRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface CreditReversalListParams extends PaginationParams {
+      export interface CreditReversalListParams extends PaginationParams {
         /**
          * Returns objects associated with this FinancialAccount.
          */
@@ -135,7 +135,7 @@ declare module 'stripe' {
       }
 
       namespace CreditReversalListParams {
-        type Status = 'canceled' | 'posted' | 'processing';
+        export type Status = 'canceled' | 'posted' | 'processing';
       }
 
       class CreditReversalsResource {

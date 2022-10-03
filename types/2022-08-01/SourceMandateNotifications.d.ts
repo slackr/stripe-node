@@ -2,7 +2,40 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace SourceMandateNotification {
+      export interface AcssDebit {
+        /**
+         * The statement descriptor associate with the debit.
+         */
+        statement_descriptor?: string;
+      }
+
+      export interface BacsDebit {
+        /**
+         * Last 4 digits of the account number associated with the debit.
+         */
+        last4?: string;
+      }
+
+      export interface SepaDebit {
+        /**
+         * SEPA creditor ID.
+         */
+        creditor_identifier?: string;
+
+        /**
+         * Last 4 digits of the account number associated with the debit.
+         */
+        last4?: string;
+
+        /**
+         * Mandate reference associated with the debit.
+         */
+        mandate_reference?: string;
+      }
+    }
+
+    export /**
      * Source mandate notifications should be created when a notification related to
      * a source mandate must be sent to the payer. They will trigger a webhook or
      * deliver an email to the customer.
@@ -63,39 +96,6 @@ declare module 'stripe' {
        * The type of source this mandate notification is attached to. Should be the source type identifier code for the payment method, such as `three_d_secure`.
        */
       type: string;
-    }
-
-    namespace SourceMandateNotification {
-      interface AcssDebit {
-        /**
-         * The statement descriptor associate with the debit.
-         */
-        statement_descriptor?: string;
-      }
-
-      interface BacsDebit {
-        /**
-         * Last 4 digits of the account number associated with the debit.
-         */
-        last4?: string;
-      }
-
-      interface SepaDebit {
-        /**
-         * SEPA creditor ID.
-         */
-        creditor_identifier?: string;
-
-        /**
-         * Last 4 digits of the account number associated with the debit.
-         */
-        last4?: string;
-
-        /**
-         * Mandate reference associated with the debit.
-         */
-        mandate_reference?: string;
-      }
     }
   }
 }

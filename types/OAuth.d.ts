@@ -339,7 +339,7 @@ declare module 'stripe' {
        */
       deauthorize(
         params: OAuthDeauthorizeParams,
-        options?: Stripe.RequestOptions
+        options?: Stripe.Stripe.RequestOptions
       ): Promise<OAuthDeauthorization>;
 
       /**
@@ -348,7 +348,7 @@ declare module 'stripe' {
        */
       token(
         params: OAuthTokenParams,
-        options?: Stripe.RequestOptions
+        options?: Stripe.Stripe.RequestOptions
       ): Promise<OAuthToken>;
     }
   }

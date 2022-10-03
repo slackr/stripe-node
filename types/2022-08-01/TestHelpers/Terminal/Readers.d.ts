@@ -4,7 +4,7 @@ declare module 'stripe' {
   namespace Stripe {
     namespace TestHelpers {
       namespace Terminal {
-        interface ReaderPresentPaymentMethodParams {
+        export interface ReaderPresentPaymentMethodParams {
           /**
            * Simulated data for the card_present payment method
            */
@@ -22,7 +22,7 @@ declare module 'stripe' {
         }
 
         namespace ReaderPresentPaymentMethodParams {
-          interface CardPresent {
+          export interface CardPresent {
             /**
              * Card Number
              */

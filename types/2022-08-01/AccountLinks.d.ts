@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    export /**
      * Account Links are the means by which a Connect platform grants a connected account permission to access
      * Stripe-hosted applications, such as Connect Onboarding.
      *
@@ -30,7 +30,17 @@ declare module 'stripe' {
       url: string;
     }
 
-    interface AccountLinkCreateParams {
+    namespace AccountLinkCreateParams {
+      export type Type =
+        | 'account_onboarding'
+        | 'account_update'
+        | 'custom_account_update'
+        | 'custom_account_verification';
+
+      export type Collect = 'currently_due' | 'eventually_due';
+    }
+
+    export interface AccountLinkCreateParams {
       /**
        * The identifier of the account to create an account link for.
        */
@@ -60,16 +70,6 @@ declare module 'stripe' {
        * The URL that the user will be redirected to upon leaving or completing the linked flow.
        */
       return_url?: string;
-    }
-
-    namespace AccountLinkCreateParams {
-      type Collect = 'currently_due' | 'eventually_due';
-
-      type Type =
-        | 'account_onboarding'
-        | 'account_update'
-        | 'custom_account_update'
-        | 'custom_account_verification';
     }
 
     class AccountLinksResource {

@@ -2,7 +2,21 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace InvoiceItem {
+      export interface Period {
+        /**
+         * The end of the period, which must be greater than or equal to the start.
+         */
+        end: number;
+
+        /**
+         * The start of the period.
+         */
+        start: number;
+      }
+    }
+
+    export /**
      * Sometimes you want to add a charge or credit to a customer, but actually
      * charge or credit the customer's card only at the end of a regular billing
      * cycle. This is useful for combining several charges (to minimize
@@ -127,21 +141,7 @@ declare module 'stripe' {
       unit_amount_decimal: string | null;
     }
 
-    namespace InvoiceItem {
-      interface Period {
-        /**
-         * The end of the period, which must be greater than or equal to the start.
-         */
-        end: number;
-
-        /**
-         * The start of the period.
-         */
-        start: number;
-      }
-    }
-
-    /**
+    export /**
      * The DeletedInvoiceItem object.
      */
     interface DeletedInvoiceItem {
@@ -161,7 +161,64 @@ declare module 'stripe' {
       deleted: true;
     }
 
-    interface InvoiceItemCreateParams {
+    namespace InvoiceItemCreateParams {
+      export interface Discount {
+        /**
+         * ID of the coupon to create a new discount for.
+         */
+        coupon?: string;
+
+        /**
+         * ID of an existing discount on the object (or one of its ancestors) to reuse.
+         */
+        discount?: string;
+      }
+
+      export interface Period {
+        /**
+         * The end of the period, which must be greater than or equal to the start.
+         */
+        end: number;
+
+        /**
+         * The start of the period.
+         */
+        start: number;
+      }
+
+      export interface PriceData {
+        /**
+         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+         */
+        currency: string;
+
+        /**
+         * The ID of the product that this price will belong to.
+         */
+        product: string;
+
+        /**
+         * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+         */
+        tax_behavior?: PriceData.TaxBehavior;
+
+        /**
+         * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+         */
+        unit_amount?: number;
+
+        /**
+         * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
+         */
+        unit_amount_decimal?: string;
+      }
+
+      namespace PriceData {
+        export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+      }
+    }
+
+    export interface InvoiceItemCreateParams {
       /**
        * The ID of the customer who will be billed when this invoice item is billed.
        */
@@ -248,8 +305,15 @@ declare module 'stripe' {
       unit_amount_decimal?: string;
     }
 
-    namespace InvoiceItemCreateParams {
-      interface Discount {
+    export interface InvoiceItemRetrieveParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+    }
+
+    namespace InvoiceItemUpdateParams {
+      export interface Discount {
         /**
          * ID of the coupon to create a new discount for.
          */
@@ -261,7 +325,7 @@ declare module 'stripe' {
         discount?: string;
       }
 
-      interface Period {
+      export interface Period {
         /**
          * The end of the period, which must be greater than or equal to the start.
          */
@@ -273,7 +337,7 @@ declare module 'stripe' {
         start: number;
       }
 
-      interface PriceData {
+      export interface PriceData {
         /**
          * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
          */
@@ -301,18 +365,11 @@ declare module 'stripe' {
       }
 
       namespace PriceData {
-        type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+        export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
       }
     }
 
-    interface InvoiceItemRetrieveParams {
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-    }
-
-    interface InvoiceItemUpdateParams {
+    export interface InvoiceItemUpdateParams {
       /**
        * The integer amount in cents (or local equivalent) of the charge to be applied to the upcoming invoice. If you want to apply a credit to the customer's account, pass a negative amount.
        */
@@ -379,64 +436,7 @@ declare module 'stripe' {
       unit_amount_decimal?: string;
     }
 
-    namespace InvoiceItemUpdateParams {
-      interface Discount {
-        /**
-         * ID of the coupon to create a new discount for.
-         */
-        coupon?: string;
-
-        /**
-         * ID of an existing discount on the object (or one of its ancestors) to reuse.
-         */
-        discount?: string;
-      }
-
-      interface Period {
-        /**
-         * The end of the period, which must be greater than or equal to the start.
-         */
-        end: number;
-
-        /**
-         * The start of the period.
-         */
-        start: number;
-      }
-
-      interface PriceData {
-        /**
-         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-         */
-        currency: string;
-
-        /**
-         * The ID of the product that this price will belong to.
-         */
-        product: string;
-
-        /**
-         * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
-         */
-        tax_behavior?: PriceData.TaxBehavior;
-
-        /**
-         * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
-         */
-        unit_amount?: number;
-
-        /**
-         * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
-         */
-        unit_amount_decimal?: string;
-      }
-
-      namespace PriceData {
-        type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
-      }
-    }
-
-    interface InvoiceItemListParams extends PaginationParams {
+    export interface InvoiceItemListParams extends PaginationParams {
       created?: Stripe.RangeQueryParam | number;
 
       /**
@@ -460,7 +460,7 @@ declare module 'stripe' {
       pending?: boolean;
     }
 
-    interface InvoiceItemDeleteParams {}
+    export interface InvoiceItemDeleteParams {}
 
     class InvoiceItemsResource {
       /**

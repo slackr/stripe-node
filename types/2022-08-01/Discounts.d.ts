@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    export /**
      * A discount represents the actual application of a [coupon](https://stripe.com/docs/api#coupons) or [promotion code](https://stripe.com/docs/api#promotion_codes).
      * It contains information about when the discount began, when it will end, and what it is applied to.
      *
@@ -69,7 +69,7 @@ declare module 'stripe' {
       subscription: string | null;
     }
 
-    /**
+    export /**
      * The DeletedDiscount object.
      */
     interface DeletedDiscount {

@@ -4,7 +4,7 @@ declare module 'stripe' {
   namespace Stripe {
     namespace TestHelpers {
       namespace Issuing {
-        interface CardDeliverCardParams {
+        export interface CardDeliverCardParams {
           /**
            * Specifies which fields in the response should be expanded.
            */
@@ -13,7 +13,7 @@ declare module 'stripe' {
       }
 
       namespace Issuing {
-        interface CardFailCardParams {
+        export interface CardFailCardParams {
           /**
            * Specifies which fields in the response should be expanded.
            */
@@ -22,7 +22,7 @@ declare module 'stripe' {
       }
 
       namespace Issuing {
-        interface CardReturnCardParams {
+        export interface CardReturnCardParams {
           /**
            * Specifies which fields in the response should be expanded.
            */
@@ -31,7 +31,7 @@ declare module 'stripe' {
       }
 
       namespace Issuing {
-        interface CardShipCardParams {
+        export interface CardShipCardParams {
           /**
            * Specifies which fields in the response should be expanded.
            */

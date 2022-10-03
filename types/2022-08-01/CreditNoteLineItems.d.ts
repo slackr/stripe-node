@@ -2,7 +2,40 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace CreditNoteLineItem {
+      export interface DiscountAmount {
+        /**
+         * The amount, in %s, of the discount.
+         */
+        amount: number;
+
+        /**
+         * The discount that was applied to get this discount amount.
+         */
+        discount: string | Stripe.Discount | Stripe.DeletedDiscount;
+      }
+
+      export interface TaxAmount {
+        /**
+         * The amount, in %s, of the tax.
+         */
+        amount: number;
+
+        /**
+         * Whether this tax amount is inclusive or exclusive.
+         */
+        inclusive: boolean;
+
+        /**
+         * The tax rate that was applied to get this tax amount.
+         */
+        tax_rate: string | Stripe.TaxRate;
+      }
+
+      export type Type = 'custom_line_item' | 'invoice_line_item';
+    }
+
+    export /**
      * The CreditNoteLineItem object.
      */
     interface CreditNoteLineItem {
@@ -87,40 +120,7 @@ declare module 'stripe' {
       unit_amount_excluding_tax: string | null;
     }
 
-    namespace CreditNoteLineItem {
-      interface DiscountAmount {
-        /**
-         * The amount, in %s, of the discount.
-         */
-        amount: number;
-
-        /**
-         * The discount that was applied to get this discount amount.
-         */
-        discount: string | Stripe.Discount | Stripe.DeletedDiscount;
-      }
-
-      interface TaxAmount {
-        /**
-         * The amount, in %s, of the tax.
-         */
-        amount: number;
-
-        /**
-         * Whether this tax amount is inclusive or exclusive.
-         */
-        inclusive: boolean;
-
-        /**
-         * The tax rate that was applied to get this tax amount.
-         */
-        tax_rate: string | Stripe.TaxRate;
-      }
-
-      type Type = 'custom_line_item' | 'invoice_line_item';
-    }
-
-    interface CreditNoteLineItemListParams extends PaginationParams {
+    export interface CreditNoteLineItemListParams extends PaginationParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

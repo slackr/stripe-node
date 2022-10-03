@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Reporting {
-      /**
+      export /**
        * The Report Type resource corresponds to a particular type of report, such as
        * the "Activity summary" or "Itemized payouts" reports. These objects are
        * identified by an ID belonging to a set of enumerated values. See
@@ -60,14 +60,14 @@ declare module 'stripe' {
         version: number;
       }
 
-      interface ReportTypeRetrieveParams {
+      export interface ReportTypeRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface ReportTypeListParams {
+      export interface ReportTypeListParams {
         /**
          * Specifies which fields in the response should be expanded.
          */

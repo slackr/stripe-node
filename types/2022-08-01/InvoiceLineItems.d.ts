@@ -2,7 +2,73 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace InvoiceLineItem {
+      export interface DiscountAmount {
+        /**
+         * The amount, in %s, of the discount.
+         */
+        amount: number;
+
+        /**
+         * The discount that was applied to get this discount amount.
+         */
+        discount: string | Stripe.Discount | Stripe.DeletedDiscount;
+      }
+
+      export interface Period {
+        /**
+         * The end of the period, which must be greater than or equal to the start.
+         */
+        end: number;
+
+        /**
+         * The start of the period.
+         */
+        start: number;
+      }
+
+      export interface ProrationDetails {
+        /**
+         * For a credit proration `line_item`, the original debit line_items to which the credit proration applies.
+         */
+        credited_items: ProrationDetails.CreditedItems | null;
+      }
+
+      export interface TaxAmount {
+        /**
+         * The amount, in %s, of the tax.
+         */
+        amount: number;
+
+        /**
+         * Whether this tax amount is inclusive or exclusive.
+         */
+        inclusive: boolean;
+
+        /**
+         * The tax rate that was applied to get this tax amount.
+         */
+        tax_rate: string | Stripe.TaxRate;
+      }
+
+      export type Type = 'invoiceitem' | 'subscription';
+
+      namespace ProrationDetails {
+        export interface CreditedItems {
+          /**
+           * Invoice containing the credited invoice line items
+           */
+          invoice: string;
+
+          /**
+           * Credited invoice line items
+           */
+          invoice_line_items: Array<string>;
+        }
+      }
+    }
+
+    export /**
      * The InvoiceLineItem object.
      */
     interface InvoiceLineItem {
@@ -124,73 +190,7 @@ declare module 'stripe' {
       unit_amount_excluding_tax: string | null;
     }
 
-    namespace InvoiceLineItem {
-      interface DiscountAmount {
-        /**
-         * The amount, in %s, of the discount.
-         */
-        amount: number;
-
-        /**
-         * The discount that was applied to get this discount amount.
-         */
-        discount: string | Stripe.Discount | Stripe.DeletedDiscount;
-      }
-
-      interface Period {
-        /**
-         * The end of the period, which must be greater than or equal to the start.
-         */
-        end: number;
-
-        /**
-         * The start of the period.
-         */
-        start: number;
-      }
-
-      interface ProrationDetails {
-        /**
-         * For a credit proration `line_item`, the original debit line_items to which the credit proration applies.
-         */
-        credited_items: ProrationDetails.CreditedItems | null;
-      }
-
-      namespace ProrationDetails {
-        interface CreditedItems {
-          /**
-           * Invoice containing the credited invoice line items
-           */
-          invoice: string;
-
-          /**
-           * Credited invoice line items
-           */
-          invoice_line_items: Array<string>;
-        }
-      }
-
-      interface TaxAmount {
-        /**
-         * The amount, in %s, of the tax.
-         */
-        amount: number;
-
-        /**
-         * Whether this tax amount is inclusive or exclusive.
-         */
-        inclusive: boolean;
-
-        /**
-         * The tax rate that was applied to get this tax amount.
-         */
-        tax_rate: string | Stripe.TaxRate;
-      }
-
-      type Type = 'invoiceitem' | 'subscription';
-    }
-
-    interface InvoiceLineItemListParams extends PaginationParams {
+    export interface InvoiceLineItemListParams extends PaginationParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

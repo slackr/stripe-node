@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    interface CustomerSourceCreateParams {
+    export interface CustomerSourceCreateParams {
       /**
        * Please refer to full [documentation](https://stripe.com/docs/api) instead.
        */
@@ -21,14 +21,40 @@ declare module 'stripe' {
       validate?: boolean;
     }
 
-    interface CustomerSourceRetrieveParams {
+    export interface CustomerSourceRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface CustomerSourceUpdateParams {
+    namespace CustomerSourceUpdateParams {
+      export type AccountHolderType = 'company' | 'individual';
+
+      export interface Owner {
+        /**
+         * Owner's address.
+         */
+        address?: Stripe.AddressParam;
+
+        /**
+         * Owner's email address.
+         */
+        email?: string;
+
+        /**
+         * Owner's full name.
+         */
+        name?: string;
+
+        /**
+         * Owner's phone number.
+         */
+        phone?: string;
+      }
+    }
+
+    export interface CustomerSourceUpdateParams {
       /**
        * The name of the person or business that owns the bank account.
        */
@@ -97,33 +123,7 @@ declare module 'stripe' {
       owner?: CustomerSourceUpdateParams.Owner;
     }
 
-    namespace CustomerSourceUpdateParams {
-      type AccountHolderType = 'company' | 'individual';
-
-      interface Owner {
-        /**
-         * Owner's address.
-         */
-        address?: Stripe.AddressParam;
-
-        /**
-         * Owner's email address.
-         */
-        email?: string;
-
-        /**
-         * Owner's full name.
-         */
-        name?: string;
-
-        /**
-         * Owner's phone number.
-         */
-        phone?: string;
-      }
-    }
-
-    interface CustomerSourceListParams extends PaginationParams {
+    export interface CustomerSourceListParams extends PaginationParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
@@ -135,14 +135,14 @@ declare module 'stripe' {
       object?: string;
     }
 
-    interface CustomerSourceDeleteParams {
+    export interface CustomerSourceDeleteParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface CustomerSourceVerifyParams {
+    export interface CustomerSourceVerifyParams {
       /**
        * Two positive integers, in *cents*, equal to the values of the microdeposits sent to the bank account.
        */

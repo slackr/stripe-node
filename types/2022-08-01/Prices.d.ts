@@ -2,7 +2,191 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace Price {
+      export type BillingScheme = 'per_unit' | 'tiered';
+
+      export interface CurrencyOptions {
+        /**
+         * When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
+         */
+        custom_unit_amount: CurrencyOptions.CustomUnitAmount | null;
+
+        /**
+         * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+         */
+        tax_behavior: CurrencyOptions.TaxBehavior | null;
+
+        /**
+         * Each element represents a pricing tier. This parameter requires `billing_scheme` to be set to `tiered`. See also the documentation for `billing_scheme`.
+         */
+        tiers?: Array<CurrencyOptions.Tier>;
+
+        /**
+         * The unit amount in %s to be charged, represented as a whole integer if possible. Only set if `billing_scheme=per_unit`.
+         */
+        unit_amount: number | null;
+
+        /**
+         * The unit amount in %s to be charged, represented as a decimal string with at most 12 decimal places. Only set if `billing_scheme=per_unit`.
+         */
+        unit_amount_decimal: string | null;
+      }
+
+      export interface CustomUnitAmount {
+        /**
+         * The maximum unit amount the customer can specify for this item.
+         */
+        maximum: number | null;
+
+        /**
+         * The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
+         */
+        minimum: number | null;
+
+        /**
+         * The starting unit amount which can be updated by the customer.
+         */
+        preset: number | null;
+      }
+
+      export interface Recurring {
+        /**
+         * Specifies a usage aggregation strategy for prices of `usage_type=metered`. Allowed values are `sum` for summing up all usage during a period, `last_during_period` for using the last usage record reported within a period, `last_ever` for using the last usage record ever (across period bounds) or `max` which uses the usage record with the maximum reported usage during a period. Defaults to `sum`.
+         */
+        aggregate_usage: Recurring.AggregateUsage | null;
+
+        /**
+         * The frequency at which a subscription is billed. One of `day`, `week`, `month` or `year`.
+         */
+        interval: Recurring.Interval;
+
+        /**
+         * The number of intervals (specified in the `interval` attribute) between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months.
+         */
+        interval_count: number;
+
+        /**
+         * Default number of trial days when subscribing a customer to this price using [`trial_from_plan=true`](https://stripe.com/docs/api#create_subscription-trial_from_plan).
+         */
+        trial_period_days: number | null;
+
+        /**
+         * Configures how the quantity per period should be determined. Can be either `metered` or `licensed`. `licensed` automatically bills the `quantity` set when adding it to a subscription. `metered` aggregates the total usage based on usage records. Defaults to `licensed`.
+         */
+        usage_type: Recurring.UsageType;
+      }
+
+      export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+
+      export interface Tier {
+        /**
+         * Price for the entire tier.
+         */
+        flat_amount: number | null;
+
+        /**
+         * Same as `flat_amount`, but contains a decimal value with at most 12 decimal places.
+         */
+        flat_amount_decimal: string | null;
+
+        /**
+         * Per unit price for units relevant to the tier.
+         */
+        unit_amount: number | null;
+
+        /**
+         * Same as `unit_amount`, but contains a decimal value with at most 12 decimal places.
+         */
+        unit_amount_decimal: string | null;
+
+        /**
+         * Up to and including to this quantity will be contained in the tier.
+         */
+        up_to: number | null;
+      }
+
+      export type TiersMode = 'graduated' | 'volume';
+
+      export interface TransformQuantity {
+        /**
+         * Divide usage by this number.
+         */
+        divide_by: number;
+
+        /**
+         * After division, either round the result `up` or `down`.
+         */
+        round: TransformQuantity.Round;
+      }
+
+      export type Type = 'one_time' | 'recurring';
+
+      namespace CurrencyOptions {
+        export interface CustomUnitAmount {
+          /**
+           * The maximum unit amount the customer can specify for this item.
+           */
+          maximum: number | null;
+
+          /**
+           * The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
+           */
+          minimum: number | null;
+
+          /**
+           * The starting unit amount which can be updated by the customer.
+           */
+          preset: number | null;
+        }
+
+        export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+
+        export interface Tier {
+          /**
+           * Price for the entire tier.
+           */
+          flat_amount: number | null;
+
+          /**
+           * Same as `flat_amount`, but contains a decimal value with at most 12 decimal places.
+           */
+          flat_amount_decimal: string | null;
+
+          /**
+           * Per unit price for units relevant to the tier.
+           */
+          unit_amount: number | null;
+
+          /**
+           * Same as `unit_amount`, but contains a decimal value with at most 12 decimal places.
+           */
+          unit_amount_decimal: string | null;
+
+          /**
+           * Up to and including to this quantity will be contained in the tier.
+           */
+          up_to: number | null;
+        }
+      }
+
+      namespace Recurring {
+        export type AggregateUsage =
+          | 'last_during_period'
+          | 'last_ever'
+          | 'max'
+          | 'sum';
+
+        export type Interval = 'day' | 'month' | 'week' | 'year';
+
+        export type UsageType = 'licensed' | 'metered';
+      }
+
+      namespace TransformQuantity {
+        export type Round = 'down' | 'up';
+      }
+    }
+
+    export /**
      * Prices define the unit cost, currency, and (optional) billing cycle for both recurring and one-time purchases of products.
      * [Products](https://stripe.com/docs/api#products) help you track inventory or provisioning, and prices help you track payment terms. Different physical goods or levels of service should be represented by products, and pricing options should be represented by prices. This approach lets you change prices without having to change your provisioning scheme.
      *
@@ -121,191 +305,7 @@ declare module 'stripe' {
       unit_amount_decimal: string | null;
     }
 
-    namespace Price {
-      type BillingScheme = 'per_unit' | 'tiered';
-
-      interface CurrencyOptions {
-        /**
-         * When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
-         */
-        custom_unit_amount: CurrencyOptions.CustomUnitAmount | null;
-
-        /**
-         * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
-         */
-        tax_behavior: CurrencyOptions.TaxBehavior | null;
-
-        /**
-         * Each element represents a pricing tier. This parameter requires `billing_scheme` to be set to `tiered`. See also the documentation for `billing_scheme`.
-         */
-        tiers?: Array<CurrencyOptions.Tier>;
-
-        /**
-         * The unit amount in %s to be charged, represented as a whole integer if possible. Only set if `billing_scheme=per_unit`.
-         */
-        unit_amount: number | null;
-
-        /**
-         * The unit amount in %s to be charged, represented as a decimal string with at most 12 decimal places. Only set if `billing_scheme=per_unit`.
-         */
-        unit_amount_decimal: string | null;
-      }
-
-      namespace CurrencyOptions {
-        interface CustomUnitAmount {
-          /**
-           * The maximum unit amount the customer can specify for this item.
-           */
-          maximum: number | null;
-
-          /**
-           * The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
-           */
-          minimum: number | null;
-
-          /**
-           * The starting unit amount which can be updated by the customer.
-           */
-          preset: number | null;
-        }
-
-        type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
-
-        interface Tier {
-          /**
-           * Price for the entire tier.
-           */
-          flat_amount: number | null;
-
-          /**
-           * Same as `flat_amount`, but contains a decimal value with at most 12 decimal places.
-           */
-          flat_amount_decimal: string | null;
-
-          /**
-           * Per unit price for units relevant to the tier.
-           */
-          unit_amount: number | null;
-
-          /**
-           * Same as `unit_amount`, but contains a decimal value with at most 12 decimal places.
-           */
-          unit_amount_decimal: string | null;
-
-          /**
-           * Up to and including to this quantity will be contained in the tier.
-           */
-          up_to: number | null;
-        }
-      }
-
-      interface CustomUnitAmount {
-        /**
-         * The maximum unit amount the customer can specify for this item.
-         */
-        maximum: number | null;
-
-        /**
-         * The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
-         */
-        minimum: number | null;
-
-        /**
-         * The starting unit amount which can be updated by the customer.
-         */
-        preset: number | null;
-      }
-
-      interface Recurring {
-        /**
-         * Specifies a usage aggregation strategy for prices of `usage_type=metered`. Allowed values are `sum` for summing up all usage during a period, `last_during_period` for using the last usage record reported within a period, `last_ever` for using the last usage record ever (across period bounds) or `max` which uses the usage record with the maximum reported usage during a period. Defaults to `sum`.
-         */
-        aggregate_usage: Recurring.AggregateUsage | null;
-
-        /**
-         * The frequency at which a subscription is billed. One of `day`, `week`, `month` or `year`.
-         */
-        interval: Recurring.Interval;
-
-        /**
-         * The number of intervals (specified in the `interval` attribute) between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months.
-         */
-        interval_count: number;
-
-        /**
-         * Default number of trial days when subscribing a customer to this price using [`trial_from_plan=true`](https://stripe.com/docs/api#create_subscription-trial_from_plan).
-         */
-        trial_period_days: number | null;
-
-        /**
-         * Configures how the quantity per period should be determined. Can be either `metered` or `licensed`. `licensed` automatically bills the `quantity` set when adding it to a subscription. `metered` aggregates the total usage based on usage records. Defaults to `licensed`.
-         */
-        usage_type: Recurring.UsageType;
-      }
-
-      namespace Recurring {
-        type AggregateUsage =
-          | 'last_during_period'
-          | 'last_ever'
-          | 'max'
-          | 'sum';
-
-        type Interval = 'day' | 'month' | 'week' | 'year';
-
-        type UsageType = 'licensed' | 'metered';
-      }
-
-      type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
-
-      interface Tier {
-        /**
-         * Price for the entire tier.
-         */
-        flat_amount: number | null;
-
-        /**
-         * Same as `flat_amount`, but contains a decimal value with at most 12 decimal places.
-         */
-        flat_amount_decimal: string | null;
-
-        /**
-         * Per unit price for units relevant to the tier.
-         */
-        unit_amount: number | null;
-
-        /**
-         * Same as `unit_amount`, but contains a decimal value with at most 12 decimal places.
-         */
-        unit_amount_decimal: string | null;
-
-        /**
-         * Up to and including to this quantity will be contained in the tier.
-         */
-        up_to: number | null;
-      }
-
-      type TiersMode = 'graduated' | 'volume';
-
-      interface TransformQuantity {
-        /**
-         * Divide usage by this number.
-         */
-        divide_by: number;
-
-        /**
-         * After division, either round the result `up` or `down`.
-         */
-        round: TransformQuantity.Round;
-      }
-
-      namespace TransformQuantity {
-        type Round = 'down' | 'up';
-      }
-
-      type Type = 'one_time' | 'recurring';
-    }
-
-    /**
+    export /**
      * The DeletedPrice object.
      */
     interface DeletedPrice {
@@ -325,7 +325,238 @@ declare module 'stripe' {
       deleted: true;
     }
 
-    interface PriceCreateParams {
+    namespace PriceCreateParams {
+      export type BillingScheme = 'per_unit' | 'tiered';
+
+      export interface CurrencyOptions {
+        /**
+         * When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
+         */
+        custom_unit_amount?: CurrencyOptions.CustomUnitAmount;
+
+        /**
+         * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+         */
+        tax_behavior?: CurrencyOptions.TaxBehavior;
+
+        /**
+         * Each element represents a pricing tier. This parameter requires `billing_scheme` to be set to `tiered`. See also the documentation for `billing_scheme`.
+         */
+        tiers?: Array<CurrencyOptions.Tier>;
+
+        /**
+         * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+         */
+        unit_amount?: number;
+
+        /**
+         * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
+         */
+        unit_amount_decimal?: string;
+      }
+
+      export interface CustomUnitAmount {
+        /**
+         * Pass in `true` to enable `custom_unit_amount`, otherwise omit `custom_unit_amount`.
+         */
+        enabled: boolean;
+
+        /**
+         * The maximum unit amount the customer can specify for this item.
+         */
+        maximum?: number;
+
+        /**
+         * The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
+         */
+        minimum?: number;
+
+        /**
+         * The starting unit amount which can be updated by the customer.
+         */
+        preset?: number;
+      }
+
+      export interface ProductData {
+        /**
+         * Whether the product is currently available for purchase. Defaults to `true`.
+         */
+        active?: boolean;
+
+        /**
+         * The identifier for the product. Must be unique. If not provided, an identifier will be randomly generated.
+         */
+        id?: string;
+
+        /**
+         * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+         */
+        metadata?: Stripe.MetadataParam;
+
+        /**
+         * The product's name, meant to be displayable to the customer.
+         */
+        name: string;
+
+        /**
+         * An arbitrary string to be displayed on your customer's credit card or bank statement. While most banks display this information consistently, some may display it incorrectly or not at all.
+         *
+         * This may be up to 22 characters. The statement description may not include `<`, `>`, `\`, `"`, `'` characters, and will appear on your customer's statement in capital letters. Non-ASCII characters are automatically stripped.
+         */
+        statement_descriptor?: string;
+
+        /**
+         * A [tax code](https://stripe.com/docs/tax/tax-categories) ID.
+         */
+        tax_code?: string;
+
+        /**
+         * A label that represents units of this product in Stripe and on customers' receipts and invoices. When set, this will be included in associated invoice line item descriptions.
+         */
+        unit_label?: string;
+      }
+
+      export interface Recurring {
+        /**
+         * Specifies a usage aggregation strategy for prices of `usage_type=metered`. Allowed values are `sum` for summing up all usage during a period, `last_during_period` for using the last usage record reported within a period, `last_ever` for using the last usage record ever (across period bounds) or `max` which uses the usage record with the maximum reported usage during a period. Defaults to `sum`.
+         */
+        aggregate_usage?: Recurring.AggregateUsage;
+
+        /**
+         * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
+         */
+        interval: Recurring.Interval;
+
+        /**
+         * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
+         */
+        interval_count?: number;
+
+        /**
+         * Default number of trial days when subscribing a customer to this price using [`trial_from_plan=true`](https://stripe.com/docs/api#create_subscription-trial_from_plan).
+         */
+        trial_period_days?: number;
+
+        /**
+         * Configures how the quantity per period should be determined. Can be either `metered` or `licensed`. `licensed` automatically bills the `quantity` set when adding it to a subscription. `metered` aggregates the total usage based on usage records. Defaults to `licensed`.
+         */
+        usage_type?: Recurring.UsageType;
+      }
+
+      export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+
+      export interface Tier {
+        /**
+         * The flat billing amount for an entire tier, regardless of the number of units in the tier.
+         */
+        flat_amount?: number;
+
+        /**
+         * Same as `flat_amount`, but accepts a decimal value representing an integer in the minor units of the currency. Only one of `flat_amount` and `flat_amount_decimal` can be set.
+         */
+        flat_amount_decimal?: string;
+
+        /**
+         * The per unit billing amount for each individual unit for which this tier applies.
+         */
+        unit_amount?: number;
+
+        /**
+         * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
+         */
+        unit_amount_decimal?: string;
+
+        /**
+         * Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use `inf` to define a fallback tier.
+         */
+        up_to: 'inf' | number;
+      }
+
+      export type TiersMode = 'graduated' | 'volume';
+
+      export interface TransformQuantity {
+        /**
+         * Divide usage by this number.
+         */
+        divide_by: number;
+
+        /**
+         * After division, either round the result `up` or `down`.
+         */
+        round: TransformQuantity.Round;
+      }
+
+      namespace CurrencyOptions {
+        export interface CustomUnitAmount {
+          /**
+           * Pass in `true` to enable `custom_unit_amount`, otherwise omit `custom_unit_amount`.
+           */
+          enabled: boolean;
+
+          /**
+           * The maximum unit amount the customer can specify for this item.
+           */
+          maximum?: number;
+
+          /**
+           * The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
+           */
+          minimum?: number;
+
+          /**
+           * The starting unit amount which can be updated by the customer.
+           */
+          preset?: number;
+        }
+
+        export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+
+        export interface Tier {
+          /**
+           * The flat billing amount for an entire tier, regardless of the number of units in the tier.
+           */
+          flat_amount?: number;
+
+          /**
+           * Same as `flat_amount`, but accepts a decimal value representing an integer in the minor units of the currency. Only one of `flat_amount` and `flat_amount_decimal` can be set.
+           */
+          flat_amount_decimal?: string;
+
+          /**
+           * The per unit billing amount for each individual unit for which this tier applies.
+           */
+          unit_amount?: number;
+
+          /**
+           * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
+           */
+          unit_amount_decimal?: string;
+
+          /**
+           * Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use `inf` to define a fallback tier.
+           */
+          up_to: 'inf' | number;
+        }
+      }
+
+      namespace Recurring {
+        export type AggregateUsage =
+          | 'last_during_period'
+          | 'last_ever'
+          | 'max'
+          | 'sum';
+
+        export type Interval = 'day' | 'month' | 'week' | 'year';
+
+        export type UsageType = 'licensed' | 'metered';
+      }
+
+      namespace TransformQuantity {
+        export type Round = 'down' | 'up';
+      }
+    }
+
+    export interface PriceCreateParams {
       /**
        * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
        */
@@ -424,10 +655,15 @@ declare module 'stripe' {
       unit_amount_decimal?: string;
     }
 
-    namespace PriceCreateParams {
-      type BillingScheme = 'per_unit' | 'tiered';
+    export interface PriceRetrieveParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+    }
 
-      interface CurrencyOptions {
+    namespace PriceUpdateParams {
+      export interface CurrencyOptions {
         /**
          * When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
          */
@@ -454,8 +690,17 @@ declare module 'stripe' {
         unit_amount_decimal?: string;
       }
 
+      export interface Recurring {
+        /**
+         * Default number of trial days when subscribing a customer to this plan using [`trial_from_plan=true`](https://stripe.com/docs/api#create_subscription-trial_from_plan).
+         */
+        trial_period_days?: number;
+      }
+
+      export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+
       namespace CurrencyOptions {
-        interface CustomUnitAmount {
+        export interface CustomUnitAmount {
           /**
            * Pass in `true` to enable `custom_unit_amount`, otherwise omit `custom_unit_amount`.
            */
@@ -477,9 +722,9 @@ declare module 'stripe' {
           preset?: number;
         }
 
-        type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+        export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
 
-        interface Tier {
+        export interface Tier {
           /**
            * The flat billing amount for an entire tier, regardless of the number of units in the tier.
            */
@@ -506,163 +751,9 @@ declare module 'stripe' {
           up_to: 'inf' | number;
         }
       }
-
-      interface CustomUnitAmount {
-        /**
-         * Pass in `true` to enable `custom_unit_amount`, otherwise omit `custom_unit_amount`.
-         */
-        enabled: boolean;
-
-        /**
-         * The maximum unit amount the customer can specify for this item.
-         */
-        maximum?: number;
-
-        /**
-         * The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
-         */
-        minimum?: number;
-
-        /**
-         * The starting unit amount which can be updated by the customer.
-         */
-        preset?: number;
-      }
-
-      interface ProductData {
-        /**
-         * Whether the product is currently available for purchase. Defaults to `true`.
-         */
-        active?: boolean;
-
-        /**
-         * The identifier for the product. Must be unique. If not provided, an identifier will be randomly generated.
-         */
-        id?: string;
-
-        /**
-         * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
-         */
-        metadata?: Stripe.MetadataParam;
-
-        /**
-         * The product's name, meant to be displayable to the customer.
-         */
-        name: string;
-
-        /**
-         * An arbitrary string to be displayed on your customer's credit card or bank statement. While most banks display this information consistently, some may display it incorrectly or not at all.
-         *
-         * This may be up to 22 characters. The statement description may not include `<`, `>`, `\`, `"`, `'` characters, and will appear on your customer's statement in capital letters. Non-ASCII characters are automatically stripped.
-         */
-        statement_descriptor?: string;
-
-        /**
-         * A [tax code](https://stripe.com/docs/tax/tax-categories) ID.
-         */
-        tax_code?: string;
-
-        /**
-         * A label that represents units of this product in Stripe and on customers' receipts and invoices. When set, this will be included in associated invoice line item descriptions.
-         */
-        unit_label?: string;
-      }
-
-      interface Recurring {
-        /**
-         * Specifies a usage aggregation strategy for prices of `usage_type=metered`. Allowed values are `sum` for summing up all usage during a period, `last_during_period` for using the last usage record reported within a period, `last_ever` for using the last usage record ever (across period bounds) or `max` which uses the usage record with the maximum reported usage during a period. Defaults to `sum`.
-         */
-        aggregate_usage?: Recurring.AggregateUsage;
-
-        /**
-         * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
-         */
-        interval: Recurring.Interval;
-
-        /**
-         * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
-         */
-        interval_count?: number;
-
-        /**
-         * Default number of trial days when subscribing a customer to this price using [`trial_from_plan=true`](https://stripe.com/docs/api#create_subscription-trial_from_plan).
-         */
-        trial_period_days?: number;
-
-        /**
-         * Configures how the quantity per period should be determined. Can be either `metered` or `licensed`. `licensed` automatically bills the `quantity` set when adding it to a subscription. `metered` aggregates the total usage based on usage records. Defaults to `licensed`.
-         */
-        usage_type?: Recurring.UsageType;
-      }
-
-      namespace Recurring {
-        type AggregateUsage =
-          | 'last_during_period'
-          | 'last_ever'
-          | 'max'
-          | 'sum';
-
-        type Interval = 'day' | 'month' | 'week' | 'year';
-
-        type UsageType = 'licensed' | 'metered';
-      }
-
-      type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
-
-      interface Tier {
-        /**
-         * The flat billing amount for an entire tier, regardless of the number of units in the tier.
-         */
-        flat_amount?: number;
-
-        /**
-         * Same as `flat_amount`, but accepts a decimal value representing an integer in the minor units of the currency. Only one of `flat_amount` and `flat_amount_decimal` can be set.
-         */
-        flat_amount_decimal?: string;
-
-        /**
-         * The per unit billing amount for each individual unit for which this tier applies.
-         */
-        unit_amount?: number;
-
-        /**
-         * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
-         */
-        unit_amount_decimal?: string;
-
-        /**
-         * Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use `inf` to define a fallback tier.
-         */
-        up_to: 'inf' | number;
-      }
-
-      type TiersMode = 'graduated' | 'volume';
-
-      interface TransformQuantity {
-        /**
-         * Divide usage by this number.
-         */
-        divide_by: number;
-
-        /**
-         * After division, either round the result `up` or `down`.
-         */
-        round: TransformQuantity.Round;
-      }
-
-      namespace TransformQuantity {
-        type Round = 'down' | 'up';
-      }
     }
 
-    interface PriceRetrieveParams {
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-    }
-
-    interface PriceUpdateParams {
+    export interface PriceUpdateParams {
       /**
        * Whether the price can be used for new purchases. Defaults to `true`.
        */
@@ -711,98 +802,29 @@ declare module 'stripe' {
       transfer_lookup_key?: boolean;
     }
 
-    namespace PriceUpdateParams {
-      interface CurrencyOptions {
+    namespace PriceListParams {
+      export interface Recurring {
         /**
-         * When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
+         * Filter by billing frequency. Either `day`, `week`, `month` or `year`.
          */
-        custom_unit_amount?: CurrencyOptions.CustomUnitAmount;
+        interval?: Recurring.Interval;
 
         /**
-         * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+         * Filter by the usage type for this price. Can be either `metered` or `licensed`.
          */
-        tax_behavior?: CurrencyOptions.TaxBehavior;
-
-        /**
-         * Each element represents a pricing tier. This parameter requires `billing_scheme` to be set to `tiered`. See also the documentation for `billing_scheme`.
-         */
-        tiers?: Array<CurrencyOptions.Tier>;
-
-        /**
-         * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
-         */
-        unit_amount?: number;
-
-        /**
-         * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
-         */
-        unit_amount_decimal?: string;
+        usage_type?: Recurring.UsageType;
       }
 
-      namespace CurrencyOptions {
-        interface CustomUnitAmount {
-          /**
-           * Pass in `true` to enable `custom_unit_amount`, otherwise omit `custom_unit_amount`.
-           */
-          enabled: boolean;
+      export type Type = 'one_time' | 'recurring';
 
-          /**
-           * The maximum unit amount the customer can specify for this item.
-           */
-          maximum?: number;
+      namespace Recurring {
+        export type Interval = 'day' | 'month' | 'week' | 'year';
 
-          /**
-           * The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
-           */
-          minimum?: number;
-
-          /**
-           * The starting unit amount which can be updated by the customer.
-           */
-          preset?: number;
-        }
-
-        type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
-
-        interface Tier {
-          /**
-           * The flat billing amount for an entire tier, regardless of the number of units in the tier.
-           */
-          flat_amount?: number;
-
-          /**
-           * Same as `flat_amount`, but accepts a decimal value representing an integer in the minor units of the currency. Only one of `flat_amount` and `flat_amount_decimal` can be set.
-           */
-          flat_amount_decimal?: string;
-
-          /**
-           * The per unit billing amount for each individual unit for which this tier applies.
-           */
-          unit_amount?: number;
-
-          /**
-           * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
-           */
-          unit_amount_decimal?: string;
-
-          /**
-           * Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use `inf` to define a fallback tier.
-           */
-          up_to: 'inf' | number;
-        }
+        export type UsageType = 'licensed' | 'metered';
       }
-
-      interface Recurring {
-        /**
-         * Default number of trial days when subscribing a customer to this plan using [`trial_from_plan=true`](https://stripe.com/docs/api#create_subscription-trial_from_plan).
-         */
-        trial_period_days?: number;
-      }
-
-      type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
     }
 
-    interface PriceListParams extends PaginationParams {
+    export interface PriceListParams extends PaginationParams {
       /**
        * Only return prices that are active or inactive (e.g., pass `false` to list all inactive prices).
        */
@@ -844,29 +866,7 @@ declare module 'stripe' {
       type?: PriceListParams.Type;
     }
 
-    namespace PriceListParams {
-      interface Recurring {
-        /**
-         * Filter by billing frequency. Either `day`, `week`, `month` or `year`.
-         */
-        interval?: Recurring.Interval;
-
-        /**
-         * Filter by the usage type for this price. Can be either `metered` or `licensed`.
-         */
-        usage_type?: Recurring.UsageType;
-      }
-
-      namespace Recurring {
-        type Interval = 'day' | 'month' | 'week' | 'year';
-
-        type UsageType = 'licensed' | 'metered';
-      }
-
-      type Type = 'one_time' | 'recurring';
-    }
-
-    interface PriceSearchParams {
+    export interface PriceSearchParams {
       /**
        * The search query string. See [search query language](https://stripe.com/docs/search#search-query-language) and the list of supported [query fields for prices](https://stripe.com/docs/search#query-fields-for-prices).
        */

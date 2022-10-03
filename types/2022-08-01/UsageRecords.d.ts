@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    export /**
      * Usage records allow you to report customer usage and metrics to Stripe for
      * metered billing of subscription prices.
      *
@@ -40,7 +40,11 @@ declare module 'stripe' {
       timestamp: number;
     }
 
-    interface UsageRecordCreateParams {
+    namespace UsageRecordCreateParams {
+      export type Action = 'increment' | 'set';
+    }
+
+    export interface UsageRecordCreateParams {
       /**
        * The usage quantity for the specified timestamp.
        */
@@ -60,10 +64,6 @@ declare module 'stripe' {
        * The timestamp for the usage event. This timestamp must be within the current billing period of the subscription of the provided `subscription_item`, and must not be in the future. When passing `"now"`, Stripe records usage for the current time. Default is `"now"` if a value is not provided.
        */
       timestamp?: 'now' | number;
-    }
-
-    namespace UsageRecordCreateParams {
-      type Action = 'increment' | 'set';
     }
   }
 }

@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    export /**
      * [Tax codes](https://stripe.com/docs/tax/tax-categories) classify goods and services for tax purposes.
      */
     interface TaxCode {
@@ -27,14 +27,14 @@ declare module 'stripe' {
       name: string;
     }
 
-    interface TaxCodeRetrieveParams {
+    export interface TaxCodeRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface TaxCodeListParams extends PaginationParams {
+    export interface TaxCodeListParams extends PaginationParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

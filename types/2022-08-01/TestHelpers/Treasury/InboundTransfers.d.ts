@@ -4,7 +4,7 @@ declare module 'stripe' {
   namespace Stripe {
     namespace TestHelpers {
       namespace Treasury {
-        interface InboundTransferFailParams {
+        export interface InboundTransferFailParams {
           /**
            * Specifies which fields in the response should be expanded.
            */
@@ -17,7 +17,7 @@ declare module 'stripe' {
         }
 
         namespace InboundTransferFailParams {
-          interface FailureDetails {
+          export interface FailureDetails {
             /**
              * Reason for the failure.
              */
@@ -25,7 +25,7 @@ declare module 'stripe' {
           }
 
           namespace FailureDetails {
-            type Code =
+            export type Code =
               | 'account_closed'
               | 'account_frozen'
               | 'bank_account_restricted'
@@ -44,7 +44,7 @@ declare module 'stripe' {
       }
 
       namespace Treasury {
-        interface InboundTransferReturnInboundTransferParams {
+        export interface InboundTransferReturnInboundTransferParams {
           /**
            * Specifies which fields in the response should be expanded.
            */
@@ -53,7 +53,7 @@ declare module 'stripe' {
       }
 
       namespace Treasury {
-        interface InboundTransferSucceedParams {
+        export interface InboundTransferSucceedParams {
           /**
            * Specifies which fields in the response should be expanded.
            */

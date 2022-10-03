@@ -2,7 +2,48 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace Sku {
+      export interface Inventory {
+        /**
+         * The count of inventory available. Will be present if and only if `type` is `finite`.
+         */
+        quantity: number | null;
+
+        /**
+         * Inventory type. Possible values are `finite`, `bucket` (not quantified), and `infinite`.
+         */
+        type: string;
+
+        /**
+         * An indicator of the inventory available. Possible values are `in_stock`, `limited`, and `out_of_stock`. Will be present if and only if `type` is `bucket`.
+         */
+        value: string | null;
+      }
+
+      export interface PackageDimensions {
+        /**
+         * Height, in inches.
+         */
+        height: number;
+
+        /**
+         * Length, in inches.
+         */
+        length: number;
+
+        /**
+         * Weight, in ounces.
+         */
+        weight: number;
+
+        /**
+         * Width, in inches.
+         */
+        width: number;
+      }
+    }
+
+    export /**
      * Stores representations of [stock keeping units](http://en.wikipedia.org/wiki/Stock_keeping_unit).
      * SKUs describe specific product variations, taking into account any combination of: attributes,
      * currency, and cost. For example, a product may be a T-shirt, whereas a specific SKU represents
@@ -83,48 +124,7 @@ declare module 'stripe' {
       updated: number;
     }
 
-    namespace Sku {
-      interface Inventory {
-        /**
-         * The count of inventory available. Will be present if and only if `type` is `finite`.
-         */
-        quantity: number | null;
-
-        /**
-         * Inventory type. Possible values are `finite`, `bucket` (not quantified), and `infinite`.
-         */
-        type: string;
-
-        /**
-         * An indicator of the inventory available. Possible values are `in_stock`, `limited`, and `out_of_stock`. Will be present if and only if `type` is `bucket`.
-         */
-        value: string | null;
-      }
-
-      interface PackageDimensions {
-        /**
-         * Height, in inches.
-         */
-        height: number;
-
-        /**
-         * Length, in inches.
-         */
-        length: number;
-
-        /**
-         * Weight, in ounces.
-         */
-        weight: number;
-
-        /**
-         * Width, in inches.
-         */
-        width: number;
-      }
-    }
-
-    /**
+    export /**
      * The DeletedSku object.
      */
     interface DeletedSku {
@@ -144,7 +144,54 @@ declare module 'stripe' {
       deleted: true;
     }
 
-    interface SkuCreateParams {
+    namespace SkuCreateParams {
+      export interface Inventory {
+        /**
+         * The count of inventory available. Required if `type` is `finite`.
+         */
+        quantity?: number;
+
+        /**
+         * Inventory type. Possible values are `finite`, `bucket` (not quantified), and `infinite`.
+         */
+        type: Inventory.Type;
+
+        /**
+         * An indicator of the inventory available. Possible values are `in_stock`, `limited`, and `out_of_stock`. Will be present if and only if `type` is `bucket`.
+         */
+        value?: Stripe.Emptyable<Inventory.Value>;
+      }
+
+      export interface PackageDimensions {
+        /**
+         * Height, in inches. Maximum precision is 2 decimal places.
+         */
+        height: number;
+
+        /**
+         * Length, in inches. Maximum precision is 2 decimal places.
+         */
+        length: number;
+
+        /**
+         * Weight, in ounces. Maximum precision is 2 decimal places.
+         */
+        weight: number;
+
+        /**
+         * Width, in inches. Maximum precision is 2 decimal places.
+         */
+        width: number;
+      }
+
+      namespace Inventory {
+        export type Type = 'bucket' | 'finite' | 'infinite';
+
+        export type Value = 'in_stock' | 'limited' | 'out_of_stock';
+      }
+    }
+
+    export interface SkuCreateParams {
       /**
        * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
        */
@@ -203,8 +250,15 @@ declare module 'stripe' {
       package_dimensions?: SkuCreateParams.PackageDimensions;
     }
 
-    namespace SkuCreateParams {
-      interface Inventory {
+    export interface SkuRetrieveParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+    }
+
+    namespace SkuUpdateParams {
+      export interface Inventory {
         /**
          * The count of inventory available. Required if `type` is `finite`.
          */
@@ -213,7 +267,7 @@ declare module 'stripe' {
         /**
          * Inventory type. Possible values are `finite`, `bucket` (not quantified), and `infinite`.
          */
-        type: Inventory.Type;
+        type?: Inventory.Type;
 
         /**
          * An indicator of the inventory available. Possible values are `in_stock`, `limited`, and `out_of_stock`. Will be present if and only if `type` is `bucket`.
@@ -221,13 +275,7 @@ declare module 'stripe' {
         value?: Stripe.Emptyable<Inventory.Value>;
       }
 
-      namespace Inventory {
-        type Type = 'bucket' | 'finite' | 'infinite';
-
-        type Value = 'in_stock' | 'limited' | 'out_of_stock';
-      }
-
-      interface PackageDimensions {
+      export interface PackageDimensions {
         /**
          * Height, in inches. Maximum precision is 2 decimal places.
          */
@@ -248,16 +296,15 @@ declare module 'stripe' {
          */
         width: number;
       }
+
+      namespace Inventory {
+        export type Type = 'bucket' | 'finite' | 'infinite';
+
+        export type Value = 'in_stock' | 'limited' | 'out_of_stock';
+      }
     }
 
-    interface SkuRetrieveParams {
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-    }
-
-    interface SkuUpdateParams {
+    export interface SkuUpdateParams {
       /**
        * Whether this SKU is available for purchase.
        */
@@ -311,54 +358,7 @@ declare module 'stripe' {
       product?: string;
     }
 
-    namespace SkuUpdateParams {
-      interface Inventory {
-        /**
-         * The count of inventory available. Required if `type` is `finite`.
-         */
-        quantity?: number;
-
-        /**
-         * Inventory type. Possible values are `finite`, `bucket` (not quantified), and `infinite`.
-         */
-        type?: Inventory.Type;
-
-        /**
-         * An indicator of the inventory available. Possible values are `in_stock`, `limited`, and `out_of_stock`. Will be present if and only if `type` is `bucket`.
-         */
-        value?: Stripe.Emptyable<Inventory.Value>;
-      }
-
-      namespace Inventory {
-        type Type = 'bucket' | 'finite' | 'infinite';
-
-        type Value = 'in_stock' | 'limited' | 'out_of_stock';
-      }
-
-      interface PackageDimensions {
-        /**
-         * Height, in inches. Maximum precision is 2 decimal places.
-         */
-        height: number;
-
-        /**
-         * Length, in inches. Maximum precision is 2 decimal places.
-         */
-        length: number;
-
-        /**
-         * Weight, in ounces. Maximum precision is 2 decimal places.
-         */
-        weight: number;
-
-        /**
-         * Width, in inches. Maximum precision is 2 decimal places.
-         */
-        width: number;
-      }
-    }
-
-    interface SkuListParams extends PaginationParams {
+    export interface SkuListParams extends PaginationParams {
       /**
        * Only return SKUs that are active or inactive (e.g., pass `false` to list all inactive products).
        */
@@ -392,7 +392,7 @@ declare module 'stripe' {
       product?: string;
     }
 
-    interface SkuDeleteParams {}
+    export interface SkuDeleteParams {}
 
     class SkusResource {
       /**

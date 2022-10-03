@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    export /**
      * To share the contents of a `File` object with non-Stripe users, you can
      * create a `FileLink`. `FileLink`s contain a URL that can be used to
      * retrieve the contents of the file without authentication.
@@ -54,7 +54,7 @@ declare module 'stripe' {
       url: string | null;
     }
 
-    interface FileLinkCreateParams {
+    export interface FileLinkCreateParams {
       /**
        * The ID of the file. The file's `purpose` must be one of the following: `business_icon`, `business_logo`, `customer_signature`, `dispute_evidence`, `finance_report_run`, `identity_document_downloadable`, `pci_document`, `selfie`, `sigma_scheduled_query`, `tax_document_user_upload`, or `terminal_reader_splashscreen`.
        */
@@ -76,14 +76,14 @@ declare module 'stripe' {
       metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
     }
 
-    interface FileLinkRetrieveParams {
+    export interface FileLinkRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface FileLinkUpdateParams {
+    export interface FileLinkUpdateParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
@@ -100,7 +100,7 @@ declare module 'stripe' {
       metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
     }
 
-    interface FileLinkListParams extends PaginationParams {
+    export interface FileLinkListParams extends PaginationParams {
       created?: Stripe.RangeQueryParam | number;
 
       /**

@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace FinancialConnections {
-      /**
+      export /**
        * A Financial Connections Session is the secure way to programmatically launch the client-side Stripe.js modal that lets your users link their accounts.
        */
       interface Session {
@@ -51,7 +51,7 @@ declare module 'stripe' {
       }
 
       namespace Session {
-        interface AccountHolder {
+        export interface AccountHolder {
           /**
            * The ID of the Stripe account this account belongs to. Should only be present if `account_holder.type` is `account`.
            */
@@ -68,25 +68,25 @@ declare module 'stripe' {
           type: AccountHolder.Type;
         }
 
-        namespace AccountHolder {
-          type Type = 'account' | 'customer';
-        }
-
-        interface Filters {
+        export interface Filters {
           /**
            * List of countries from which to filter accounts.
            */
           countries: Array<string> | null;
         }
 
-        type Permission =
+        export type Permission =
           | 'balances'
           | 'ownership'
           | 'payment_method'
           | 'transactions';
+
+        namespace AccountHolder {
+          export type Type = 'account' | 'customer';
+        }
       }
 
-      interface SessionCreateParams {
+      export interface SessionCreateParams {
         /**
          * The account holder to link accounts for.
          */
@@ -116,7 +116,7 @@ declare module 'stripe' {
       }
 
       namespace SessionCreateParams {
-        interface AccountHolder {
+        export interface AccountHolder {
           /**
            * The ID of the Stripe account whose accounts will be retrieved. Should only be present if `type` is `account`.
            */
@@ -133,25 +133,25 @@ declare module 'stripe' {
           type: AccountHolder.Type;
         }
 
-        namespace AccountHolder {
-          type Type = 'account' | 'customer';
-        }
+        export type Permission =
+          | 'balances'
+          | 'ownership'
+          | 'payment_method'
+          | 'transactions';
 
-        interface Filters {
+        export interface Filters {
           /**
            * List of countries from which to collect accounts.
            */
           countries: Array<string>;
         }
 
-        type Permission =
-          | 'balances'
-          | 'ownership'
-          | 'payment_method'
-          | 'transactions';
+        namespace AccountHolder {
+          export type Type = 'account' | 'customer';
+        }
       }
 
-      interface SessionRetrieveParams {
+      export interface SessionRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */

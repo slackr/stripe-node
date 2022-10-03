@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    export /**
      * The Application object.
      */
     interface Application {
@@ -24,7 +24,7 @@ declare module 'stripe' {
       name: string | null;
     }
 
-    /**
+    export /**
      * The DeletedApplication object.
      */
     interface DeletedApplication {

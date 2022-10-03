@@ -2,7 +2,52 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace Refund {
+      export interface NextAction {
+        /**
+         * Contains the refund details.
+         */
+        display_details: NextAction.DisplayDetails | null;
+
+        /**
+         * Type of the next action to perform.
+         */
+        type: string;
+      }
+
+      export type Reason =
+        | 'duplicate'
+        | 'expired_uncaptured_charge'
+        | 'fraudulent'
+        | 'requested_by_customer';
+
+      namespace NextAction {
+        export interface DisplayDetails {
+          email_sent: DisplayDetails.EmailSent;
+
+          /**
+           * The expiry timestamp.
+           */
+          expires_at: number;
+        }
+
+        namespace DisplayDetails {
+          export interface EmailSent {
+            /**
+             * The timestamp when the email was sent.
+             */
+            email_sent_at: number;
+
+            /**
+             * The recipient's email address.
+             */
+            email_sent_to: string;
+          }
+        }
+      }
+    }
+
+    export /**
      * `Refund` objects allow you to refund a charge that has previously been created
      * but not yet refunded. Funds will be refunded to the credit or debit card that
      * was originally charged.
@@ -103,52 +148,11 @@ declare module 'stripe' {
       transfer_reversal: string | Stripe.TransferReversal | null;
     }
 
-    namespace Refund {
-      interface NextAction {
-        /**
-         * Contains the refund details.
-         */
-        display_details: NextAction.DisplayDetails | null;
-
-        /**
-         * Type of the next action to perform.
-         */
-        type: string;
-      }
-
-      namespace NextAction {
-        interface DisplayDetails {
-          email_sent: DisplayDetails.EmailSent;
-
-          /**
-           * The expiry timestamp.
-           */
-          expires_at: number;
-        }
-
-        namespace DisplayDetails {
-          interface EmailSent {
-            /**
-             * The timestamp when the email was sent.
-             */
-            email_sent_at: number;
-
-            /**
-             * The recipient's email address.
-             */
-            email_sent_to: string;
-          }
-        }
-      }
-
-      type Reason =
-        | 'duplicate'
-        | 'expired_uncaptured_charge'
-        | 'fraudulent'
-        | 'requested_by_customer';
+    namespace RefundCreateParams {
+      export type Reason = 'duplicate' | 'fraudulent' | 'requested_by_customer';
     }
 
-    interface RefundCreateParams {
+    export interface RefundCreateParams {
       /**
        * A positive integer representing how much to refund.
        */
@@ -195,18 +199,14 @@ declare module 'stripe' {
       reverse_transfer?: boolean;
     }
 
-    namespace RefundCreateParams {
-      type Reason = 'duplicate' | 'fraudulent' | 'requested_by_customer';
-    }
-
-    interface RefundRetrieveParams {
+    export interface RefundRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface RefundUpdateParams {
+    export interface RefundUpdateParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
@@ -218,7 +218,7 @@ declare module 'stripe' {
       metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
     }
 
-    interface RefundListParams extends PaginationParams {
+    export interface RefundListParams extends PaginationParams {
       /**
        * Only return refunds for the charge specified by this charge ID.
        */
@@ -237,7 +237,7 @@ declare module 'stripe' {
       payment_intent?: string;
     }
 
-    interface RefundCancelParams {
+    export interface RefundCancelParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

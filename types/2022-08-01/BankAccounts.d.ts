@@ -2,7 +2,11 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace BankAccount {
+      export type AvailablePayoutMethod = 'instant' | 'standard';
+    }
+
+    export /**
      * These bank accounts are payment methods on `Customer` objects.
      *
      * On the other hand [External Accounts](https://stripe.com/docs/api#external_accounts) are transfer
@@ -104,11 +108,7 @@ declare module 'stripe' {
       status: string;
     }
 
-    namespace BankAccount {
-      type AvailablePayoutMethod = 'instant' | 'standard';
-    }
-
-    /**
+    export /**
      * The DeletedBankAccount object.
      */
     interface DeletedBankAccount {

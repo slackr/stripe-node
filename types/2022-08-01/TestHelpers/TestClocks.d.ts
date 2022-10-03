@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace TestHelpers {
-      /**
+      export /**
        * A test clock enables deterministic control over objects in testmode. With a test clock, you can create
        * objects at a frozen time in the past or future, and advance to a specific future time to observe webhooks and state changes. After the clock advances,
        * you can either validate the current state of your scenario (and test your assumptions), change the current state of your scenario (and test more complex scenarios), or keep advancing forward in time.
@@ -53,10 +53,10 @@ declare module 'stripe' {
       }
 
       namespace TestClock {
-        type Status = 'advancing' | 'internal_failure' | 'ready';
+        export type Status = 'advancing' | 'internal_failure' | 'ready';
       }
 
-      /**
+      export /**
        * The DeletedTestClock object.
        */
       interface DeletedTestClock {
@@ -76,7 +76,7 @@ declare module 'stripe' {
         deleted: true;
       }
 
-      interface TestClockCreateParams {
+      export interface TestClockCreateParams {
         /**
          * The initial frozen time for this test clock.
          */
@@ -93,23 +93,23 @@ declare module 'stripe' {
         name?: string;
       }
 
-      interface TestClockRetrieveParams {
+      export interface TestClockRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface TestClockListParams extends PaginationParams {
+      export interface TestClockListParams extends PaginationParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface TestClockDeleteParams {}
+      export interface TestClockDeleteParams {}
 
-      interface TestClockAdvanceParams {
+      export interface TestClockAdvanceParams {
         /**
          * The time to advance the test clock. Must be after the test clock's current frozen time. Cannot be more than two intervals in the future from the shortest subscription in this test clock. If there are no subscriptions in this test clock, it cannot be more than two years in the future.
          */

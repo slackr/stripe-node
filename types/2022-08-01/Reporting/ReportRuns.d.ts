@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Reporting {
-      /**
+      export /**
        * The Report Run object represents an instance of a report type generated with
        * specific run parameters. Once the object is created, Stripe begins processing the report.
        * When the report has finished running, it will give you a reference to a file
@@ -68,7 +68,7 @@ declare module 'stripe' {
       }
 
       namespace ReportRun {
-        interface Parameters {
+        export interface Parameters {
           /**
            * The set of output columns requested for inclusion in the report run.
            */
@@ -111,7 +111,7 @@ declare module 'stripe' {
         }
       }
 
-      interface ReportRunCreateParams {
+      export interface ReportRunCreateParams {
         /**
          * The ID of the [report type](https://stripe.com/docs/reporting/statements/api#report-types) to run, such as `"balance.summary.1"`.
          */
@@ -129,7 +129,7 @@ declare module 'stripe' {
       }
 
       namespace ReportRunCreateParams {
-        interface Parameters {
+        export interface Parameters {
           /**
            * The set of report columns to include in the report output. If omitted, the Report Type is run with its default column set.
            */
@@ -172,7 +172,7 @@ declare module 'stripe' {
         }
 
         namespace Parameters {
-          type ReportingCategory =
+          export type ReportingCategory =
             | 'advance'
             | 'advance_funding'
             | 'anticipation_repayment'
@@ -208,7 +208,7 @@ declare module 'stripe' {
             | 'transfer'
             | 'transfer_reversal';
 
-          type Timezone =
+          export type Timezone =
             | 'Africa/Abidjan'
             | 'Africa/Accra'
             | 'Africa/Addis_Ababa'
@@ -806,14 +806,14 @@ declare module 'stripe' {
         }
       }
 
-      interface ReportRunRetrieveParams {
+      export interface ReportRunRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface ReportRunListParams extends PaginationParams {
+      export interface ReportRunListParams extends PaginationParams {
         created?: Stripe.RangeQueryParam | number;
 
         /**

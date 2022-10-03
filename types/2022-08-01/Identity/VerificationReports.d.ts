@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Identity {
-      /**
+      export /**
        * A VerificationReport is the result of an attempt to collect and verify data from a user.
        * The collection of verification checks performed is determined from the `type` and `options`
        * parameters used. You can find the result of each verification check performed in the
@@ -66,7 +66,7 @@ declare module 'stripe' {
       }
 
       namespace VerificationReport {
-        interface Document {
+        export interface Document {
           /**
            * Address as it appears in the document.
            */
@@ -128,83 +128,7 @@ declare module 'stripe' {
           type: Document.Type | null;
         }
 
-        namespace Document {
-          interface Dob {
-            /**
-             * Numerical day between 1 and 31.
-             */
-            day: number | null;
-
-            /**
-             * Numerical month between 1 and 12.
-             */
-            month: number | null;
-
-            /**
-             * The four-digit year.
-             */
-            year: number | null;
-          }
-
-          interface Error {
-            /**
-             * A short machine-readable string giving the reason for the verification failure.
-             */
-            code: Error.Code | null;
-
-            /**
-             * A human-readable message giving the reason for the failure. These messages can be shown to your users.
-             */
-            reason: string | null;
-          }
-
-          namespace Error {
-            type Code =
-              | 'document_expired'
-              | 'document_type_not_supported'
-              | 'document_unverified_other';
-          }
-
-          interface ExpirationDate {
-            /**
-             * Numerical day between 1 and 31.
-             */
-            day: number | null;
-
-            /**
-             * Numerical month between 1 and 12.
-             */
-            month: number | null;
-
-            /**
-             * The four-digit year.
-             */
-            year: number | null;
-          }
-
-          interface IssuedDate {
-            /**
-             * Numerical day between 1 and 31.
-             */
-            day: number | null;
-
-            /**
-             * Numerical month between 1 and 12.
-             */
-            month: number | null;
-
-            /**
-             * The four-digit year.
-             */
-            year: number | null;
-          }
-
-          type Status = 'unverified' | 'verified';
-
-          type Type = 'driving_license' | 'id_card' | 'passport';
-        }
-
-        interface IdNumber {
+        export interface IdNumber {
           /**
            * Date of birth.
            */
@@ -241,85 +165,13 @@ declare module 'stripe' {
           status: IdNumber.Status;
         }
 
-        namespace IdNumber {
-          interface Dob {
-            /**
-             * Numerical day between 1 and 31.
-             */
-            day: number | null;
-
-            /**
-             * Numerical month between 1 and 12.
-             */
-            month: number | null;
-
-            /**
-             * The four-digit year.
-             */
-            year: number | null;
-          }
-
-          interface Error {
-            /**
-             * A short machine-readable string giving the reason for the verification failure.
-             */
-            code: Error.Code | null;
-
-            /**
-             * A human-readable message giving the reason for the failure. These messages can be shown to your users.
-             */
-            reason: string | null;
-          }
-
-          namespace Error {
-            type Code =
-              | 'id_number_insufficient_document_data'
-              | 'id_number_mismatch'
-              | 'id_number_unverified_other';
-          }
-
-          type IdNumberType = 'br_cpf' | 'sg_nric' | 'us_ssn';
-
-          type Status = 'unverified' | 'verified';
-        }
-
-        interface Options {
+        export interface Options {
           document?: Options.Document;
 
           id_number?: Options.IdNumber;
         }
 
-        namespace Options {
-          interface Document {
-            /**
-             * Array of strings of allowed identity document types. If the provided identity document isn't one of the allowed types, the verification check will fail with a document_type_not_allowed error code.
-             */
-            allowed_types?: Array<Document.AllowedType>;
-
-            /**
-             * Collect an ID number and perform an [ID number check](https://stripe.com/docs/identity/verification-checks?type=id-number) with the document's extracted name and date of birth.
-             */
-            require_id_number?: boolean;
-
-            /**
-             * Disable image uploads, identity document images have to be captured using the device's camera.
-             */
-            require_live_capture?: boolean;
-
-            /**
-             * Capture a face image and perform a [selfie check](https://stripe.com/docs/identity/verification-checks?type=selfie) comparing a photo ID and a picture of your user's face. [Learn more](https://stripe.com/docs/identity/selfie).
-             */
-            require_matching_selfie?: boolean;
-          }
-
-          namespace Document {
-            type AllowedType = 'driving_license' | 'id_card' | 'passport';
-          }
-
-          interface IdNumber {}
-        }
-
-        interface Selfie {
+        export interface Selfie {
           /**
            * ID of the [File](https://stripe.com/docs/api/files) holding the image of the identity document used in this check.
            */
@@ -341,8 +193,27 @@ declare module 'stripe' {
           status: Selfie.Status;
         }
 
-        namespace Selfie {
-          interface Error {
+        export type Type = 'document' | 'id_number';
+
+        namespace Document {
+          export interface Dob {
+            /**
+             * Numerical day between 1 and 31.
+             */
+            day: number | null;
+
+            /**
+             * Numerical month between 1 and 12.
+             */
+            month: number | null;
+
+            /**
+             * The four-digit year.
+             */
+            year: number | null;
+          }
+
+          export interface Error {
             /**
              * A short machine-readable string giving the reason for the verification failure.
              */
@@ -354,28 +225,160 @@ declare module 'stripe' {
             reason: string | null;
           }
 
+          export interface ExpirationDate {
+            /**
+             * Numerical day between 1 and 31.
+             */
+            day: number | null;
+
+            /**
+             * Numerical month between 1 and 12.
+             */
+            month: number | null;
+
+            /**
+             * The four-digit year.
+             */
+            year: number | null;
+          }
+
+          export interface IssuedDate {
+            /**
+             * Numerical day between 1 and 31.
+             */
+            day: number | null;
+
+            /**
+             * Numerical month between 1 and 12.
+             */
+            month: number | null;
+
+            /**
+             * The four-digit year.
+             */
+            year: number | null;
+          }
+
+          export type Status = 'unverified' | 'verified';
+
+          export type Type = 'driving_license' | 'id_card' | 'passport';
+
           namespace Error {
-            type Code =
+            export type Code =
+              | 'document_expired'
+              | 'document_type_not_supported'
+              | 'document_unverified_other';
+          }
+        }
+
+        namespace IdNumber {
+          export interface Dob {
+            /**
+             * Numerical day between 1 and 31.
+             */
+            day: number | null;
+
+            /**
+             * Numerical month between 1 and 12.
+             */
+            month: number | null;
+
+            /**
+             * The four-digit year.
+             */
+            year: number | null;
+          }
+
+          export interface Error {
+            /**
+             * A short machine-readable string giving the reason for the verification failure.
+             */
+            code: Error.Code | null;
+
+            /**
+             * A human-readable message giving the reason for the failure. These messages can be shown to your users.
+             */
+            reason: string | null;
+          }
+
+          export type IdNumberType = 'br_cpf' | 'sg_nric' | 'us_ssn';
+
+          export type Status = 'unverified' | 'verified';
+
+          namespace Error {
+            export type Code =
+              | 'id_number_insufficient_document_data'
+              | 'id_number_mismatch'
+              | 'id_number_unverified_other';
+          }
+        }
+
+        namespace Options {
+          export interface Document {
+            /**
+             * Array of strings of allowed identity document types. If the provided identity document isn't one of the allowed types, the verification check will fail with a document_type_not_allowed error code.
+             */
+            allowed_types?: Array<Document.AllowedType>;
+
+            /**
+             * Collect an ID number and perform an [ID number check](https://stripe.com/docs/identity/verification-checks?type=id-number) with the document's extracted name and date of birth.
+             */
+            require_id_number?: boolean;
+
+            /**
+             * Disable image uploads, identity document images have to be captured using the device's camera.
+             */
+            require_live_capture?: boolean;
+
+            /**
+             * Capture a face image and perform a [selfie check](https://stripe.com/docs/identity/verification-checks?type=selfie) comparing a photo ID and a picture of your user's face. [Learn more](https://stripe.com/docs/identity/selfie).
+             */
+            require_matching_selfie?: boolean;
+          }
+
+          export interface IdNumber {}
+
+          namespace Document {
+            export type AllowedType =
+              | 'driving_license'
+              | 'id_card'
+              | 'passport';
+          }
+        }
+
+        namespace Selfie {
+          export interface Error {
+            /**
+             * A short machine-readable string giving the reason for the verification failure.
+             */
+            code: Error.Code | null;
+
+            /**
+             * A human-readable message giving the reason for the failure. These messages can be shown to your users.
+             */
+            reason: string | null;
+          }
+
+          export type Status = 'unverified' | 'verified';
+
+          namespace Error {
+            export type Code =
               | 'selfie_document_missing_photo'
               | 'selfie_face_mismatch'
               | 'selfie_manipulated'
               | 'selfie_unverified_other';
           }
-
-          type Status = 'unverified' | 'verified';
         }
-
-        type Type = 'document' | 'id_number';
       }
 
-      interface VerificationReportRetrieveParams {
+      export interface VerificationReportRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface VerificationReportListParams extends PaginationParams {
+      export interface VerificationReportListParams extends PaginationParams {
         created?: Stripe.RangeQueryParam | number;
 
         /**
@@ -395,7 +398,7 @@ declare module 'stripe' {
       }
 
       namespace VerificationReportListParams {
-        type Type = 'document' | 'id_number';
+        export type Type = 'document' | 'id_number';
       }
 
       class VerificationReportsResource {

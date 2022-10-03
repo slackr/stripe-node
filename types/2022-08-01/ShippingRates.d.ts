@@ -2,7 +2,94 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace ShippingRate {
+      export interface DeliveryEstimate {
+        /**
+         * The upper bound of the estimated range. If empty, represents no upper bound i.e., infinite.
+         */
+        maximum: DeliveryEstimate.Maximum | null;
+
+        /**
+         * The lower bound of the estimated range. If empty, represents no lower bound.
+         */
+        minimum: DeliveryEstimate.Minimum | null;
+      }
+
+      export interface FixedAmount {
+        /**
+         * A non-negative integer in cents representing how much to charge.
+         */
+        amount: number;
+
+        /**
+         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+         */
+        currency: string;
+
+        /**
+         * Shipping rates defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
+         */
+        currency_options?: {
+          [key: string]: FixedAmount.CurrencyOptions;
+        };
+      }
+
+      export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+
+      namespace DeliveryEstimate {
+        export interface Maximum {
+          /**
+           * A unit of time.
+           */
+          unit: Maximum.Unit;
+
+          /**
+           * Must be greater than 0.
+           */
+          value: number;
+        }
+
+        export interface Minimum {
+          /**
+           * A unit of time.
+           */
+          unit: Minimum.Unit;
+
+          /**
+           * Must be greater than 0.
+           */
+          value: number;
+        }
+
+        namespace Maximum {
+          export type Unit = 'business_day' | 'day' | 'hour' | 'month' | 'week';
+        }
+
+        namespace Minimum {
+          export type Unit = 'business_day' | 'day' | 'hour' | 'month' | 'week';
+        }
+      }
+
+      namespace FixedAmount {
+        export interface CurrencyOptions {
+          /**
+           * A non-negative integer in cents representing how much to charge.
+           */
+          amount: number;
+
+          /**
+           * Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`.
+           */
+          tax_behavior: CurrencyOptions.TaxBehavior;
+        }
+
+        namespace CurrencyOptions {
+          export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+        }
+      }
+    }
+
+    export /**
      * Shipping rates describe the price of shipping presented to your customers and can be
      * applied to [Checkout Sessions](https://stripe.com/docs/payments/checkout/shipping)
      * and [Orders](https://stripe.com/docs/orders/shipping) to collect shipping costs.
@@ -66,54 +153,20 @@ declare module 'stripe' {
       type: 'fixed_amount';
     }
 
-    namespace ShippingRate {
-      interface DeliveryEstimate {
+    namespace ShippingRateCreateParams {
+      export interface DeliveryEstimate {
         /**
          * The upper bound of the estimated range. If empty, represents no upper bound i.e., infinite.
          */
-        maximum: DeliveryEstimate.Maximum | null;
+        maximum?: DeliveryEstimate.Maximum;
 
         /**
          * The lower bound of the estimated range. If empty, represents no lower bound.
          */
-        minimum: DeliveryEstimate.Minimum | null;
+        minimum?: DeliveryEstimate.Minimum;
       }
 
-      namespace DeliveryEstimate {
-        interface Maximum {
-          /**
-           * A unit of time.
-           */
-          unit: Maximum.Unit;
-
-          /**
-           * Must be greater than 0.
-           */
-          value: number;
-        }
-
-        namespace Maximum {
-          type Unit = 'business_day' | 'day' | 'hour' | 'month' | 'week';
-        }
-
-        interface Minimum {
-          /**
-           * A unit of time.
-           */
-          unit: Minimum.Unit;
-
-          /**
-           * Must be greater than 0.
-           */
-          value: number;
-        }
-
-        namespace Minimum {
-          type Unit = 'business_day' | 'day' | 'hour' | 'month' | 'week';
-        }
-      }
-
-      interface FixedAmount {
+      export interface FixedAmount {
         /**
          * A non-negative integer in cents representing how much to charge.
          */
@@ -132,8 +185,44 @@ declare module 'stripe' {
         };
       }
 
+      export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+
+      namespace DeliveryEstimate {
+        export interface Maximum {
+          /**
+           * A unit of time.
+           */
+          unit: Maximum.Unit;
+
+          /**
+           * Must be greater than 0.
+           */
+          value: number;
+        }
+
+        export interface Minimum {
+          /**
+           * A unit of time.
+           */
+          unit: Minimum.Unit;
+
+          /**
+           * Must be greater than 0.
+           */
+          value: number;
+        }
+
+        namespace Maximum {
+          export type Unit = 'business_day' | 'day' | 'hour' | 'month' | 'week';
+        }
+
+        namespace Minimum {
+          export type Unit = 'business_day' | 'day' | 'hour' | 'month' | 'week';
+        }
+      }
+
       namespace FixedAmount {
-        interface CurrencyOptions {
+        export interface CurrencyOptions {
           /**
            * A non-negative integer in cents representing how much to charge.
            */
@@ -142,18 +231,16 @@ declare module 'stripe' {
           /**
            * Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`.
            */
-          tax_behavior: CurrencyOptions.TaxBehavior;
+          tax_behavior?: CurrencyOptions.TaxBehavior;
         }
 
         namespace CurrencyOptions {
-          type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+          export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
         }
       }
-
-      type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
     }
 
-    interface ShippingRateCreateParams {
+    export interface ShippingRateCreateParams {
       /**
        * The name of the shipping rate, meant to be displayable to the customer. This will appear on CheckoutSessions.
        */
@@ -195,64 +282,15 @@ declare module 'stripe' {
       type?: 'fixed_amount';
     }
 
-    namespace ShippingRateCreateParams {
-      interface DeliveryEstimate {
-        /**
-         * The upper bound of the estimated range. If empty, represents no upper bound i.e., infinite.
-         */
-        maximum?: DeliveryEstimate.Maximum;
+    export interface ShippingRateRetrieveParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+    }
 
-        /**
-         * The lower bound of the estimated range. If empty, represents no lower bound.
-         */
-        minimum?: DeliveryEstimate.Minimum;
-      }
-
-      namespace DeliveryEstimate {
-        interface Maximum {
-          /**
-           * A unit of time.
-           */
-          unit: Maximum.Unit;
-
-          /**
-           * Must be greater than 0.
-           */
-          value: number;
-        }
-
-        namespace Maximum {
-          type Unit = 'business_day' | 'day' | 'hour' | 'month' | 'week';
-        }
-
-        interface Minimum {
-          /**
-           * A unit of time.
-           */
-          unit: Minimum.Unit;
-
-          /**
-           * Must be greater than 0.
-           */
-          value: number;
-        }
-
-        namespace Minimum {
-          type Unit = 'business_day' | 'day' | 'hour' | 'month' | 'week';
-        }
-      }
-
-      interface FixedAmount {
-        /**
-         * A non-negative integer in cents representing how much to charge.
-         */
-        amount: number;
-
-        /**
-         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-         */
-        currency: string;
-
+    namespace ShippingRateUpdateParams {
+      export interface FixedAmount {
         /**
          * Shipping rates defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
          */
@@ -261,12 +299,14 @@ declare module 'stripe' {
         };
       }
 
+      export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+
       namespace FixedAmount {
-        interface CurrencyOptions {
+        export interface CurrencyOptions {
           /**
            * A non-negative integer in cents representing how much to charge.
            */
-          amount: number;
+          amount?: number;
 
           /**
            * Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`.
@@ -275,21 +315,12 @@ declare module 'stripe' {
         }
 
         namespace CurrencyOptions {
-          type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+          export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
         }
       }
-
-      type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
     }
 
-    interface ShippingRateRetrieveParams {
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-    }
-
-    interface ShippingRateUpdateParams {
+    export interface ShippingRateUpdateParams {
       /**
        * Whether the shipping rate can be used for new purchases. Defaults to `true`.
        */
@@ -316,38 +347,7 @@ declare module 'stripe' {
       tax_behavior?: ShippingRateUpdateParams.TaxBehavior;
     }
 
-    namespace ShippingRateUpdateParams {
-      interface FixedAmount {
-        /**
-         * Shipping rates defined in each available currency option. Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
-         */
-        currency_options?: {
-          [key: string]: FixedAmount.CurrencyOptions;
-        };
-      }
-
-      namespace FixedAmount {
-        interface CurrencyOptions {
-          /**
-           * A non-negative integer in cents representing how much to charge.
-           */
-          amount?: number;
-
-          /**
-           * Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`.
-           */
-          tax_behavior?: CurrencyOptions.TaxBehavior;
-        }
-
-        namespace CurrencyOptions {
-          type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
-        }
-      }
-
-      type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
-    }
-
-    interface ShippingRateListParams extends PaginationParams {
+    export interface ShippingRateListParams extends PaginationParams {
       /**
        * Only return shipping rates that are active or inactive.
        */

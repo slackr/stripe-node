@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Treasury {
-      /**
+      export /**
        * Encodes whether a FinancialAccount has access to a particular Feature, with a `status` enum and associated `status_details`.
        * Stripe or the platform can control Features via the requested field.
        */
@@ -50,7 +50,7 @@ declare module 'stripe' {
       }
 
       namespace FinancialAccountFeatures {
-        interface CardIssuing {
+        export interface CardIssuing {
           /**
            * Whether the FinancialAccount should have the Feature.
            */
@@ -67,48 +67,7 @@ declare module 'stripe' {
           status_details: Array<CardIssuing.StatusDetail>;
         }
 
-        namespace CardIssuing {
-          type Status = 'active' | 'pending' | 'restricted';
-
-          interface StatusDetail {
-            /**
-             * Represents the reason why the status is `pending` or `restricted`.
-             */
-            code: StatusDetail.Code;
-
-            /**
-             * Represents what the user should do, if anything, to activate the Feature.
-             */
-            resolution: StatusDetail.Resolution | null;
-
-            /**
-             * The `platform_restrictions` that are restricting this Feature.
-             */
-            restriction?: StatusDetail.Restriction;
-          }
-
-          namespace StatusDetail {
-            type Code =
-              | 'activating'
-              | 'capability_not_requested'
-              | 'financial_account_closed'
-              | 'rejected_other'
-              | 'rejected_unsupported_business'
-              | 'requirements_past_due'
-              | 'requirements_pending_verification'
-              | 'restricted_by_platform'
-              | 'restricted_other';
-
-            type Resolution =
-              | 'contact_stripe'
-              | 'provide_information'
-              | 'remove_restriction';
-
-            type Restriction = 'inbound_flows' | 'outbound_flows';
-          }
-        }
-
-        interface DepositInsurance {
+        export interface DepositInsurance {
           /**
            * Whether the FinancialAccount should have the Feature.
            */
@@ -125,10 +84,65 @@ declare module 'stripe' {
           status_details: Array<DepositInsurance.StatusDetail>;
         }
 
-        namespace DepositInsurance {
-          type Status = 'active' | 'pending' | 'restricted';
+        export interface FinancialAddresses {
+          /**
+           * Toggle settings for enabling/disabling a feature
+           */
+          aba?: FinancialAddresses.Aba;
+        }
 
-          interface StatusDetail {
+        export interface InboundTransfers {
+          /**
+           * Toggle settings for enabling/disabling a feature
+           */
+          ach?: InboundTransfers.Ach;
+        }
+
+        export interface IntraStripeFlows {
+          /**
+           * Whether the FinancialAccount should have the Feature.
+           */
+          requested: boolean;
+
+          /**
+           * Whether the Feature is operational.
+           */
+          status: IntraStripeFlows.Status;
+
+          /**
+           * Additional details; includes at least one entry when the status is not `active`.
+           */
+          status_details: Array<IntraStripeFlows.StatusDetail>;
+        }
+
+        export interface OutboundPayments {
+          /**
+           * Toggle settings for enabling/disabling a feature
+           */
+          ach?: OutboundPayments.Ach;
+
+          /**
+           * Toggle settings for enabling/disabling a feature
+           */
+          us_domestic_wire?: OutboundPayments.UsDomesticWire;
+        }
+
+        export interface OutboundTransfers {
+          /**
+           * Toggle settings for enabling/disabling a feature
+           */
+          ach?: OutboundTransfers.Ach;
+
+          /**
+           * Toggle settings for enabling/disabling a feature
+           */
+          us_domestic_wire?: OutboundTransfers.UsDomesticWire;
+        }
+
+        namespace CardIssuing {
+          export type Status = 'active' | 'pending' | 'restricted';
+
+          export interface StatusDetail {
             /**
              * Represents the reason why the status is `pending` or `restricted`.
              */
@@ -146,7 +160,7 @@ declare module 'stripe' {
           }
 
           namespace StatusDetail {
-            type Code =
+            export type Code =
               | 'activating'
               | 'capability_not_requested'
               | 'financial_account_closed'
@@ -157,24 +171,58 @@ declare module 'stripe' {
               | 'restricted_by_platform'
               | 'restricted_other';
 
-            type Resolution =
+            export type Resolution =
               | 'contact_stripe'
               | 'provide_information'
               | 'remove_restriction';
 
-            type Restriction = 'inbound_flows' | 'outbound_flows';
+            export type Restriction = 'inbound_flows' | 'outbound_flows';
           }
         }
 
-        interface FinancialAddresses {
-          /**
-           * Toggle settings for enabling/disabling a feature
-           */
-          aba?: FinancialAddresses.Aba;
+        namespace DepositInsurance {
+          export type Status = 'active' | 'pending' | 'restricted';
+
+          export interface StatusDetail {
+            /**
+             * Represents the reason why the status is `pending` or `restricted`.
+             */
+            code: StatusDetail.Code;
+
+            /**
+             * Represents what the user should do, if anything, to activate the Feature.
+             */
+            resolution: StatusDetail.Resolution | null;
+
+            /**
+             * The `platform_restrictions` that are restricting this Feature.
+             */
+            restriction?: StatusDetail.Restriction;
+          }
+
+          namespace StatusDetail {
+            export type Code =
+              | 'activating'
+              | 'capability_not_requested'
+              | 'financial_account_closed'
+              | 'rejected_other'
+              | 'rejected_unsupported_business'
+              | 'requirements_past_due'
+              | 'requirements_pending_verification'
+              | 'restricted_by_platform'
+              | 'restricted_other';
+
+            export type Resolution =
+              | 'contact_stripe'
+              | 'provide_information'
+              | 'remove_restriction';
+
+            export type Restriction = 'inbound_flows' | 'outbound_flows';
+          }
         }
 
         namespace FinancialAddresses {
-          interface Aba {
+          export interface Aba {
             /**
              * Whether the FinancialAccount should have the Feature.
              */
@@ -192,9 +240,9 @@ declare module 'stripe' {
           }
 
           namespace Aba {
-            type Status = 'active' | 'pending' | 'restricted';
+            export type Status = 'active' | 'pending' | 'restricted';
 
-            interface StatusDetail {
+            export interface StatusDetail {
               /**
                * Represents the reason why the status is `pending` or `restricted`.
                */
@@ -212,7 +260,7 @@ declare module 'stripe' {
             }
 
             namespace StatusDetail {
-              type Code =
+              export type Code =
                 | 'activating'
                 | 'capability_not_requested'
                 | 'financial_account_closed'
@@ -223,25 +271,18 @@ declare module 'stripe' {
                 | 'restricted_by_platform'
                 | 'restricted_other';
 
-              type Resolution =
+              export type Resolution =
                 | 'contact_stripe'
                 | 'provide_information'
                 | 'remove_restriction';
 
-              type Restriction = 'inbound_flows' | 'outbound_flows';
+              export type Restriction = 'inbound_flows' | 'outbound_flows';
             }
           }
         }
 
-        interface InboundTransfers {
-          /**
-           * Toggle settings for enabling/disabling a feature
-           */
-          ach?: InboundTransfers.Ach;
-        }
-
         namespace InboundTransfers {
-          interface Ach {
+          export interface Ach {
             /**
              * Whether the FinancialAccount should have the Feature.
              */
@@ -259,9 +300,9 @@ declare module 'stripe' {
           }
 
           namespace Ach {
-            type Status = 'active' | 'pending' | 'restricted';
+            export type Status = 'active' | 'pending' | 'restricted';
 
-            interface StatusDetail {
+            export interface StatusDetail {
               /**
                * Represents the reason why the status is `pending` or `restricted`.
                */
@@ -279,7 +320,7 @@ declare module 'stripe' {
             }
 
             namespace StatusDetail {
-              type Code =
+              export type Code =
                 | 'activating'
                 | 'capability_not_requested'
                 | 'financial_account_closed'
@@ -290,37 +331,20 @@ declare module 'stripe' {
                 | 'restricted_by_platform'
                 | 'restricted_other';
 
-              type Resolution =
+              export type Resolution =
                 | 'contact_stripe'
                 | 'provide_information'
                 | 'remove_restriction';
 
-              type Restriction = 'inbound_flows' | 'outbound_flows';
+              export type Restriction = 'inbound_flows' | 'outbound_flows';
             }
           }
         }
 
-        interface IntraStripeFlows {
-          /**
-           * Whether the FinancialAccount should have the Feature.
-           */
-          requested: boolean;
-
-          /**
-           * Whether the Feature is operational.
-           */
-          status: IntraStripeFlows.Status;
-
-          /**
-           * Additional details; includes at least one entry when the status is not `active`.
-           */
-          status_details: Array<IntraStripeFlows.StatusDetail>;
-        }
-
         namespace IntraStripeFlows {
-          type Status = 'active' | 'pending' | 'restricted';
+          export type Status = 'active' | 'pending' | 'restricted';
 
-          interface StatusDetail {
+          export interface StatusDetail {
             /**
              * Represents the reason why the status is `pending` or `restricted`.
              */
@@ -338,7 +362,7 @@ declare module 'stripe' {
           }
 
           namespace StatusDetail {
-            type Code =
+            export type Code =
               | 'activating'
               | 'capability_not_requested'
               | 'financial_account_closed'
@@ -349,29 +373,17 @@ declare module 'stripe' {
               | 'restricted_by_platform'
               | 'restricted_other';
 
-            type Resolution =
+            export type Resolution =
               | 'contact_stripe'
               | 'provide_information'
               | 'remove_restriction';
 
-            type Restriction = 'inbound_flows' | 'outbound_flows';
+            export type Restriction = 'inbound_flows' | 'outbound_flows';
           }
-        }
-
-        interface OutboundPayments {
-          /**
-           * Toggle settings for enabling/disabling a feature
-           */
-          ach?: OutboundPayments.Ach;
-
-          /**
-           * Toggle settings for enabling/disabling a feature
-           */
-          us_domestic_wire?: OutboundPayments.UsDomesticWire;
         }
 
         namespace OutboundPayments {
-          interface Ach {
+          export interface Ach {
             /**
              * Whether the FinancialAccount should have the Feature.
              */
@@ -388,48 +400,7 @@ declare module 'stripe' {
             status_details: Array<Ach.StatusDetail>;
           }
 
-          namespace Ach {
-            type Status = 'active' | 'pending' | 'restricted';
-
-            interface StatusDetail {
-              /**
-               * Represents the reason why the status is `pending` or `restricted`.
-               */
-              code: StatusDetail.Code;
-
-              /**
-               * Represents what the user should do, if anything, to activate the Feature.
-               */
-              resolution: StatusDetail.Resolution | null;
-
-              /**
-               * The `platform_restrictions` that are restricting this Feature.
-               */
-              restriction?: StatusDetail.Restriction;
-            }
-
-            namespace StatusDetail {
-              type Code =
-                | 'activating'
-                | 'capability_not_requested'
-                | 'financial_account_closed'
-                | 'rejected_other'
-                | 'rejected_unsupported_business'
-                | 'requirements_past_due'
-                | 'requirements_pending_verification'
-                | 'restricted_by_platform'
-                | 'restricted_other';
-
-              type Resolution =
-                | 'contact_stripe'
-                | 'provide_information'
-                | 'remove_restriction';
-
-              type Restriction = 'inbound_flows' | 'outbound_flows';
-            }
-          }
-
-          interface UsDomesticWire {
+          export interface UsDomesticWire {
             /**
              * Whether the FinancialAccount should have the Feature.
              */
@@ -446,10 +417,10 @@ declare module 'stripe' {
             status_details: Array<UsDomesticWire.StatusDetail>;
           }
 
-          namespace UsDomesticWire {
-            type Status = 'active' | 'pending' | 'restricted';
+          namespace Ach {
+            export type Status = 'active' | 'pending' | 'restricted';
 
-            interface StatusDetail {
+            export interface StatusDetail {
               /**
                * Represents the reason why the status is `pending` or `restricted`.
                */
@@ -467,7 +438,7 @@ declare module 'stripe' {
             }
 
             namespace StatusDetail {
-              type Code =
+              export type Code =
                 | 'activating'
                 | 'capability_not_requested'
                 | 'financial_account_closed'
@@ -478,30 +449,59 @@ declare module 'stripe' {
                 | 'restricted_by_platform'
                 | 'restricted_other';
 
-              type Resolution =
+              export type Resolution =
                 | 'contact_stripe'
                 | 'provide_information'
                 | 'remove_restriction';
 
-              type Restriction = 'inbound_flows' | 'outbound_flows';
+              export type Restriction = 'inbound_flows' | 'outbound_flows';
             }
           }
-        }
 
-        interface OutboundTransfers {
-          /**
-           * Toggle settings for enabling/disabling a feature
-           */
-          ach?: OutboundTransfers.Ach;
+          namespace UsDomesticWire {
+            export type Status = 'active' | 'pending' | 'restricted';
 
-          /**
-           * Toggle settings for enabling/disabling a feature
-           */
-          us_domestic_wire?: OutboundTransfers.UsDomesticWire;
+            export interface StatusDetail {
+              /**
+               * Represents the reason why the status is `pending` or `restricted`.
+               */
+              code: StatusDetail.Code;
+
+              /**
+               * Represents what the user should do, if anything, to activate the Feature.
+               */
+              resolution: StatusDetail.Resolution | null;
+
+              /**
+               * The `platform_restrictions` that are restricting this Feature.
+               */
+              restriction?: StatusDetail.Restriction;
+            }
+
+            namespace StatusDetail {
+              export type Code =
+                | 'activating'
+                | 'capability_not_requested'
+                | 'financial_account_closed'
+                | 'rejected_other'
+                | 'rejected_unsupported_business'
+                | 'requirements_past_due'
+                | 'requirements_pending_verification'
+                | 'restricted_by_platform'
+                | 'restricted_other';
+
+              export type Resolution =
+                | 'contact_stripe'
+                | 'provide_information'
+                | 'remove_restriction';
+
+              export type Restriction = 'inbound_flows' | 'outbound_flows';
+            }
+          }
         }
 
         namespace OutboundTransfers {
-          interface Ach {
+          export interface Ach {
             /**
              * Whether the FinancialAccount should have the Feature.
              */
@@ -518,48 +518,7 @@ declare module 'stripe' {
             status_details: Array<Ach.StatusDetail>;
           }
 
-          namespace Ach {
-            type Status = 'active' | 'pending' | 'restricted';
-
-            interface StatusDetail {
-              /**
-               * Represents the reason why the status is `pending` or `restricted`.
-               */
-              code: StatusDetail.Code;
-
-              /**
-               * Represents what the user should do, if anything, to activate the Feature.
-               */
-              resolution: StatusDetail.Resolution | null;
-
-              /**
-               * The `platform_restrictions` that are restricting this Feature.
-               */
-              restriction?: StatusDetail.Restriction;
-            }
-
-            namespace StatusDetail {
-              type Code =
-                | 'activating'
-                | 'capability_not_requested'
-                | 'financial_account_closed'
-                | 'rejected_other'
-                | 'rejected_unsupported_business'
-                | 'requirements_past_due'
-                | 'requirements_pending_verification'
-                | 'restricted_by_platform'
-                | 'restricted_other';
-
-              type Resolution =
-                | 'contact_stripe'
-                | 'provide_information'
-                | 'remove_restriction';
-
-              type Restriction = 'inbound_flows' | 'outbound_flows';
-            }
-          }
-
-          interface UsDomesticWire {
+          export interface UsDomesticWire {
             /**
              * Whether the FinancialAccount should have the Feature.
              */
@@ -576,10 +535,10 @@ declare module 'stripe' {
             status_details: Array<UsDomesticWire.StatusDetail>;
           }
 
-          namespace UsDomesticWire {
-            type Status = 'active' | 'pending' | 'restricted';
+          namespace Ach {
+            export type Status = 'active' | 'pending' | 'restricted';
 
-            interface StatusDetail {
+            export interface StatusDetail {
               /**
                * Represents the reason why the status is `pending` or `restricted`.
                */
@@ -597,7 +556,7 @@ declare module 'stripe' {
             }
 
             namespace StatusDetail {
-              type Code =
+              export type Code =
                 | 'activating'
                 | 'capability_not_requested'
                 | 'financial_account_closed'
@@ -608,12 +567,53 @@ declare module 'stripe' {
                 | 'restricted_by_platform'
                 | 'restricted_other';
 
-              type Resolution =
+              export type Resolution =
                 | 'contact_stripe'
                 | 'provide_information'
                 | 'remove_restriction';
 
-              type Restriction = 'inbound_flows' | 'outbound_flows';
+              export type Restriction = 'inbound_flows' | 'outbound_flows';
+            }
+          }
+
+          namespace UsDomesticWire {
+            export type Status = 'active' | 'pending' | 'restricted';
+
+            export interface StatusDetail {
+              /**
+               * Represents the reason why the status is `pending` or `restricted`.
+               */
+              code: StatusDetail.Code;
+
+              /**
+               * Represents what the user should do, if anything, to activate the Feature.
+               */
+              resolution: StatusDetail.Resolution | null;
+
+              /**
+               * The `platform_restrictions` that are restricting this Feature.
+               */
+              restriction?: StatusDetail.Restriction;
+            }
+
+            namespace StatusDetail {
+              export type Code =
+                | 'activating'
+                | 'capability_not_requested'
+                | 'financial_account_closed'
+                | 'rejected_other'
+                | 'rejected_unsupported_business'
+                | 'requirements_past_due'
+                | 'requirements_pending_verification'
+                | 'restricted_by_platform'
+                | 'restricted_other';
+
+              export type Resolution =
+                | 'contact_stripe'
+                | 'provide_information'
+                | 'remove_restriction';
+
+              export type Restriction = 'inbound_flows' | 'outbound_flows';
             }
           }
         }

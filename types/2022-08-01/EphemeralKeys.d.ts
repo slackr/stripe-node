@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    export /**
      * The EphemeralKey object.
      */
     interface EphemeralKey {
@@ -37,7 +37,7 @@ declare module 'stripe' {
       secret?: string;
     }
 
-    interface EphemeralKeyCreateParams {
+    export interface EphemeralKeyCreateParams {
       /**
        * The ID of the Customer you'd like to modify using the resulting ephemeral key.
        */
@@ -54,7 +54,7 @@ declare module 'stripe' {
       issuing_card?: string;
     }
 
-    interface EphemeralKeyDeleteParams {
+    export interface EphemeralKeyDeleteParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

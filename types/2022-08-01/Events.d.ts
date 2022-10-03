@@ -2,7 +2,39 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace Event {
+      export interface Data {
+        /**
+         * Object containing the API resource relevant to the event. For example, an `invoice.created` event will have a full [invoice object](https://stripe.com/docs/api#invoice_object) as the value of the object key.
+         */
+        object: Data.Object;
+
+        /**
+         * Object containing the names of the attributes that have changed, and their previous values (sent along only with *.updated events).
+         */
+        previous_attributes?: Data.PreviousAttributes;
+      }
+
+      export interface Request {
+        /**
+         * ID of the API request that caused the event. If null, the event was automatic (e.g., Stripe's automatic subscription handling). Request logs are available in the [dashboard](https://dashboard.stripe.com/logs), but currently not in the API.
+         */
+        id: string | null;
+
+        /**
+         * The idempotency key transmitted during the request, if any. *Note: This property is populated only for events on or after May 23, 2017*.
+         */
+        idempotency_key: string | null;
+      }
+
+      namespace Data {
+        export interface Object {}
+
+        export interface PreviousAttributes {}
+      }
+    }
+
+    export /**
      * Events are our way of letting you know when something interesting happens in
      * your account. When an interesting event occurs, we create a new `Event`
      * object. For example, when a charge succeeds, we create a `charge.succeeded`
@@ -82,46 +114,14 @@ declare module 'stripe' {
       type: string;
     }
 
-    namespace Event {
-      interface Data {
-        /**
-         * Object containing the API resource relevant to the event. For example, an `invoice.created` event will have a full [invoice object](https://stripe.com/docs/api#invoice_object) as the value of the object key.
-         */
-        object: Data.Object;
-
-        /**
-         * Object containing the names of the attributes that have changed, and their previous values (sent along only with *.updated events).
-         */
-        previous_attributes?: Data.PreviousAttributes;
-      }
-
-      namespace Data {
-        interface Object {}
-
-        interface PreviousAttributes {}
-      }
-
-      interface Request {
-        /**
-         * ID of the API request that caused the event. If null, the event was automatic (e.g., Stripe's automatic subscription handling). Request logs are available in the [dashboard](https://dashboard.stripe.com/logs), but currently not in the API.
-         */
-        id: string | null;
-
-        /**
-         * The idempotency key transmitted during the request, if any. *Note: This property is populated only for events on or after May 23, 2017*.
-         */
-        idempotency_key: string | null;
-      }
-    }
-
-    interface EventRetrieveParams {
+    export interface EventRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface EventListParams extends PaginationParams {
+    export interface EventListParams extends PaginationParams {
       created?: Stripe.RangeQueryParam | number;
 
       /**

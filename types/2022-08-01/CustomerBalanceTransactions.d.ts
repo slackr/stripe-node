@@ -2,7 +2,20 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace CustomerBalanceTransaction {
+      export type Type =
+        | 'adjustment'
+        | 'applied_to_invoice'
+        | 'credit_note'
+        | 'initial'
+        | 'invoice_too_large'
+        | 'invoice_too_small'
+        | 'migration'
+        | 'unapplied_from_invoice'
+        | 'unspent_receiver_credit';
+    }
+
+    export /**
      * Each customer has a [`balance`](https://stripe.com/docs/api/customers/object#customer_object-balance) value,
      * which denotes a debit or credit that's automatically applied to their next invoice upon finalization.
      * You may modify the value directly by using the [update customer API](https://stripe.com/docs/api/customers/update),
@@ -77,20 +90,7 @@ declare module 'stripe' {
       type: CustomerBalanceTransaction.Type;
     }
 
-    namespace CustomerBalanceTransaction {
-      type Type =
-        | 'adjustment'
-        | 'applied_to_invoice'
-        | 'credit_note'
-        | 'initial'
-        | 'invoice_too_large'
-        | 'invoice_too_small'
-        | 'migration'
-        | 'unapplied_from_invoice'
-        | 'unspent_receiver_credit';
-    }
-
-    interface CustomerBalanceTransactionCreateParams {
+    export interface CustomerBalanceTransactionCreateParams {
       /**
        * The integer amount in **cents (or local equivalent)** to apply to the customer's credit balance.
        */
@@ -117,14 +117,14 @@ declare module 'stripe' {
       metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
     }
 
-    interface CustomerBalanceTransactionRetrieveParams {
+    export interface CustomerBalanceTransactionRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface CustomerBalanceTransactionUpdateParams {
+    export interface CustomerBalanceTransactionUpdateParams {
       /**
        * An arbitrary string attached to the object. Often useful for displaying to users.
        */
@@ -141,7 +141,8 @@ declare module 'stripe' {
       metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
     }
 
-    interface CustomerBalanceTransactionListParams extends PaginationParams {
+    export interface CustomerBalanceTransactionListParams
+      extends PaginationParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

@@ -4,7 +4,7 @@ declare module 'stripe' {
   namespace Stripe {
     namespace TestHelpers {
       namespace Treasury {
-        interface ReceivedCreditCreateParams {
+        export interface ReceivedCreditCreateParams {
           /**
            * Amount (in cents) to be transferred.
            */
@@ -42,7 +42,9 @@ declare module 'stripe' {
         }
 
         namespace ReceivedCreditCreateParams {
-          interface InitiatingPaymentMethodDetails {
+          export type Network = 'ach' | 'us_domestic_wire';
+
+          export interface InitiatingPaymentMethodDetails {
             /**
              * The source type.
              */
@@ -55,7 +57,7 @@ declare module 'stripe' {
           }
 
           namespace InitiatingPaymentMethodDetails {
-            interface UsBankAccount {
+            export interface UsBankAccount {
               /**
                * The bank account holder's name.
                */
@@ -72,8 +74,6 @@ declare module 'stripe' {
               routing_number?: string;
             }
           }
-
-          type Network = 'ach' | 'us_domestic_wire';
         }
       }
 

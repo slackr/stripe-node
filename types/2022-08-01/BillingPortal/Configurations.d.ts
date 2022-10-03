@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace BillingPortal {
-      /**
+      export /**
        * A portal configuration describes the functionality and behavior of a portal session.
        */
       interface Configuration {
@@ -69,7 +69,7 @@ declare module 'stripe' {
       }
 
       namespace Configuration {
-        interface BusinessProfile {
+        export interface BusinessProfile {
           /**
            * The messaging shown to customers in the portal.
            */
@@ -86,7 +86,7 @@ declare module 'stripe' {
           terms_of_service_url: string | null;
         }
 
-        interface Features {
+        export interface Features {
           customer_update: Features.CustomerUpdate;
 
           invoice_history: Features.InvoiceHistory;
@@ -100,8 +100,22 @@ declare module 'stripe' {
           subscription_update: Features.SubscriptionUpdate;
         }
 
+        export interface LoginPage {
+          /**
+           * If `true`, a shareable `url` will be generated that will take your customers to a hosted login page for the customer portal.
+           *
+           * If `false`, the previously generated `url`, if any, will be deactivated.
+           */
+          enabled: boolean;
+
+          /**
+           * A shareable URL to the hosted portal login page. Your customers will be able to log in with their [email](https://stripe.com/docs/api/customers/object#customer_object-email) and receive a link to their customer portal.
+           */
+          url: string | null;
+        }
+
         namespace Features {
-          interface CustomerUpdate {
+          export interface CustomerUpdate {
             /**
              * The types of customer updates that are supported. When empty, customers are not updateable.
              */
@@ -113,30 +127,21 @@ declare module 'stripe' {
             enabled: boolean;
           }
 
-          namespace CustomerUpdate {
-            type AllowedUpdate =
-              | 'address'
-              | 'email'
-              | 'phone'
-              | 'shipping'
-              | 'tax_id';
-          }
-
-          interface InvoiceHistory {
+          export interface InvoiceHistory {
             /**
              * Whether the feature is enabled.
              */
             enabled: boolean;
           }
 
-          interface PaymentMethodUpdate {
+          export interface PaymentMethodUpdate {
             /**
              * Whether the feature is enabled.
              */
             enabled: boolean;
           }
 
-          interface SubscriptionCancel {
+          export interface SubscriptionCancel {
             cancellation_reason: SubscriptionCancel.CancellationReason;
 
             /**
@@ -155,47 +160,14 @@ declare module 'stripe' {
             proration_behavior: SubscriptionCancel.ProrationBehavior;
           }
 
-          namespace SubscriptionCancel {
-            interface CancellationReason {
-              /**
-               * Whether the feature is enabled.
-               */
-              enabled: boolean;
-
-              /**
-               * Which cancellation reasons will be given as options to the customer.
-               */
-              options: Array<CancellationReason.Option>;
-            }
-
-            namespace CancellationReason {
-              type Option =
-                | 'customer_service'
-                | 'low_quality'
-                | 'missing_features'
-                | 'other'
-                | 'switched_service'
-                | 'too_complex'
-                | 'too_expensive'
-                | 'unused';
-            }
-
-            type Mode = 'at_period_end' | 'immediately';
-
-            type ProrationBehavior =
-              | 'always_invoice'
-              | 'create_prorations'
-              | 'none';
-          }
-
-          interface SubscriptionPause {
+          export interface SubscriptionPause {
             /**
              * Whether the feature is enabled.
              */
             enabled: boolean;
           }
 
-          interface SubscriptionUpdate {
+          export interface SubscriptionUpdate {
             /**
              * The types of subscription updates that are supported for items listed in the `products` attribute. When empty, subscriptions are not updateable.
              */
@@ -219,10 +191,55 @@ declare module 'stripe' {
             proration_behavior: SubscriptionUpdate.ProrationBehavior;
           }
 
-          namespace SubscriptionUpdate {
-            type DefaultAllowedUpdate = 'price' | 'promotion_code' | 'quantity';
+          namespace CustomerUpdate {
+            export type AllowedUpdate =
+              | 'address'
+              | 'email'
+              | 'phone'
+              | 'shipping'
+              | 'tax_id';
+          }
 
-            interface Product {
+          namespace SubscriptionCancel {
+            export interface CancellationReason {
+              /**
+               * Whether the feature is enabled.
+               */
+              enabled: boolean;
+
+              /**
+               * Which cancellation reasons will be given as options to the customer.
+               */
+              options: Array<CancellationReason.Option>;
+            }
+
+            export type Mode = 'at_period_end' | 'immediately';
+
+            export type ProrationBehavior =
+              | 'always_invoice'
+              | 'create_prorations'
+              | 'none';
+
+            namespace CancellationReason {
+              export type Option =
+                | 'customer_service'
+                | 'low_quality'
+                | 'missing_features'
+                | 'other'
+                | 'switched_service'
+                | 'too_complex'
+                | 'too_expensive'
+                | 'unused';
+            }
+          }
+
+          namespace SubscriptionUpdate {
+            export type DefaultAllowedUpdate =
+              | 'price'
+              | 'promotion_code'
+              | 'quantity';
+
+            export interface Product {
               /**
                * The list of price IDs which, when subscribed to, a subscription can be updated.
                */
@@ -234,29 +251,15 @@ declare module 'stripe' {
               product: string;
             }
 
-            type ProrationBehavior =
+            export type ProrationBehavior =
               | 'always_invoice'
               | 'create_prorations'
               | 'none';
           }
         }
-
-        interface LoginPage {
-          /**
-           * If `true`, a shareable `url` will be generated that will take your customers to a hosted login page for the customer portal.
-           *
-           * If `false`, the previously generated `url`, if any, will be deactivated.
-           */
-          enabled: boolean;
-
-          /**
-           * A shareable URL to the hosted portal login page. Your customers will be able to log in with their [email](https://stripe.com/docs/api/customers/object#customer_object-email) and receive a link to their customer portal.
-           */
-          url: string | null;
-        }
       }
 
-      interface ConfigurationCreateParams {
+      export interface ConfigurationCreateParams {
         /**
          * The business information shown to customers in the portal.
          */
@@ -289,7 +292,7 @@ declare module 'stripe' {
       }
 
       namespace ConfigurationCreateParams {
-        interface BusinessProfile {
+        export interface BusinessProfile {
           /**
            * The messaging shown to customers in the portal.
            */
@@ -306,7 +309,7 @@ declare module 'stripe' {
           terms_of_service_url?: string;
         }
 
-        interface Features {
+        export interface Features {
           /**
            * Information about updating the customer details in the portal.
            */
@@ -338,8 +341,15 @@ declare module 'stripe' {
           subscription_update?: Features.SubscriptionUpdate;
         }
 
+        export interface LoginPage {
+          /**
+           * Set to `true` to generate a shareable URL [`login_page.url`](https://stripe.com/docs/api/customer_portal/configuration#portal_configuration_object-login_page-url) that will take your customers to a hosted login page for the customer portal.
+           */
+          enabled: boolean;
+        }
+
         namespace Features {
-          interface CustomerUpdate {
+          export interface CustomerUpdate {
             /**
              * The types of customer updates that are supported. When empty, customers are not updateable.
              */
@@ -353,30 +363,21 @@ declare module 'stripe' {
             enabled: boolean;
           }
 
-          namespace CustomerUpdate {
-            type AllowedUpdate =
-              | 'address'
-              | 'email'
-              | 'phone'
-              | 'shipping'
-              | 'tax_id';
-          }
-
-          interface InvoiceHistory {
+          export interface InvoiceHistory {
             /**
              * Whether the feature is enabled.
              */
             enabled: boolean;
           }
 
-          interface PaymentMethodUpdate {
+          export interface PaymentMethodUpdate {
             /**
              * Whether the feature is enabled.
              */
             enabled: boolean;
           }
 
-          interface SubscriptionCancel {
+          export interface SubscriptionCancel {
             /**
              * Whether the cancellation reasons will be collected in the portal and which options are exposed to the customer
              */
@@ -398,47 +399,14 @@ declare module 'stripe' {
             proration_behavior?: SubscriptionCancel.ProrationBehavior;
           }
 
-          namespace SubscriptionCancel {
-            interface CancellationReason {
-              /**
-               * Whether the feature is enabled.
-               */
-              enabled: boolean;
-
-              /**
-               * Which cancellation reasons will be given as options to the customer.
-               */
-              options: Stripe.Emptyable<Array<CancellationReason.Option>>;
-            }
-
-            namespace CancellationReason {
-              type Option =
-                | 'customer_service'
-                | 'low_quality'
-                | 'missing_features'
-                | 'other'
-                | 'switched_service'
-                | 'too_complex'
-                | 'too_expensive'
-                | 'unused';
-            }
-
-            type Mode = 'at_period_end' | 'immediately';
-
-            type ProrationBehavior =
-              | 'always_invoice'
-              | 'create_prorations'
-              | 'none';
-          }
-
-          interface SubscriptionPause {
+          export interface SubscriptionPause {
             /**
              * Whether the feature is enabled.
              */
             enabled?: boolean;
           }
 
-          interface SubscriptionUpdate {
+          export interface SubscriptionUpdate {
             /**
              * The types of subscription updates that are supported. When empty, subscriptions are not updateable.
              */
@@ -462,10 +430,55 @@ declare module 'stripe' {
             proration_behavior?: SubscriptionUpdate.ProrationBehavior;
           }
 
-          namespace SubscriptionUpdate {
-            type DefaultAllowedUpdate = 'price' | 'promotion_code' | 'quantity';
+          namespace CustomerUpdate {
+            export type AllowedUpdate =
+              | 'address'
+              | 'email'
+              | 'phone'
+              | 'shipping'
+              | 'tax_id';
+          }
 
-            interface Product {
+          namespace SubscriptionCancel {
+            export interface CancellationReason {
+              /**
+               * Whether the feature is enabled.
+               */
+              enabled: boolean;
+
+              /**
+               * Which cancellation reasons will be given as options to the customer.
+               */
+              options: Stripe.Emptyable<Array<CancellationReason.Option>>;
+            }
+
+            export type Mode = 'at_period_end' | 'immediately';
+
+            export type ProrationBehavior =
+              | 'always_invoice'
+              | 'create_prorations'
+              | 'none';
+
+            namespace CancellationReason {
+              export type Option =
+                | 'customer_service'
+                | 'low_quality'
+                | 'missing_features'
+                | 'other'
+                | 'switched_service'
+                | 'too_complex'
+                | 'too_expensive'
+                | 'unused';
+            }
+          }
+
+          namespace SubscriptionUpdate {
+            export type DefaultAllowedUpdate =
+              | 'price'
+              | 'promotion_code'
+              | 'quantity';
+
+            export interface Product {
               /**
                * The list of price IDs for the product that a subscription can be updated to.
                */
@@ -477,29 +490,22 @@ declare module 'stripe' {
               product: string;
             }
 
-            type ProrationBehavior =
+            export type ProrationBehavior =
               | 'always_invoice'
               | 'create_prorations'
               | 'none';
           }
         }
-
-        interface LoginPage {
-          /**
-           * Set to `true` to generate a shareable URL [`login_page.url`](https://stripe.com/docs/api/customer_portal/configuration#portal_configuration_object-login_page-url) that will take your customers to a hosted login page for the customer portal.
-           */
-          enabled: boolean;
-        }
       }
 
-      interface ConfigurationRetrieveParams {
+      export interface ConfigurationRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface ConfigurationUpdateParams {
+      export interface ConfigurationUpdateParams {
         /**
          * Whether the configuration is active and can be used to create portal sessions.
          */
@@ -537,7 +543,7 @@ declare module 'stripe' {
       }
 
       namespace ConfigurationUpdateParams {
-        interface BusinessProfile {
+        export interface BusinessProfile {
           /**
            * The messaging shown to customers in the portal.
            */
@@ -554,7 +560,7 @@ declare module 'stripe' {
           terms_of_service_url?: Stripe.Emptyable<string>;
         }
 
-        interface Features {
+        export interface Features {
           /**
            * Information about updating the customer details in the portal.
            */
@@ -586,8 +592,17 @@ declare module 'stripe' {
           subscription_update?: Features.SubscriptionUpdate;
         }
 
+        export interface LoginPage {
+          /**
+           * Set to `true` to generate a shareable URL [`login_page.url`](https://stripe.com/docs/api/customer_portal/configuration#portal_configuration_object-login_page-url) that will take your customers to a hosted login page for the customer portal.
+           *
+           * Set to `false` to deactivate the `login_page.url`.
+           */
+          enabled: boolean;
+        }
+
         namespace Features {
-          interface CustomerUpdate {
+          export interface CustomerUpdate {
             /**
              * The types of customer updates that are supported. When empty, customers are not updateable.
              */
@@ -601,30 +616,21 @@ declare module 'stripe' {
             enabled?: boolean;
           }
 
-          namespace CustomerUpdate {
-            type AllowedUpdate =
-              | 'address'
-              | 'email'
-              | 'phone'
-              | 'shipping'
-              | 'tax_id';
-          }
-
-          interface InvoiceHistory {
+          export interface InvoiceHistory {
             /**
              * Whether the feature is enabled.
              */
             enabled: boolean;
           }
 
-          interface PaymentMethodUpdate {
+          export interface PaymentMethodUpdate {
             /**
              * Whether the feature is enabled.
              */
             enabled: boolean;
           }
 
-          interface SubscriptionCancel {
+          export interface SubscriptionCancel {
             /**
              * Whether the cancellation reasons will be collected in the portal and which options are exposed to the customer
              */
@@ -646,47 +652,14 @@ declare module 'stripe' {
             proration_behavior?: SubscriptionCancel.ProrationBehavior;
           }
 
-          namespace SubscriptionCancel {
-            interface CancellationReason {
-              /**
-               * Whether the feature is enabled.
-               */
-              enabled: boolean;
-
-              /**
-               * Which cancellation reasons will be given as options to the customer.
-               */
-              options?: Stripe.Emptyable<Array<CancellationReason.Option>>;
-            }
-
-            namespace CancellationReason {
-              type Option =
-                | 'customer_service'
-                | 'low_quality'
-                | 'missing_features'
-                | 'other'
-                | 'switched_service'
-                | 'too_complex'
-                | 'too_expensive'
-                | 'unused';
-            }
-
-            type Mode = 'at_period_end' | 'immediately';
-
-            type ProrationBehavior =
-              | 'always_invoice'
-              | 'create_prorations'
-              | 'none';
-          }
-
-          interface SubscriptionPause {
+          export interface SubscriptionPause {
             /**
              * Whether the feature is enabled.
              */
             enabled?: boolean;
           }
 
-          interface SubscriptionUpdate {
+          export interface SubscriptionUpdate {
             /**
              * The types of subscription updates that are supported. When empty, subscriptions are not updateable.
              */
@@ -710,10 +683,55 @@ declare module 'stripe' {
             proration_behavior?: SubscriptionUpdate.ProrationBehavior;
           }
 
-          namespace SubscriptionUpdate {
-            type DefaultAllowedUpdate = 'price' | 'promotion_code' | 'quantity';
+          namespace CustomerUpdate {
+            export type AllowedUpdate =
+              | 'address'
+              | 'email'
+              | 'phone'
+              | 'shipping'
+              | 'tax_id';
+          }
 
-            interface Product {
+          namespace SubscriptionCancel {
+            export interface CancellationReason {
+              /**
+               * Whether the feature is enabled.
+               */
+              enabled: boolean;
+
+              /**
+               * Which cancellation reasons will be given as options to the customer.
+               */
+              options?: Stripe.Emptyable<Array<CancellationReason.Option>>;
+            }
+
+            export type Mode = 'at_period_end' | 'immediately';
+
+            export type ProrationBehavior =
+              | 'always_invoice'
+              | 'create_prorations'
+              | 'none';
+
+            namespace CancellationReason {
+              export type Option =
+                | 'customer_service'
+                | 'low_quality'
+                | 'missing_features'
+                | 'other'
+                | 'switched_service'
+                | 'too_complex'
+                | 'too_expensive'
+                | 'unused';
+            }
+          }
+
+          namespace SubscriptionUpdate {
+            export type DefaultAllowedUpdate =
+              | 'price'
+              | 'promotion_code'
+              | 'quantity';
+
+            export interface Product {
               /**
                * The list of price IDs for the product that a subscription can be updated to.
                */
@@ -725,24 +743,15 @@ declare module 'stripe' {
               product: string;
             }
 
-            type ProrationBehavior =
+            export type ProrationBehavior =
               | 'always_invoice'
               | 'create_prorations'
               | 'none';
           }
         }
-
-        interface LoginPage {
-          /**
-           * Set to `true` to generate a shareable URL [`login_page.url`](https://stripe.com/docs/api/customer_portal/configuration#portal_configuration_object-login_page-url) that will take your customers to a hosted login page for the customer portal.
-           *
-           * Set to `false` to deactivate the `login_page.url`.
-           */
-          enabled: boolean;
-        }
       }
 
-      interface ConfigurationListParams extends PaginationParams {
+      export interface ConfigurationListParams extends PaginationParams {
         /**
          * Only return configurations that are active or inactive (e.g., pass `true` to only list active configurations).
          */

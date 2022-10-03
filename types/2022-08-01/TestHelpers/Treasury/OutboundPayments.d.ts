@@ -4,7 +4,7 @@ declare module 'stripe' {
   namespace Stripe {
     namespace TestHelpers {
       namespace Treasury {
-        interface OutboundPaymentFailParams {
+        export interface OutboundPaymentFailParams {
           /**
            * Specifies which fields in the response should be expanded.
            */
@@ -13,7 +13,7 @@ declare module 'stripe' {
       }
 
       namespace Treasury {
-        interface OutboundPaymentPostParams {
+        export interface OutboundPaymentPostParams {
           /**
            * Specifies which fields in the response should be expanded.
            */
@@ -22,7 +22,7 @@ declare module 'stripe' {
       }
 
       namespace Treasury {
-        interface OutboundPaymentReturnOutboundPaymentParams {
+        export interface OutboundPaymentReturnOutboundPaymentParams {
           /**
            * Specifies which fields in the response should be expanded.
            */
@@ -35,7 +35,7 @@ declare module 'stripe' {
         }
 
         namespace OutboundPaymentReturnOutboundPaymentParams {
-          interface ReturnedDetails {
+          export interface ReturnedDetails {
             /**
              * The return code to be set on the OutboundPayment object.
              */
@@ -43,7 +43,7 @@ declare module 'stripe' {
           }
 
           namespace ReturnedDetails {
-            type Code =
+            export type Code =
               | 'account_closed'
               | 'account_frozen'
               | 'bank_account_restricted'

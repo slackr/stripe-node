@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Issuing {
-      /**
+      export /**
        * You can [create physical or virtual cards](https://stripe.com/docs/issuing/cards) that are issued to cardholders.
        */
       interface Card {
@@ -123,11 +123,15 @@ declare module 'stripe' {
       }
 
       namespace Card {
-        type CancellationReason = 'design_rejected' | 'lost' | 'stolen';
+        export type CancellationReason = 'design_rejected' | 'lost' | 'stolen';
 
-        type ReplacementReason = 'damaged' | 'expired' | 'lost' | 'stolen';
+        export type ReplacementReason =
+          | 'damaged'
+          | 'expired'
+          | 'lost'
+          | 'stolen';
 
-        interface Shipping {
+        export interface Shipping {
           address: Stripe.Address;
 
           /**
@@ -186,30 +190,7 @@ declare module 'stripe' {
           type: Shipping.Type;
         }
 
-        namespace Shipping {
-          type Carrier = 'dhl' | 'fedex' | 'royal_mail' | 'usps';
-
-          interface Customs {
-            /**
-             * A registration number used for customs in Europe. See https://www.gov.uk/eori and https://ec.europa.eu/taxation_customs/business/customs-procedures-import-and-export/customs-procedures/economic-operators-registration-and-identification-number-eori_en.
-             */
-            eori_number: string | null;
-          }
-
-          type Service = 'express' | 'priority' | 'standard';
-
-          type Status =
-            | 'canceled'
-            | 'delivered'
-            | 'failure'
-            | 'pending'
-            | 'returned'
-            | 'shipped';
-
-          type Type = 'bulk' | 'individual';
-        }
-
-        interface SpendingControls {
+        export interface SpendingControls {
           /**
            * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to allow. All other categories will be blocked. Cannot be set with `blocked_categories`.
            */
@@ -231,8 +212,46 @@ declare module 'stripe' {
           spending_limits_currency: string | null;
         }
 
+        export type Status = 'active' | 'canceled' | 'inactive';
+
+        export type Type = 'physical' | 'virtual';
+
+        export interface Wallets {
+          apple_pay: Wallets.ApplePay;
+
+          google_pay: Wallets.GooglePay;
+
+          /**
+           * Unique identifier for a card used with digital wallets
+           */
+          primary_account_identifier: string | null;
+        }
+
+        namespace Shipping {
+          export type Carrier = 'dhl' | 'fedex' | 'royal_mail' | 'usps';
+
+          export interface Customs {
+            /**
+             * A registration number used for customs in Europe. See https://www.gov.uk/eori and https://ec.europa.eu/taxation_customs/business/customs-procedures-import-and-export/customs-procedures/economic-operators-registration-and-identification-number-eori_en.
+             */
+            eori_number: string | null;
+          }
+
+          export type Service = 'express' | 'priority' | 'standard';
+
+          export type Status =
+            | 'canceled'
+            | 'delivered'
+            | 'failure'
+            | 'pending'
+            | 'returned'
+            | 'shipped';
+
+          export type Type = 'bulk' | 'individual';
+        }
+
         namespace SpendingControls {
-          type AllowedCategory =
+          export type AllowedCategory =
             | 'ac_refrigeration_repair'
             | 'accounting_bookkeeping_services'
             | 'advertising_services'
@@ -522,7 +541,7 @@ declare module 'stripe' {
             | 'womens_ready_to_wear_stores'
             | 'wrecking_and_salvage_yards';
 
-          type BlockedCategory =
+          export type BlockedCategory =
             | 'ac_refrigeration_repair'
             | 'accounting_bookkeeping_services'
             | 'advertising_services'
@@ -812,7 +831,7 @@ declare module 'stripe' {
             | 'womens_ready_to_wear_stores'
             | 'wrecking_and_salvage_yards';
 
-          interface SpendingLimit {
+          export interface SpendingLimit {
             /**
              * Maximum amount allowed to spend per interval. This amount is in the card's currency and in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
              */
@@ -830,7 +849,7 @@ declare module 'stripe' {
           }
 
           namespace SpendingLimit {
-            type Category =
+            export type Category =
               | 'ac_refrigeration_repair'
               | 'accounting_bookkeeping_services'
               | 'advertising_services'
@@ -1120,7 +1139,7 @@ declare module 'stripe' {
               | 'womens_ready_to_wear_stores'
               | 'wrecking_and_salvage_yards';
 
-            type Interval =
+            export type Interval =
               | 'all_time'
               | 'daily'
               | 'monthly'
@@ -1130,23 +1149,8 @@ declare module 'stripe' {
           }
         }
 
-        type Status = 'active' | 'canceled' | 'inactive';
-
-        type Type = 'physical' | 'virtual';
-
-        interface Wallets {
-          apple_pay: Wallets.ApplePay;
-
-          google_pay: Wallets.GooglePay;
-
-          /**
-           * Unique identifier for a card used with digital wallets
-           */
-          primary_account_identifier: string | null;
-        }
-
         namespace Wallets {
-          interface ApplePay {
+          export interface ApplePay {
             /**
              * Apple Pay Eligibility
              */
@@ -1158,14 +1162,7 @@ declare module 'stripe' {
             ineligible_reason: ApplePay.IneligibleReason | null;
           }
 
-          namespace ApplePay {
-            type IneligibleReason =
-              | 'missing_agreement'
-              | 'missing_cardholder_contact'
-              | 'unsupported_region';
-          }
-
-          interface GooglePay {
+          export interface GooglePay {
             /**
              * Google Pay Eligibility
              */
@@ -1177,8 +1174,15 @@ declare module 'stripe' {
             ineligible_reason: GooglePay.IneligibleReason | null;
           }
 
+          namespace ApplePay {
+            export type IneligibleReason =
+              | 'missing_agreement'
+              | 'missing_cardholder_contact'
+              | 'unsupported_region';
+          }
+
           namespace GooglePay {
-            type IneligibleReason =
+            export type IneligibleReason =
               | 'missing_agreement'
               | 'missing_cardholder_contact'
               | 'unsupported_region';
@@ -1186,7 +1190,7 @@ declare module 'stripe' {
         }
       }
 
-      interface CardCreateParams {
+      export interface CardCreateParams {
         /**
          * The currency for the card.
          */
@@ -1241,9 +1245,15 @@ declare module 'stripe' {
       }
 
       namespace CardCreateParams {
-        type ReplacementReason = 'damaged' | 'expired' | 'lost' | 'stolen';
+        export type Type = 'physical' | 'virtual';
 
-        interface Shipping {
+        export type ReplacementReason =
+          | 'damaged'
+          | 'expired'
+          | 'lost'
+          | 'stolen';
+
+        export interface Shipping {
           /**
            * The address that the card is shipped to.
            */
@@ -1280,8 +1290,27 @@ declare module 'stripe' {
           type?: Shipping.Type;
         }
 
+        export interface SpendingControls {
+          /**
+           * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to allow. All other categories will be blocked. Cannot be set with `blocked_categories`.
+           */
+          allowed_categories?: Array<SpendingControls.AllowedCategory>;
+
+          /**
+           * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to decline. All other categories will be allowed. Cannot be set with `allowed_categories`.
+           */
+          blocked_categories?: Array<SpendingControls.BlockedCategory>;
+
+          /**
+           * Limit spending with amount-based rules that apply across any cards this card replaced (i.e., its `replacement_for` card and _that_ card's `replacement_for` card, up the chain).
+           */
+          spending_limits?: Array<SpendingControls.SpendingLimit>;
+        }
+
+        export type Status = 'active' | 'inactive';
+
         namespace Shipping {
-          interface Address {
+          export interface Address {
             /**
              * City, district, suburb, town, or village.
              */
@@ -1313,37 +1342,20 @@ declare module 'stripe' {
             state?: string;
           }
 
-          interface Customs {
+          export interface Customs {
             /**
              * The Economic Operators Registration and Identification (EORI) number to use for Customs. Required for bulk shipments to Europe.
              */
             eori_number?: string;
           }
 
-          type Service = 'express' | 'priority' | 'standard';
+          export type Service = 'express' | 'priority' | 'standard';
 
-          type Type = 'bulk' | 'individual';
-        }
-
-        interface SpendingControls {
-          /**
-           * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to allow. All other categories will be blocked. Cannot be set with `blocked_categories`.
-           */
-          allowed_categories?: Array<SpendingControls.AllowedCategory>;
-
-          /**
-           * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to decline. All other categories will be allowed. Cannot be set with `allowed_categories`.
-           */
-          blocked_categories?: Array<SpendingControls.BlockedCategory>;
-
-          /**
-           * Limit spending with amount-based rules that apply across any cards this card replaced (i.e., its `replacement_for` card and _that_ card's `replacement_for` card, up the chain).
-           */
-          spending_limits?: Array<SpendingControls.SpendingLimit>;
+          export type Type = 'bulk' | 'individual';
         }
 
         namespace SpendingControls {
-          type AllowedCategory =
+          export type AllowedCategory =
             | 'ac_refrigeration_repair'
             | 'accounting_bookkeeping_services'
             | 'advertising_services'
@@ -1633,7 +1645,7 @@ declare module 'stripe' {
             | 'womens_ready_to_wear_stores'
             | 'wrecking_and_salvage_yards';
 
-          type BlockedCategory =
+          export type BlockedCategory =
             | 'ac_refrigeration_repair'
             | 'accounting_bookkeeping_services'
             | 'advertising_services'
@@ -1923,7 +1935,7 @@ declare module 'stripe' {
             | 'womens_ready_to_wear_stores'
             | 'wrecking_and_salvage_yards';
 
-          interface SpendingLimit {
+          export interface SpendingLimit {
             /**
              * Maximum amount allowed to spend per interval.
              */
@@ -1941,7 +1953,7 @@ declare module 'stripe' {
           }
 
           namespace SpendingLimit {
-            type Category =
+            export type Category =
               | 'ac_refrigeration_repair'
               | 'accounting_bookkeeping_services'
               | 'advertising_services'
@@ -2231,7 +2243,7 @@ declare module 'stripe' {
               | 'womens_ready_to_wear_stores'
               | 'wrecking_and_salvage_yards';
 
-            type Interval =
+            export type Interval =
               | 'all_time'
               | 'daily'
               | 'monthly'
@@ -2240,20 +2252,16 @@ declare module 'stripe' {
               | 'yearly';
           }
         }
-
-        type Status = 'active' | 'inactive';
-
-        type Type = 'physical' | 'virtual';
       }
 
-      interface CardRetrieveParams {
+      export interface CardRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface CardUpdateParams {
+      export interface CardUpdateParams {
         /**
          * Reason why the `status` of this card is `canceled`.
          */
@@ -2286,16 +2294,16 @@ declare module 'stripe' {
       }
 
       namespace CardUpdateParams {
-        type CancellationReason = 'lost' | 'stolen';
+        export type CancellationReason = 'lost' | 'stolen';
 
-        interface Pin {
+        export interface Pin {
           /**
            * The card's desired new PIN, encrypted under Stripe's public key.
            */
           encrypted_number?: string;
         }
 
-        interface SpendingControls {
+        export interface SpendingControls {
           /**
            * Array of strings containing [categories](https://stripe.com/docs/api#issuing_authorization_object-merchant_data-category) of authorizations to allow. All other categories will be blocked. Cannot be set with `blocked_categories`.
            */
@@ -2312,8 +2320,10 @@ declare module 'stripe' {
           spending_limits?: Array<SpendingControls.SpendingLimit>;
         }
 
+        export type Status = 'active' | 'canceled' | 'inactive';
+
         namespace SpendingControls {
-          type AllowedCategory =
+          export type AllowedCategory =
             | 'ac_refrigeration_repair'
             | 'accounting_bookkeeping_services'
             | 'advertising_services'
@@ -2603,7 +2613,7 @@ declare module 'stripe' {
             | 'womens_ready_to_wear_stores'
             | 'wrecking_and_salvage_yards';
 
-          type BlockedCategory =
+          export type BlockedCategory =
             | 'ac_refrigeration_repair'
             | 'accounting_bookkeeping_services'
             | 'advertising_services'
@@ -2893,7 +2903,7 @@ declare module 'stripe' {
             | 'womens_ready_to_wear_stores'
             | 'wrecking_and_salvage_yards';
 
-          interface SpendingLimit {
+          export interface SpendingLimit {
             /**
              * Maximum amount allowed to spend per interval.
              */
@@ -2911,7 +2921,7 @@ declare module 'stripe' {
           }
 
           namespace SpendingLimit {
-            type Category =
+            export type Category =
               | 'ac_refrigeration_repair'
               | 'accounting_bookkeeping_services'
               | 'advertising_services'
@@ -3201,7 +3211,7 @@ declare module 'stripe' {
               | 'womens_ready_to_wear_stores'
               | 'wrecking_and_salvage_yards';
 
-            type Interval =
+            export type Interval =
               | 'all_time'
               | 'daily'
               | 'monthly'
@@ -3210,11 +3220,9 @@ declare module 'stripe' {
               | 'yearly';
           }
         }
-
-        type Status = 'active' | 'canceled' | 'inactive';
       }
 
-      interface CardListParams extends PaginationParams {
+      export interface CardListParams extends PaginationParams {
         /**
          * Only return cards belonging to the Cardholder with the provided ID.
          */
@@ -3257,9 +3265,9 @@ declare module 'stripe' {
       }
 
       namespace CardListParams {
-        type Status = 'active' | 'canceled' | 'inactive';
+        export type Status = 'active' | 'canceled' | 'inactive';
 
-        type Type = 'physical' | 'virtual';
+        export type Type = 'physical' | 'virtual';
       }
 
       class CardsResource {

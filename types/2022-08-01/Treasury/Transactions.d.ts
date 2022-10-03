@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Treasury {
-      /**
+      export /**
        * Transactions represent changes to a [FinancialAccount's](https://stripe.com/docs/api#financial_accounts) balance.
        */
       interface Transaction {
@@ -81,7 +81,7 @@ declare module 'stripe' {
       }
 
       namespace Transaction {
-        interface BalanceImpact {
+        export interface BalanceImpact {
           /**
            * The change made to funds the user can spend right now.
            */
@@ -98,7 +98,7 @@ declare module 'stripe' {
           outbound_pending: number;
         }
 
-        interface FlowDetails {
+        export interface FlowDetails {
           /**
            * You can reverse some [ReceivedCredits](https://stripe.com/docs/api#received_credits) depending on their network and source flow. Reversing a ReceivedCredit leads to the creation of a new object known as a CreditReversal.
            */
@@ -153,20 +153,7 @@ declare module 'stripe' {
           type: FlowDetails.Type;
         }
 
-        namespace FlowDetails {
-          type Type =
-            | 'credit_reversal'
-            | 'debit_reversal'
-            | 'inbound_transfer'
-            | 'issuing_authorization'
-            | 'other'
-            | 'outbound_payment'
-            | 'outbound_transfer'
-            | 'received_credit'
-            | 'received_debit';
-        }
-
-        type FlowType =
+        export type FlowType =
           | 'credit_reversal'
           | 'debit_reversal'
           | 'inbound_transfer'
@@ -177,9 +164,9 @@ declare module 'stripe' {
           | 'received_credit'
           | 'received_debit';
 
-        type Status = 'open' | 'posted' | 'void';
+        export type Status = 'open' | 'posted' | 'void';
 
-        interface StatusTransitions {
+        export interface StatusTransitions {
           /**
            * Timestamp describing when the Transaction changed status to `posted`.
            */
@@ -190,16 +177,29 @@ declare module 'stripe' {
            */
           void_at: number | null;
         }
+
+        namespace FlowDetails {
+          export type Type =
+            | 'credit_reversal'
+            | 'debit_reversal'
+            | 'inbound_transfer'
+            | 'issuing_authorization'
+            | 'other'
+            | 'outbound_payment'
+            | 'outbound_transfer'
+            | 'received_credit'
+            | 'received_debit';
+        }
       }
 
-      interface TransactionRetrieveParams {
+      export interface TransactionRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface TransactionListParams extends PaginationParams {
+      export interface TransactionListParams extends PaginationParams {
         /**
          * Returns objects associated with this FinancialAccount.
          */
@@ -229,11 +229,11 @@ declare module 'stripe' {
       }
 
       namespace TransactionListParams {
-        type OrderBy = 'created' | 'posted_at';
+        export type OrderBy = 'created' | 'posted_at';
 
-        type Status = 'open' | 'posted' | 'void';
+        export type Status = 'open' | 'posted' | 'void';
 
-        interface StatusTransitions {
+        export interface StatusTransitions {
           /**
            * Returns Transactions with `posted_at` within the specified range.
            */

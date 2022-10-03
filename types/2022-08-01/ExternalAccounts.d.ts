@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    interface ExternalAccountCreateParams {
+    export interface ExternalAccountCreateParams {
       /**
        * Please refer to full [documentation](https://stripe.com/docs/api) instead.
        */
@@ -24,14 +24,20 @@ declare module 'stripe' {
       metadata?: Stripe.MetadataParam;
     }
 
-    interface ExternalAccountRetrieveParams {
+    export interface ExternalAccountRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface ExternalAccountUpdateParams {
+    namespace ExternalAccountUpdateParams {
+      export type AccountHolderType = 'company' | 'individual';
+
+      export type AccountType = 'checking' | 'futsu' | 'savings' | 'toza';
+    }
+
+    export interface ExternalAccountUpdateParams {
       /**
        * The name of the person or business that owns the bank account.
        */
@@ -110,13 +116,11 @@ declare module 'stripe' {
       name?: string;
     }
 
-    namespace ExternalAccountUpdateParams {
-      type AccountHolderType = 'company' | 'individual';
-
-      type AccountType = 'checking' | 'futsu' | 'savings' | 'toza';
+    namespace ExternalAccountListParams {
+      export type Object = 'bank_account' | 'card';
     }
 
-    interface ExternalAccountListParams extends PaginationParams {
+    export interface ExternalAccountListParams extends PaginationParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
@@ -125,10 +129,6 @@ declare module 'stripe' {
       object?: ExternalAccountListParams.Object;
     }
 
-    namespace ExternalAccountListParams {
-      type Object = 'bank_account' | 'card';
-    }
-
-    interface ExternalAccountDeleteParams {}
+    export interface ExternalAccountDeleteParams {}
   }
 }

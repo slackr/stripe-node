@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    export /**
      * The TaxDeductedAtSource object.
      */
     interface TaxDeductedAtSource {

@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    export /**
      * The LoginLink object.
      */
     interface LoginLink {
@@ -22,7 +22,7 @@ declare module 'stripe' {
       url: string;
     }
 
-    interface LoginLinkCreateParams {
+    export interface LoginLinkCreateParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

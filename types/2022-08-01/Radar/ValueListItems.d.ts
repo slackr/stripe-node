@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Radar {
-      /**
+      export /**
        * Value list items allow you to add specific values to a given Radar value list, which can then be used in rules.
        *
        * Related guide: [Managing List Items](https://stripe.com/docs/radar/lists#managing-list-items).
@@ -47,7 +47,7 @@ declare module 'stripe' {
         value_list: string;
       }
 
-      /**
+      export /**
        * The DeletedValueListItem object.
        */
       interface DeletedValueListItem {
@@ -67,7 +67,7 @@ declare module 'stripe' {
         deleted: true;
       }
 
-      interface ValueListItemCreateParams {
+      export interface ValueListItemCreateParams {
         /**
          * The value of the item (whose type must match the type of the parent value list).
          */
@@ -84,14 +84,14 @@ declare module 'stripe' {
         expand?: Array<string>;
       }
 
-      interface ValueListItemRetrieveParams {
+      export interface ValueListItemRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface ValueListItemListParams extends PaginationParams {
+      export interface ValueListItemListParams extends PaginationParams {
         /**
          * Identifier for the parent value list this item belongs to.
          */
@@ -110,7 +110,7 @@ declare module 'stripe' {
         value?: string;
       }
 
-      interface ValueListItemDeleteParams {}
+      export interface ValueListItemDeleteParams {}
 
       class ValueListItemsResource {
         /**

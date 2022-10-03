@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace FinancialConnections {
-      /**
+      export /**
        * The AccountOwner object.
        */
       interface AccountOwner {

@@ -2,7 +2,41 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace CountrySpec {
+      export interface VerificationFields {
+        company: VerificationFields.Company;
+
+        individual: VerificationFields.Individual;
+      }
+
+      namespace VerificationFields {
+        export interface Company {
+          /**
+           * Additional fields which are only required for some users.
+           */
+          additional: Array<string>;
+
+          /**
+           * Fields which every account must eventually provide.
+           */
+          minimum: Array<string>;
+        }
+
+        export interface Individual {
+          /**
+           * Additional fields which are only required for some users.
+           */
+          additional: Array<string>;
+
+          /**
+           * Fields which every account must eventually provide.
+           */
+          minimum: Array<string>;
+        }
+      }
+    }
+
+    export /**
      * Stripe needs to collect certain pieces of information about each account
      * created. These requirements can differ depending on the account's country. The
      * Country Specs API makes these rules available to your integration.
@@ -51,48 +85,14 @@ declare module 'stripe' {
       verification_fields: CountrySpec.VerificationFields;
     }
 
-    namespace CountrySpec {
-      interface VerificationFields {
-        company: VerificationFields.Company;
-
-        individual: VerificationFields.Individual;
-      }
-
-      namespace VerificationFields {
-        interface Company {
-          /**
-           * Additional fields which are only required for some users.
-           */
-          additional: Array<string>;
-
-          /**
-           * Fields which every account must eventually provide.
-           */
-          minimum: Array<string>;
-        }
-
-        interface Individual {
-          /**
-           * Additional fields which are only required for some users.
-           */
-          additional: Array<string>;
-
-          /**
-           * Fields which every account must eventually provide.
-           */
-          minimum: Array<string>;
-        }
-      }
-    }
-
-    interface CountrySpecRetrieveParams {
+    export interface CountrySpecRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface CountrySpecListParams extends PaginationParams {
+    export interface CountrySpecListParams extends PaginationParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

@@ -2,7 +2,66 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace Plan {
+      export type AggregateUsage =
+        | 'last_during_period'
+        | 'last_ever'
+        | 'max'
+        | 'sum';
+
+      export type BillingScheme = 'per_unit' | 'tiered';
+
+      export type Interval = 'day' | 'month' | 'week' | 'year';
+
+      export interface Tier {
+        /**
+         * Price for the entire tier.
+         */
+        flat_amount: number | null;
+
+        /**
+         * Same as `flat_amount`, but contains a decimal value with at most 12 decimal places.
+         */
+        flat_amount_decimal: string | null;
+
+        /**
+         * Per unit price for units relevant to the tier.
+         */
+        unit_amount: number | null;
+
+        /**
+         * Same as `unit_amount`, but contains a decimal value with at most 12 decimal places.
+         */
+        unit_amount_decimal: string | null;
+
+        /**
+         * Up to and including to this quantity will be contained in the tier.
+         */
+        up_to: number | null;
+      }
+
+      export type TiersMode = 'graduated' | 'volume';
+
+      export interface TransformUsage {
+        /**
+         * Divide usage by this number.
+         */
+        divide_by: number;
+
+        /**
+         * After division, either round the result `up` or `down`.
+         */
+        round: TransformUsage.Round;
+      }
+
+      export type UsageType = 'licensed' | 'metered';
+
+      namespace TransformUsage {
+        export type Round = 'down' | 'up';
+      }
+    }
+
+    export /**
      * You can now model subscriptions more flexibly using the [Prices API](https://stripe.com/docs/api#prices). It replaces the Plans API and is backwards compatible to simplify your migration.
      *
      * Plans define the base price, currency, and billing cycle for recurring purchases of products.
@@ -116,62 +175,7 @@ declare module 'stripe' {
       usage_type: Plan.UsageType;
     }
 
-    namespace Plan {
-      type AggregateUsage = 'last_during_period' | 'last_ever' | 'max' | 'sum';
-
-      type BillingScheme = 'per_unit' | 'tiered';
-
-      type Interval = 'day' | 'month' | 'week' | 'year';
-
-      interface Tier {
-        /**
-         * Price for the entire tier.
-         */
-        flat_amount: number | null;
-
-        /**
-         * Same as `flat_amount`, but contains a decimal value with at most 12 decimal places.
-         */
-        flat_amount_decimal: string | null;
-
-        /**
-         * Per unit price for units relevant to the tier.
-         */
-        unit_amount: number | null;
-
-        /**
-         * Same as `unit_amount`, but contains a decimal value with at most 12 decimal places.
-         */
-        unit_amount_decimal: string | null;
-
-        /**
-         * Up to and including to this quantity will be contained in the tier.
-         */
-        up_to: number | null;
-      }
-
-      type TiersMode = 'graduated' | 'volume';
-
-      interface TransformUsage {
-        /**
-         * Divide usage by this number.
-         */
-        divide_by: number;
-
-        /**
-         * After division, either round the result `up` or `down`.
-         */
-        round: TransformUsage.Round;
-      }
-
-      namespace TransformUsage {
-        type Round = 'down' | 'up';
-      }
-
-      type UsageType = 'licensed' | 'metered';
-    }
-
-    /**
+    export /**
      * The DeletedPlan object.
      */
     interface DeletedPlan {
@@ -191,7 +195,105 @@ declare module 'stripe' {
       deleted: true;
     }
 
-    interface PlanCreateParams {
+    namespace PlanCreateParams {
+      export type Interval = 'day' | 'month' | 'week' | 'year';
+
+      export type AggregateUsage =
+        | 'last_during_period'
+        | 'last_ever'
+        | 'max'
+        | 'sum';
+
+      export type BillingScheme = 'per_unit' | 'tiered';
+
+      export interface Product {
+        /**
+         * Whether the product is currently available for purchase. Defaults to `true`.
+         */
+        active?: boolean;
+
+        /**
+         * The identifier for the product. Must be unique. If not provided, an identifier will be randomly generated.
+         */
+        id?: string;
+
+        /**
+         * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+         */
+        metadata?: Stripe.MetadataParam;
+
+        /**
+         * The product's name, meant to be displayable to the customer.
+         */
+        name: string;
+
+        /**
+         * An arbitrary string to be displayed on your customer's credit card or bank statement. While most banks display this information consistently, some may display it incorrectly or not at all.
+         *
+         * This may be up to 22 characters. The statement description may not include `<`, `>`, `\`, `"`, `'` characters, and will appear on your customer's statement in capital letters. Non-ASCII characters are automatically stripped.
+         */
+        statement_descriptor?: string;
+
+        /**
+         * A [tax code](https://stripe.com/docs/tax/tax-categories) ID.
+         */
+        tax_code?: string;
+
+        /**
+         * A label that represents units of this product in Stripe and on customers' receipts and invoices. When set, this will be included in associated invoice line item descriptions.
+         */
+        unit_label?: string;
+      }
+
+      export interface Tier {
+        /**
+         * The flat billing amount for an entire tier, regardless of the number of units in the tier.
+         */
+        flat_amount?: number;
+
+        /**
+         * Same as `flat_amount`, but accepts a decimal value representing an integer in the minor units of the currency. Only one of `flat_amount` and `flat_amount_decimal` can be set.
+         */
+        flat_amount_decimal?: string;
+
+        /**
+         * The per unit billing amount for each individual unit for which this tier applies.
+         */
+        unit_amount?: number;
+
+        /**
+         * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
+         */
+        unit_amount_decimal?: string;
+
+        /**
+         * Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use `inf` to define a fallback tier.
+         */
+        up_to: 'inf' | number;
+      }
+
+      export type TiersMode = 'graduated' | 'volume';
+
+      export interface TransformUsage {
+        /**
+         * Divide usage by this number.
+         */
+        divide_by: number;
+
+        /**
+         * After division, either round the result `up` or `down`.
+         */
+        round: TransformUsage.Round;
+      }
+
+      export type UsageType = 'licensed' | 'metered';
+
+      namespace TransformUsage {
+        export type Round = 'down' | 'up';
+      }
+    }
+
+    export interface PlanCreateParams {
       /**
        * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
        */
@@ -280,108 +382,14 @@ declare module 'stripe' {
       usage_type?: PlanCreateParams.UsageType;
     }
 
-    namespace PlanCreateParams {
-      type AggregateUsage = 'last_during_period' | 'last_ever' | 'max' | 'sum';
-
-      type BillingScheme = 'per_unit' | 'tiered';
-
-      type Interval = 'day' | 'month' | 'week' | 'year';
-
-      interface Product {
-        /**
-         * Whether the product is currently available for purchase. Defaults to `true`.
-         */
-        active?: boolean;
-
-        /**
-         * The identifier for the product. Must be unique. If not provided, an identifier will be randomly generated.
-         */
-        id?: string;
-
-        /**
-         * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
-         */
-        metadata?: Stripe.MetadataParam;
-
-        /**
-         * The product's name, meant to be displayable to the customer.
-         */
-        name: string;
-
-        /**
-         * An arbitrary string to be displayed on your customer's credit card or bank statement. While most banks display this information consistently, some may display it incorrectly or not at all.
-         *
-         * This may be up to 22 characters. The statement description may not include `<`, `>`, `\`, `"`, `'` characters, and will appear on your customer's statement in capital letters. Non-ASCII characters are automatically stripped.
-         */
-        statement_descriptor?: string;
-
-        /**
-         * A [tax code](https://stripe.com/docs/tax/tax-categories) ID.
-         */
-        tax_code?: string;
-
-        /**
-         * A label that represents units of this product in Stripe and on customers' receipts and invoices. When set, this will be included in associated invoice line item descriptions.
-         */
-        unit_label?: string;
-      }
-
-      interface Tier {
-        /**
-         * The flat billing amount for an entire tier, regardless of the number of units in the tier.
-         */
-        flat_amount?: number;
-
-        /**
-         * Same as `flat_amount`, but accepts a decimal value representing an integer in the minor units of the currency. Only one of `flat_amount` and `flat_amount_decimal` can be set.
-         */
-        flat_amount_decimal?: string;
-
-        /**
-         * The per unit billing amount for each individual unit for which this tier applies.
-         */
-        unit_amount?: number;
-
-        /**
-         * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
-         */
-        unit_amount_decimal?: string;
-
-        /**
-         * Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use `inf` to define a fallback tier.
-         */
-        up_to: 'inf' | number;
-      }
-
-      type TiersMode = 'graduated' | 'volume';
-
-      interface TransformUsage {
-        /**
-         * Divide usage by this number.
-         */
-        divide_by: number;
-
-        /**
-         * After division, either round the result `up` or `down`.
-         */
-        round: TransformUsage.Round;
-      }
-
-      namespace TransformUsage {
-        type Round = 'down' | 'up';
-      }
-
-      type UsageType = 'licensed' | 'metered';
-    }
-
-    interface PlanRetrieveParams {
+    export interface PlanRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface PlanUpdateParams {
+    export interface PlanUpdateParams {
       /**
        * Whether the plan is currently available for new subscriptions.
        */
@@ -413,7 +421,7 @@ declare module 'stripe' {
       trial_period_days?: number;
     }
 
-    interface PlanListParams extends PaginationParams {
+    export interface PlanListParams extends PaginationParams {
       /**
        * Only return plans that are active or inactive (e.g., pass `false` to list all inactive plans).
        */
@@ -435,7 +443,7 @@ declare module 'stripe' {
       product?: string;
     }
 
-    interface PlanDeleteParams {}
+    export interface PlanDeleteParams {}
 
     class PlansResource {
       /**

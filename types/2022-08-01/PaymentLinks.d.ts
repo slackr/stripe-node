@@ -2,7 +2,414 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace PaymentLink {
+      export interface AfterCompletion {
+        hosted_confirmation?: AfterCompletion.HostedConfirmation;
+
+        redirect?: AfterCompletion.Redirect;
+
+        /**
+         * The specified behavior after the purchase is complete.
+         */
+        type: AfterCompletion.Type;
+      }
+
+      export interface AutomaticTax {
+        /**
+         * If `true`, tax will be calculated automatically using the customer's location.
+         */
+        enabled: boolean;
+      }
+
+      export type BillingAddressCollection = 'auto' | 'required';
+
+      export interface ConsentCollection {
+        /**
+         * If set to `auto`, enables the collection of customer consent for promotional communications.
+         */
+        promotions: ConsentCollection.Promotions | null;
+
+        /**
+         * If set to `required`, it requires cutomers to accept the terms of service before being able to pay. If set to `none`, customers won't be shown a checkbox to accept the terms of service.
+         */
+        terms_of_service: ConsentCollection.TermsOfService | null;
+      }
+
+      export type CustomerCreation = 'always' | 'if_required';
+
+      export interface PaymentIntentData {
+        /**
+         * Indicates when the funds will be captured from the customer's account.
+         */
+        capture_method: PaymentIntentData.CaptureMethod | null;
+
+        /**
+         * Indicates that you intend to make future payments with the payment method collected during checkout.
+         */
+        setup_future_usage: PaymentIntentData.SetupFutureUsage | null;
+      }
+
+      export type PaymentMethodCollection = 'always' | 'if_required';
+
+      export type PaymentMethodType =
+        | 'affirm'
+        | 'afterpay_clearpay'
+        | 'alipay'
+        | 'au_becs_debit'
+        | 'bacs_debit'
+        | 'bancontact'
+        | 'blik'
+        | 'boleto'
+        | 'card'
+        | 'eps'
+        | 'fpx'
+        | 'giropay'
+        | 'grabpay'
+        | 'ideal'
+        | 'klarna'
+        | 'konbini'
+        | 'oxxo'
+        | 'p24'
+        | 'paynow'
+        | 'pix'
+        | 'promptpay'
+        | 'sepa_debit'
+        | 'sofort'
+        | 'us_bank_account'
+        | 'wechat_pay';
+
+      export interface PhoneNumberCollection {
+        /**
+         * If `true`, a phone number will be collected during checkout.
+         */
+        enabled: boolean;
+      }
+
+      export interface ShippingAddressCollection {
+        /**
+         * An array of two-letter ISO country codes representing which countries Checkout should provide as options for shipping locations. Unsupported country codes: `AS, CX, CC, CU, HM, IR, KP, MH, FM, NF, MP, PW, SD, SY, UM, VI`.
+         */
+        allowed_countries: Array<ShippingAddressCollection.AllowedCountry>;
+      }
+
+      export interface ShippingOption {
+        /**
+         * A non-negative integer in cents representing how much to charge.
+         */
+        shipping_amount: number;
+
+        /**
+         * The ID of the Shipping Rate to use for this shipping option.
+         */
+        shipping_rate: string | Stripe.ShippingRate;
+      }
+
+      export type SubmitType = 'auto' | 'book' | 'donate' | 'pay';
+
+      export interface SubscriptionData {
+        /**
+         * The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription.
+         */
+        description: string | null;
+
+        /**
+         * Integer representing the number of trial period days before the customer is charged for the first time.
+         */
+        trial_period_days: number | null;
+      }
+
+      export interface TaxIdCollection {
+        /**
+         * Indicates whether tax ID collection is enabled for the session.
+         */
+        enabled: boolean;
+      }
+
+      export interface TransferData {
+        /**
+         * The amount in %s that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+         */
+        amount: number | null;
+
+        /**
+         * The connected account receiving the transfer.
+         */
+        destination: string | Stripe.Account;
+      }
+
+      namespace AfterCompletion {
+        export interface HostedConfirmation {
+          /**
+           * The custom message that is displayed to the customer after the purchase is complete.
+           */
+          custom_message: string | null;
+        }
+
+        export interface Redirect {
+          /**
+           * The URL the customer will be redirected to after the purchase is complete.
+           */
+          url: string;
+        }
+
+        export type Type = 'hosted_confirmation' | 'redirect';
+      }
+
+      namespace ConsentCollection {
+        export type Promotions = 'auto' | 'none';
+
+        export type TermsOfService = 'none' | 'required';
+      }
+
+      namespace PaymentIntentData {
+        export type CaptureMethod = 'automatic' | 'manual';
+
+        export type SetupFutureUsage = 'off_session' | 'on_session';
+      }
+
+      namespace ShippingAddressCollection {
+        export type AllowedCountry =
+          | 'AC'
+          | 'AD'
+          | 'AE'
+          | 'AF'
+          | 'AG'
+          | 'AI'
+          | 'AL'
+          | 'AM'
+          | 'AO'
+          | 'AQ'
+          | 'AR'
+          | 'AT'
+          | 'AU'
+          | 'AW'
+          | 'AX'
+          | 'AZ'
+          | 'BA'
+          | 'BB'
+          | 'BD'
+          | 'BE'
+          | 'BF'
+          | 'BG'
+          | 'BH'
+          | 'BI'
+          | 'BJ'
+          | 'BL'
+          | 'BM'
+          | 'BN'
+          | 'BO'
+          | 'BQ'
+          | 'BR'
+          | 'BS'
+          | 'BT'
+          | 'BV'
+          | 'BW'
+          | 'BY'
+          | 'BZ'
+          | 'CA'
+          | 'CD'
+          | 'CF'
+          | 'CG'
+          | 'CH'
+          | 'CI'
+          | 'CK'
+          | 'CL'
+          | 'CM'
+          | 'CN'
+          | 'CO'
+          | 'CR'
+          | 'CV'
+          | 'CW'
+          | 'CY'
+          | 'CZ'
+          | 'DE'
+          | 'DJ'
+          | 'DK'
+          | 'DM'
+          | 'DO'
+          | 'DZ'
+          | 'EC'
+          | 'EE'
+          | 'EG'
+          | 'EH'
+          | 'ER'
+          | 'ES'
+          | 'ET'
+          | 'FI'
+          | 'FJ'
+          | 'FK'
+          | 'FO'
+          | 'FR'
+          | 'GA'
+          | 'GB'
+          | 'GD'
+          | 'GE'
+          | 'GF'
+          | 'GG'
+          | 'GH'
+          | 'GI'
+          | 'GL'
+          | 'GM'
+          | 'GN'
+          | 'GP'
+          | 'GQ'
+          | 'GR'
+          | 'GS'
+          | 'GT'
+          | 'GU'
+          | 'GW'
+          | 'GY'
+          | 'HK'
+          | 'HN'
+          | 'HR'
+          | 'HT'
+          | 'HU'
+          | 'ID'
+          | 'IE'
+          | 'IL'
+          | 'IM'
+          | 'IN'
+          | 'IO'
+          | 'IQ'
+          | 'IS'
+          | 'IT'
+          | 'JE'
+          | 'JM'
+          | 'JO'
+          | 'JP'
+          | 'KE'
+          | 'KG'
+          | 'KH'
+          | 'KI'
+          | 'KM'
+          | 'KN'
+          | 'KR'
+          | 'KW'
+          | 'KY'
+          | 'KZ'
+          | 'LA'
+          | 'LB'
+          | 'LC'
+          | 'LI'
+          | 'LK'
+          | 'LR'
+          | 'LS'
+          | 'LT'
+          | 'LU'
+          | 'LV'
+          | 'LY'
+          | 'MA'
+          | 'MC'
+          | 'MD'
+          | 'ME'
+          | 'MF'
+          | 'MG'
+          | 'MK'
+          | 'ML'
+          | 'MM'
+          | 'MN'
+          | 'MO'
+          | 'MQ'
+          | 'MR'
+          | 'MS'
+          | 'MT'
+          | 'MU'
+          | 'MV'
+          | 'MW'
+          | 'MX'
+          | 'MY'
+          | 'MZ'
+          | 'NA'
+          | 'NC'
+          | 'NE'
+          | 'NG'
+          | 'NI'
+          | 'NL'
+          | 'NO'
+          | 'NP'
+          | 'NR'
+          | 'NU'
+          | 'NZ'
+          | 'OM'
+          | 'PA'
+          | 'PE'
+          | 'PF'
+          | 'PG'
+          | 'PH'
+          | 'PK'
+          | 'PL'
+          | 'PM'
+          | 'PN'
+          | 'PR'
+          | 'PS'
+          | 'PT'
+          | 'PY'
+          | 'QA'
+          | 'RE'
+          | 'RO'
+          | 'RS'
+          | 'RU'
+          | 'RW'
+          | 'SA'
+          | 'SB'
+          | 'SC'
+          | 'SE'
+          | 'SG'
+          | 'SH'
+          | 'SI'
+          | 'SJ'
+          | 'SK'
+          | 'SL'
+          | 'SM'
+          | 'SN'
+          | 'SO'
+          | 'SR'
+          | 'SS'
+          | 'ST'
+          | 'SV'
+          | 'SX'
+          | 'SZ'
+          | 'TA'
+          | 'TC'
+          | 'TD'
+          | 'TF'
+          | 'TG'
+          | 'TH'
+          | 'TJ'
+          | 'TK'
+          | 'TL'
+          | 'TM'
+          | 'TN'
+          | 'TO'
+          | 'TR'
+          | 'TT'
+          | 'TV'
+          | 'TW'
+          | 'TZ'
+          | 'UA'
+          | 'UG'
+          | 'US'
+          | 'UY'
+          | 'UZ'
+          | 'VA'
+          | 'VC'
+          | 'VE'
+          | 'VG'
+          | 'VN'
+          | 'VU'
+          | 'WF'
+          | 'WS'
+          | 'XK'
+          | 'YE'
+          | 'YT'
+          | 'ZA'
+          | 'ZM'
+          | 'ZW'
+          | 'ZZ';
+      }
+    }
+
+    export /**
      * A payment link is a shareable URL that will take your customers to a hosted payment page. A payment link can be shared and used multiple times.
      *
      * When a customer opens a payment link it will open a new [checkout session](https://stripe.com/docs/api/checkout/sessions) to render the payment page. You can use [checkout session events](https://stripe.com/docs/api/events/types#event_types-checkout.session.completed) to track payments through payment links.
@@ -134,86 +541,92 @@ declare module 'stripe' {
       url: string;
     }
 
-    namespace PaymentLink {
-      interface AfterCompletion {
+    namespace PaymentLinkCreateParams {
+      export interface LineItem {
+        /**
+         * When set, provides configuration for this item's quantity to be adjusted by the customer during checkout.
+         */
+        adjustable_quantity?: LineItem.AdjustableQuantity;
+
+        /**
+         * The ID of the [Price](https://stripe.com/docs/api/prices) or [Plan](https://stripe.com/docs/api/plans) object.
+         */
+        price: string;
+
+        /**
+         * The quantity of the line item being purchased.
+         */
+        quantity: number;
+      }
+
+      export interface AfterCompletion {
+        /**
+         * Configuration when `type=hosted_confirmation`.
+         */
         hosted_confirmation?: AfterCompletion.HostedConfirmation;
 
+        /**
+         * Configuration when `type=redirect`.
+         */
         redirect?: AfterCompletion.Redirect;
 
         /**
-         * The specified behavior after the purchase is complete.
+         * The specified behavior after the purchase is complete. Either `redirect` or `hosted_confirmation`.
          */
         type: AfterCompletion.Type;
       }
 
-      namespace AfterCompletion {
-        interface HostedConfirmation {
-          /**
-           * The custom message that is displayed to the customer after the purchase is complete.
-           */
-          custom_message: string | null;
-        }
-
-        interface Redirect {
-          /**
-           * The URL the customer will be redirected to after the purchase is complete.
-           */
-          url: string;
-        }
-
-        type Type = 'hosted_confirmation' | 'redirect';
-      }
-
-      interface AutomaticTax {
+      export interface AutomaticTax {
         /**
          * If `true`, tax will be calculated automatically using the customer's location.
          */
         enabled: boolean;
       }
 
-      type BillingAddressCollection = 'auto' | 'required';
+      export type BillingAddressCollection = 'auto' | 'required';
 
-      interface ConsentCollection {
+      export interface ConsentCollection {
         /**
-         * If set to `auto`, enables the collection of customer consent for promotional communications.
+         * If set to `auto`, enables the collection of customer consent for promotional communications. The Checkout
+         * Session will determine whether to display an option to opt into promotional communication
+         * from the merchant depending on the customer's locale. Only available to US merchants.
          */
-        promotions: ConsentCollection.Promotions | null;
-
-        /**
-         * If set to `required`, it requires cutomers to accept the terms of service before being able to pay. If set to `none`, customers won't be shown a checkbox to accept the terms of service.
-         */
-        terms_of_service: ConsentCollection.TermsOfService | null;
-      }
-
-      namespace ConsentCollection {
-        type Promotions = 'auto' | 'none';
-
-        type TermsOfService = 'none' | 'required';
-      }
-
-      type CustomerCreation = 'always' | 'if_required';
-
-      interface PaymentIntentData {
-        /**
-         * Indicates when the funds will be captured from the customer's account.
-         */
-        capture_method: PaymentIntentData.CaptureMethod | null;
+        promotions?: ConsentCollection.Promotions;
 
         /**
-         * Indicates that you intend to make future payments with the payment method collected during checkout.
+         * If set to `required`, it requires customers to check a terms of service checkbox before being able to pay.
+         * There must be a valid terms of service URL set in your [Dashboard settings](https://dashboard.stripe.com/settings/public).
          */
-        setup_future_usage: PaymentIntentData.SetupFutureUsage | null;
+        terms_of_service?: ConsentCollection.TermsOfService;
       }
 
-      namespace PaymentIntentData {
-        type CaptureMethod = 'automatic' | 'manual';
+      export type CustomerCreation = 'always' | 'if_required';
 
-        type SetupFutureUsage = 'off_session' | 'on_session';
+      export interface PaymentIntentData {
+        /**
+         * Controls when the funds will be captured from the customer's account.
+         */
+        capture_method?: PaymentIntentData.CaptureMethod;
+
+        /**
+         * Indicates that you intend to [make future payments](https://stripe.com/docs/payments/payment-intents#future-usage) with the payment method collected by this Checkout Session.
+         *
+         * When setting this to `on_session`, Checkout will show a notice to the customer that their payment details will be saved.
+         *
+         * When setting this to `off_session`, Checkout will show a notice to the customer that their payment details will be saved and used for future payments.
+         *
+         * If a Customer has been provided or Checkout creates a new Customer,Checkout will attach the payment method to the Customer.
+         *
+         * If Checkout does not create a Customer, the payment method is not attached to a Customer. To reuse the payment method, you can retrieve it from the Checkout Session's PaymentIntent.
+         *
+         * When processing card payments, Checkout also uses `setup_future_usage` to dynamically optimize your payment flow and comply with regional legislation and network rules, such as SCA.
+         */
+        setup_future_usage?: PaymentIntentData.SetupFutureUsage;
       }
 
-      type PaymentMethodCollection = 'always' | 'if_required';
+      export type PaymentMethodCollection = 'always' | 'if_required';
 
-      type PaymentMethodType =
+      export type PaymentMethodType =
         | 'affirm'
         | 'afterpay_clearpay'
         | 'alipay'
@@ -240,22 +653,115 @@ declare module 'stripe' {
         | 'us_bank_account'
         | 'wechat_pay';
 
-      interface PhoneNumberCollection {
+      export interface PhoneNumberCollection {
         /**
-         * If `true`, a phone number will be collected during checkout.
+         * Set to `true` to enable phone number collection.
          */
         enabled: boolean;
       }
 
-      interface ShippingAddressCollection {
+      export interface ShippingAddressCollection {
         /**
-         * An array of two-letter ISO country codes representing which countries Checkout should provide as options for shipping locations. Unsupported country codes: `AS, CX, CC, CU, HM, IR, KP, MH, FM, NF, MP, PW, SD, SY, UM, VI`.
+         * An array of two-letter ISO country codes representing which countries Checkout should provide as options for
+         * shipping locations. Unsupported country codes: `AS, CX, CC, CU, HM, IR, KP, MH, FM, NF, MP, PW, SD, SY, UM, VI`.
          */
         allowed_countries: Array<ShippingAddressCollection.AllowedCountry>;
       }
 
+      export interface ShippingOption {
+        /**
+         * The ID of the Shipping Rate to use for this shipping option.
+         */
+        shipping_rate?: string;
+      }
+
+      export type SubmitType = 'auto' | 'book' | 'donate' | 'pay';
+
+      export interface SubscriptionData {
+        /**
+         * The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription.
+         */
+        description?: string;
+
+        /**
+         * Integer representing the number of trial period days before the customer is charged for the first time. Has to be at least 1.
+         */
+        trial_period_days?: number;
+      }
+
+      export interface TaxIdCollection {
+        /**
+         * Set to `true` to enable tax ID collection.
+         */
+        enabled: boolean;
+      }
+
+      export interface TransferData {
+        /**
+         * The amount that will be transferred automatically when a charge succeeds.
+         */
+        amount?: number;
+
+        /**
+         * If specified, successful charges will be attributed to the destination
+         * account for tax reporting, and the funds from charges will be transferred
+         * to the destination account. The ID of the resulting transfer will be
+         * returned on the successful charge's `transfer` field.
+         */
+        destination: string;
+      }
+
+      namespace AfterCompletion {
+        export interface HostedConfirmation {
+          /**
+           * A custom message to display to the customer after the purchase is complete.
+           */
+          custom_message?: string;
+        }
+
+        export interface Redirect {
+          /**
+           * The URL the customer will be redirected to after the purchase is complete. You can embed `{CHECKOUT_SESSION_ID}` into the URL to have the `id` of the completed [checkout session](https://stripe.com/docs/api/checkout/sessions/object#checkout_session_object-id) included.
+           */
+          url: string;
+        }
+
+        export type Type = 'hosted_confirmation' | 'redirect';
+      }
+
+      namespace ConsentCollection {
+        export type Promotions = 'auto' | 'none';
+
+        export type TermsOfService = 'none' | 'required';
+      }
+
+      namespace LineItem {
+        export interface AdjustableQuantity {
+          /**
+           * Set to true if the quantity can be adjusted to any non-negative Integer.
+           */
+          enabled: boolean;
+
+          /**
+           * The maximum quantity the customer can purchase. By default this value is 99. You can specify a value up to 99.
+           */
+          maximum?: number;
+
+          /**
+           * The minimum quantity the customer can purchase. By default this value is 0. You can specify a value up to 98. If there is only one item in the cart then that item's quantity cannot go down to 0.
+           */
+          minimum?: number;
+        }
+      }
+
+      namespace PaymentIntentData {
+        export type CaptureMethod = 'automatic' | 'manual';
+
+        export type SetupFutureUsage = 'off_session' | 'on_session';
+      }
+
       namespace ShippingAddressCollection {
-        type AllowedCountry =
+        export type AllowedCountry =
           | 'AC'
           | 'AD'
           | 'AE'
@@ -494,54 +1000,9 @@ declare module 'stripe' {
           | 'ZW'
           | 'ZZ';
       }
-
-      interface ShippingOption {
-        /**
-         * A non-negative integer in cents representing how much to charge.
-         */
-        shipping_amount: number;
-
-        /**
-         * The ID of the Shipping Rate to use for this shipping option.
-         */
-        shipping_rate: string | Stripe.ShippingRate;
-      }
-
-      type SubmitType = 'auto' | 'book' | 'donate' | 'pay';
-
-      interface SubscriptionData {
-        /**
-         * The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription.
-         */
-        description: string | null;
-
-        /**
-         * Integer representing the number of trial period days before the customer is charged for the first time.
-         */
-        trial_period_days: number | null;
-      }
-
-      interface TaxIdCollection {
-        /**
-         * Indicates whether tax ID collection is enabled for the session.
-         */
-        enabled: boolean;
-      }
-
-      interface TransferData {
-        /**
-         * The amount in %s that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
-         */
-        amount: number | null;
-
-        /**
-         * The connected account receiving the transfer.
-         */
-        destination: string | Stripe.Account;
-      }
     }
 
-    interface PaymentLinkCreateParams {
+    export interface PaymentLinkCreateParams {
       /**
        * The line items representing what is being sold. Each line item represents an item being sold. Up to 20 line items are supported.
        */
@@ -664,8 +1125,15 @@ declare module 'stripe' {
       transfer_data?: PaymentLinkCreateParams.TransferData;
     }
 
-    namespace PaymentLinkCreateParams {
-      interface AfterCompletion {
+    export interface PaymentLinkRetrieveParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+    }
+
+    namespace PaymentLinkUpdateParams {
+      export interface AfterCompletion {
         /**
          * Configuration when `type=hosted_confirmation`.
          */
@@ -682,123 +1150,37 @@ declare module 'stripe' {
         type: AfterCompletion.Type;
       }
 
-      namespace AfterCompletion {
-        interface HostedConfirmation {
-          /**
-           * A custom message to display to the customer after the purchase is complete.
-           */
-          custom_message?: string;
-        }
-
-        interface Redirect {
-          /**
-           * The URL the customer will be redirected to after the purchase is complete. You can embed `{CHECKOUT_SESSION_ID}` into the URL to have the `id` of the completed [checkout session](https://stripe.com/docs/api/checkout/sessions/object#checkout_session_object-id) included.
-           */
-          url: string;
-        }
-
-        type Type = 'hosted_confirmation' | 'redirect';
-      }
-
-      interface AutomaticTax {
+      export interface AutomaticTax {
         /**
          * If `true`, tax will be calculated automatically using the customer's location.
          */
         enabled: boolean;
       }
 
-      type BillingAddressCollection = 'auto' | 'required';
+      export type BillingAddressCollection = 'auto' | 'required';
 
-      interface ConsentCollection {
-        /**
-         * If set to `auto`, enables the collection of customer consent for promotional communications. The Checkout
-         * Session will determine whether to display an option to opt into promotional communication
-         * from the merchant depending on the customer's locale. Only available to US merchants.
-         */
-        promotions?: ConsentCollection.Promotions;
+      export type CustomerCreation = 'always' | 'if_required';
 
-        /**
-         * If set to `required`, it requires customers to check a terms of service checkbox before being able to pay.
-         * There must be a valid terms of service URL set in your [Dashboard settings](https://dashboard.stripe.com/settings/public).
-         */
-        terms_of_service?: ConsentCollection.TermsOfService;
-      }
-
-      namespace ConsentCollection {
-        type Promotions = 'auto' | 'none';
-
-        type TermsOfService = 'none' | 'required';
-      }
-
-      type CustomerCreation = 'always' | 'if_required';
-
-      interface LineItem {
+      export interface LineItem {
         /**
          * When set, provides configuration for this item's quantity to be adjusted by the customer during checkout.
          */
         adjustable_quantity?: LineItem.AdjustableQuantity;
 
         /**
-         * The ID of the [Price](https://stripe.com/docs/api/prices) or [Plan](https://stripe.com/docs/api/plans) object.
+         * The ID of an existing line item on the payment link.
          */
-        price: string;
+        id: string;
 
         /**
          * The quantity of the line item being purchased.
          */
-        quantity: number;
+        quantity?: number;
       }
 
-      namespace LineItem {
-        interface AdjustableQuantity {
-          /**
-           * Set to true if the quantity can be adjusted to any non-negative Integer.
-           */
-          enabled: boolean;
+      export type PaymentMethodCollection = 'always' | 'if_required';
 
-          /**
-           * The maximum quantity the customer can purchase. By default this value is 99. You can specify a value up to 99.
-           */
-          maximum?: number;
-
-          /**
-           * The minimum quantity the customer can purchase. By default this value is 0. You can specify a value up to 98. If there is only one item in the cart then that item's quantity cannot go down to 0.
-           */
-          minimum?: number;
-        }
-      }
-
-      interface PaymentIntentData {
-        /**
-         * Controls when the funds will be captured from the customer's account.
-         */
-        capture_method?: PaymentIntentData.CaptureMethod;
-
-        /**
-         * Indicates that you intend to [make future payments](https://stripe.com/docs/payments/payment-intents#future-usage) with the payment method collected by this Checkout Session.
-         *
-         * When setting this to `on_session`, Checkout will show a notice to the customer that their payment details will be saved.
-         *
-         * When setting this to `off_session`, Checkout will show a notice to the customer that their payment details will be saved and used for future payments.
-         *
-         * If a Customer has been provided or Checkout creates a new Customer,Checkout will attach the payment method to the Customer.
-         *
-         * If Checkout does not create a Customer, the payment method is not attached to a Customer. To reuse the payment method, you can retrieve it from the Checkout Session's PaymentIntent.
-         *
-         * When processing card payments, Checkout also uses `setup_future_usage` to dynamically optimize your payment flow and comply with regional legislation and network rules, such as SCA.
-         */
-        setup_future_usage?: PaymentIntentData.SetupFutureUsage;
-      }
-
-      namespace PaymentIntentData {
-        type CaptureMethod = 'automatic' | 'manual';
-
-        type SetupFutureUsage = 'off_session' | 'on_session';
-      }
-
-      type PaymentMethodCollection = 'always' | 'if_required';
-
-      type PaymentMethodType =
+      export type PaymentMethodType =
         | 'affirm'
         | 'afterpay_clearpay'
         | 'alipay'
@@ -825,14 +1207,7 @@ declare module 'stripe' {
         | 'us_bank_account'
         | 'wechat_pay';
 
-      interface PhoneNumberCollection {
-        /**
-         * Set to `true` to enable phone number collection.
-         */
-        enabled: boolean;
-      }
-
-      interface ShippingAddressCollection {
+      export interface ShippingAddressCollection {
         /**
          * An array of two-letter ISO country codes representing which countries Checkout should provide as options for
          * shipping locations. Unsupported country codes: `AS, CX, CC, CU, HM, IR, KP, MH, FM, NF, MP, PW, SD, SY, UM, VI`.
@@ -840,8 +1215,45 @@ declare module 'stripe' {
         allowed_countries: Array<ShippingAddressCollection.AllowedCountry>;
       }
 
+      namespace AfterCompletion {
+        export interface HostedConfirmation {
+          /**
+           * A custom message to display to the customer after the purchase is complete.
+           */
+          custom_message?: string;
+        }
+
+        export interface Redirect {
+          /**
+           * The URL the customer will be redirected to after the purchase is complete. You can embed `{CHECKOUT_SESSION_ID}` into the URL to have the `id` of the completed [checkout session](https://stripe.com/docs/api/checkout/sessions/object#checkout_session_object-id) included.
+           */
+          url: string;
+        }
+
+        export type Type = 'hosted_confirmation' | 'redirect';
+      }
+
+      namespace LineItem {
+        export interface AdjustableQuantity {
+          /**
+           * Set to true if the quantity can be adjusted to any non-negative Integer.
+           */
+          enabled: boolean;
+
+          /**
+           * The maximum quantity the customer can purchase. By default this value is 99. You can specify a value up to 99.
+           */
+          maximum?: number;
+
+          /**
+           * The minimum quantity the customer can purchase. By default this value is 0. You can specify a value up to 98. If there is only one item in the cart then that item's quantity cannot go down to 0.
+           */
+          minimum?: number;
+        }
+      }
+
       namespace ShippingAddressCollection {
-        type AllowedCountry =
+        export type AllowedCountry =
           | 'AC'
           | 'AD'
           | 'AE'
@@ -1080,59 +1492,9 @@ declare module 'stripe' {
           | 'ZW'
           | 'ZZ';
       }
-
-      interface ShippingOption {
-        /**
-         * The ID of the Shipping Rate to use for this shipping option.
-         */
-        shipping_rate?: string;
-      }
-
-      type SubmitType = 'auto' | 'book' | 'donate' | 'pay';
-
-      interface SubscriptionData {
-        /**
-         * The subscription's description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription.
-         */
-        description?: string;
-
-        /**
-         * Integer representing the number of trial period days before the customer is charged for the first time. Has to be at least 1.
-         */
-        trial_period_days?: number;
-      }
-
-      interface TaxIdCollection {
-        /**
-         * Set to `true` to enable tax ID collection.
-         */
-        enabled: boolean;
-      }
-
-      interface TransferData {
-        /**
-         * The amount that will be transferred automatically when a charge succeeds.
-         */
-        amount?: number;
-
-        /**
-         * If specified, successful charges will be attributed to the destination
-         * account for tax reporting, and the funds from charges will be transferred
-         * to the destination account. The ID of the resulting transfer will be
-         * returned on the successful charge's `transfer` field.
-         */
-        destination: string;
-      }
     }
 
-    interface PaymentLinkRetrieveParams {
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-    }
-
-    interface PaymentLinkUpdateParams {
+    export interface PaymentLinkUpdateParams {
       /**
        * Whether the payment link's `url` is active. If `false`, customers visiting the URL will be shown a page saying that the link has been deactivated.
        */
@@ -1202,369 +1564,7 @@ declare module 'stripe' {
       >;
     }
 
-    namespace PaymentLinkUpdateParams {
-      interface AfterCompletion {
-        /**
-         * Configuration when `type=hosted_confirmation`.
-         */
-        hosted_confirmation?: AfterCompletion.HostedConfirmation;
-
-        /**
-         * Configuration when `type=redirect`.
-         */
-        redirect?: AfterCompletion.Redirect;
-
-        /**
-         * The specified behavior after the purchase is complete. Either `redirect` or `hosted_confirmation`.
-         */
-        type: AfterCompletion.Type;
-      }
-
-      namespace AfterCompletion {
-        interface HostedConfirmation {
-          /**
-           * A custom message to display to the customer after the purchase is complete.
-           */
-          custom_message?: string;
-        }
-
-        interface Redirect {
-          /**
-           * The URL the customer will be redirected to after the purchase is complete. You can embed `{CHECKOUT_SESSION_ID}` into the URL to have the `id` of the completed [checkout session](https://stripe.com/docs/api/checkout/sessions/object#checkout_session_object-id) included.
-           */
-          url: string;
-        }
-
-        type Type = 'hosted_confirmation' | 'redirect';
-      }
-
-      interface AutomaticTax {
-        /**
-         * If `true`, tax will be calculated automatically using the customer's location.
-         */
-        enabled: boolean;
-      }
-
-      type BillingAddressCollection = 'auto' | 'required';
-
-      type CustomerCreation = 'always' | 'if_required';
-
-      interface LineItem {
-        /**
-         * When set, provides configuration for this item's quantity to be adjusted by the customer during checkout.
-         */
-        adjustable_quantity?: LineItem.AdjustableQuantity;
-
-        /**
-         * The ID of an existing line item on the payment link.
-         */
-        id: string;
-
-        /**
-         * The quantity of the line item being purchased.
-         */
-        quantity?: number;
-      }
-
-      namespace LineItem {
-        interface AdjustableQuantity {
-          /**
-           * Set to true if the quantity can be adjusted to any non-negative Integer.
-           */
-          enabled: boolean;
-
-          /**
-           * The maximum quantity the customer can purchase. By default this value is 99. You can specify a value up to 99.
-           */
-          maximum?: number;
-
-          /**
-           * The minimum quantity the customer can purchase. By default this value is 0. You can specify a value up to 98. If there is only one item in the cart then that item's quantity cannot go down to 0.
-           */
-          minimum?: number;
-        }
-      }
-
-      type PaymentMethodCollection = 'always' | 'if_required';
-
-      type PaymentMethodType =
-        | 'affirm'
-        | 'afterpay_clearpay'
-        | 'alipay'
-        | 'au_becs_debit'
-        | 'bacs_debit'
-        | 'bancontact'
-        | 'blik'
-        | 'boleto'
-        | 'card'
-        | 'eps'
-        | 'fpx'
-        | 'giropay'
-        | 'grabpay'
-        | 'ideal'
-        | 'klarna'
-        | 'konbini'
-        | 'oxxo'
-        | 'p24'
-        | 'paynow'
-        | 'pix'
-        | 'promptpay'
-        | 'sepa_debit'
-        | 'sofort'
-        | 'us_bank_account'
-        | 'wechat_pay';
-
-      interface ShippingAddressCollection {
-        /**
-         * An array of two-letter ISO country codes representing which countries Checkout should provide as options for
-         * shipping locations. Unsupported country codes: `AS, CX, CC, CU, HM, IR, KP, MH, FM, NF, MP, PW, SD, SY, UM, VI`.
-         */
-        allowed_countries: Array<ShippingAddressCollection.AllowedCountry>;
-      }
-
-      namespace ShippingAddressCollection {
-        type AllowedCountry =
-          | 'AC'
-          | 'AD'
-          | 'AE'
-          | 'AF'
-          | 'AG'
-          | 'AI'
-          | 'AL'
-          | 'AM'
-          | 'AO'
-          | 'AQ'
-          | 'AR'
-          | 'AT'
-          | 'AU'
-          | 'AW'
-          | 'AX'
-          | 'AZ'
-          | 'BA'
-          | 'BB'
-          | 'BD'
-          | 'BE'
-          | 'BF'
-          | 'BG'
-          | 'BH'
-          | 'BI'
-          | 'BJ'
-          | 'BL'
-          | 'BM'
-          | 'BN'
-          | 'BO'
-          | 'BQ'
-          | 'BR'
-          | 'BS'
-          | 'BT'
-          | 'BV'
-          | 'BW'
-          | 'BY'
-          | 'BZ'
-          | 'CA'
-          | 'CD'
-          | 'CF'
-          | 'CG'
-          | 'CH'
-          | 'CI'
-          | 'CK'
-          | 'CL'
-          | 'CM'
-          | 'CN'
-          | 'CO'
-          | 'CR'
-          | 'CV'
-          | 'CW'
-          | 'CY'
-          | 'CZ'
-          | 'DE'
-          | 'DJ'
-          | 'DK'
-          | 'DM'
-          | 'DO'
-          | 'DZ'
-          | 'EC'
-          | 'EE'
-          | 'EG'
-          | 'EH'
-          | 'ER'
-          | 'ES'
-          | 'ET'
-          | 'FI'
-          | 'FJ'
-          | 'FK'
-          | 'FO'
-          | 'FR'
-          | 'GA'
-          | 'GB'
-          | 'GD'
-          | 'GE'
-          | 'GF'
-          | 'GG'
-          | 'GH'
-          | 'GI'
-          | 'GL'
-          | 'GM'
-          | 'GN'
-          | 'GP'
-          | 'GQ'
-          | 'GR'
-          | 'GS'
-          | 'GT'
-          | 'GU'
-          | 'GW'
-          | 'GY'
-          | 'HK'
-          | 'HN'
-          | 'HR'
-          | 'HT'
-          | 'HU'
-          | 'ID'
-          | 'IE'
-          | 'IL'
-          | 'IM'
-          | 'IN'
-          | 'IO'
-          | 'IQ'
-          | 'IS'
-          | 'IT'
-          | 'JE'
-          | 'JM'
-          | 'JO'
-          | 'JP'
-          | 'KE'
-          | 'KG'
-          | 'KH'
-          | 'KI'
-          | 'KM'
-          | 'KN'
-          | 'KR'
-          | 'KW'
-          | 'KY'
-          | 'KZ'
-          | 'LA'
-          | 'LB'
-          | 'LC'
-          | 'LI'
-          | 'LK'
-          | 'LR'
-          | 'LS'
-          | 'LT'
-          | 'LU'
-          | 'LV'
-          | 'LY'
-          | 'MA'
-          | 'MC'
-          | 'MD'
-          | 'ME'
-          | 'MF'
-          | 'MG'
-          | 'MK'
-          | 'ML'
-          | 'MM'
-          | 'MN'
-          | 'MO'
-          | 'MQ'
-          | 'MR'
-          | 'MS'
-          | 'MT'
-          | 'MU'
-          | 'MV'
-          | 'MW'
-          | 'MX'
-          | 'MY'
-          | 'MZ'
-          | 'NA'
-          | 'NC'
-          | 'NE'
-          | 'NG'
-          | 'NI'
-          | 'NL'
-          | 'NO'
-          | 'NP'
-          | 'NR'
-          | 'NU'
-          | 'NZ'
-          | 'OM'
-          | 'PA'
-          | 'PE'
-          | 'PF'
-          | 'PG'
-          | 'PH'
-          | 'PK'
-          | 'PL'
-          | 'PM'
-          | 'PN'
-          | 'PR'
-          | 'PS'
-          | 'PT'
-          | 'PY'
-          | 'QA'
-          | 'RE'
-          | 'RO'
-          | 'RS'
-          | 'RU'
-          | 'RW'
-          | 'SA'
-          | 'SB'
-          | 'SC'
-          | 'SE'
-          | 'SG'
-          | 'SH'
-          | 'SI'
-          | 'SJ'
-          | 'SK'
-          | 'SL'
-          | 'SM'
-          | 'SN'
-          | 'SO'
-          | 'SR'
-          | 'SS'
-          | 'ST'
-          | 'SV'
-          | 'SX'
-          | 'SZ'
-          | 'TA'
-          | 'TC'
-          | 'TD'
-          | 'TF'
-          | 'TG'
-          | 'TH'
-          | 'TJ'
-          | 'TK'
-          | 'TL'
-          | 'TM'
-          | 'TN'
-          | 'TO'
-          | 'TR'
-          | 'TT'
-          | 'TV'
-          | 'TW'
-          | 'TZ'
-          | 'UA'
-          | 'UG'
-          | 'US'
-          | 'UY'
-          | 'UZ'
-          | 'VA'
-          | 'VC'
-          | 'VE'
-          | 'VG'
-          | 'VN'
-          | 'VU'
-          | 'WF'
-          | 'WS'
-          | 'XK'
-          | 'YE'
-          | 'YT'
-          | 'ZA'
-          | 'ZM'
-          | 'ZW'
-          | 'ZZ';
-      }
-    }
-
-    interface PaymentLinkListParams extends PaginationParams {
+    export interface PaymentLinkListParams extends PaginationParams {
       /**
        * Only return payment links that are active or inactive (e.g., pass `false` to list all inactive payment links).
        */
@@ -1576,7 +1576,7 @@ declare module 'stripe' {
       expand?: Array<string>;
     }
 
-    interface PaymentLinkListLineItemsParams extends PaginationParams {
+    export interface PaymentLinkListLineItemsParams extends PaginationParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

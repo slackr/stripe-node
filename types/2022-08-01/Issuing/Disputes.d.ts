@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Issuing {
-      /**
+      export /**
        * As a [card issuer](https://stripe.com/docs/issuing), you can dispute transactions that the cardholder does not recognize, suspects to be fraudulent, or has other issues with.
        *
        * Related guide: [Disputing Transactions](https://stripe.com/docs/issuing/purchases/disputes)
@@ -68,7 +68,7 @@ declare module 'stripe' {
       }
 
       namespace Dispute {
-        interface Evidence {
+        export interface Evidence {
           canceled?: Evidence.Canceled;
 
           duplicate?: Evidence.Duplicate;
@@ -89,8 +89,27 @@ declare module 'stripe' {
           service_not_as_described?: Evidence.ServiceNotAsDescribed;
         }
 
+        export type Status =
+          | 'expired'
+          | 'lost'
+          | 'submitted'
+          | 'unsubmitted'
+          | 'won';
+
+        export interface Treasury {
+          /**
+           * The Treasury [DebitReversal](https://stripe.com/docs/api/treasury/debit_reversals) representing this Issuing dispute
+           */
+          debit_reversal: string | null;
+
+          /**
+           * The Treasury [ReceivedDebit](https://stripe.com/docs/api/treasury/received_debits) that is being disputed.
+           */
+          received_debit: string;
+        }
+
         namespace Evidence {
-          interface Canceled {
+          export interface Canceled {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -142,13 +161,7 @@ declare module 'stripe' {
             returned_at: number | null;
           }
 
-          namespace Canceled {
-            type ProductType = 'merchandise' | 'service';
-
-            type ReturnStatus = 'merchant_rejected' | 'successful';
-          }
-
-          interface Duplicate {
+          export interface Duplicate {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -180,7 +193,7 @@ declare module 'stripe' {
             original_transaction: string | null;
           }
 
-          interface Fraudulent {
+          export interface Fraudulent {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -192,7 +205,7 @@ declare module 'stripe' {
             explanation: string | null;
           }
 
-          interface MerchandiseNotAsDescribed {
+          export interface MerchandiseNotAsDescribed {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -224,11 +237,7 @@ declare module 'stripe' {
             returned_at: number | null;
           }
 
-          namespace MerchandiseNotAsDescribed {
-            type ReturnStatus = 'merchant_rejected' | 'successful';
-          }
-
-          interface NotReceived {
+          export interface NotReceived {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -255,11 +264,7 @@ declare module 'stripe' {
             product_type: NotReceived.ProductType | null;
           }
 
-          namespace NotReceived {
-            type ProductType = 'merchandise' | 'service';
-          }
-
-          interface Other {
+          export interface Other {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -281,11 +286,7 @@ declare module 'stripe' {
             product_type: Other.ProductType | null;
           }
 
-          namespace Other {
-            type ProductType = 'merchandise' | 'service';
-          }
-
-          type Reason =
+          export type Reason =
             | 'canceled'
             | 'duplicate'
             | 'fraudulent'
@@ -294,7 +295,7 @@ declare module 'stripe' {
             | 'other'
             | 'service_not_as_described';
 
-          interface ServiceNotAsDescribed {
+          export interface ServiceNotAsDescribed {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -320,24 +321,28 @@ declare module 'stripe' {
              */
             received_at: number | null;
           }
-        }
 
-        type Status = 'expired' | 'lost' | 'submitted' | 'unsubmitted' | 'won';
+          namespace Canceled {
+            export type ProductType = 'merchandise' | 'service';
 
-        interface Treasury {
-          /**
-           * The Treasury [DebitReversal](https://stripe.com/docs/api/treasury/debit_reversals) representing this Issuing dispute
-           */
-          debit_reversal: string | null;
+            export type ReturnStatus = 'merchant_rejected' | 'successful';
+          }
 
-          /**
-           * The Treasury [ReceivedDebit](https://stripe.com/docs/api/treasury/received_debits) that is being disputed.
-           */
-          received_debit: string;
+          namespace MerchandiseNotAsDescribed {
+            export type ReturnStatus = 'merchant_rejected' | 'successful';
+          }
+
+          namespace NotReceived {
+            export type ProductType = 'merchandise' | 'service';
+          }
+
+          namespace Other {
+            export type ProductType = 'merchandise' | 'service';
+          }
         }
       }
 
-      interface DisputeCreateParams {
+      export interface DisputeCreateParams {
         /**
          * The dispute amount in the card's currency and in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal). If not set, defaults to the full transaction amount.
          */
@@ -370,7 +375,7 @@ declare module 'stripe' {
       }
 
       namespace DisputeCreateParams {
-        interface Evidence {
+        export interface Evidence {
           /**
            * Evidence provided when `reason` is 'canceled'.
            */
@@ -416,8 +421,15 @@ declare module 'stripe' {
           >;
         }
 
+        export interface Treasury {
+          /**
+           * The ID of the ReceivedDebit to initiate an Issuings dispute for.
+           */
+          received_debit: string;
+        }
+
         namespace Evidence {
-          interface Canceled {
+          export interface Canceled {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -469,13 +481,7 @@ declare module 'stripe' {
             returned_at?: Stripe.Emptyable<number>;
           }
 
-          namespace Canceled {
-            type ProductType = 'merchandise' | 'service';
-
-            type ReturnStatus = 'merchant_rejected' | 'successful';
-          }
-
-          interface Duplicate {
+          export interface Duplicate {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -507,7 +513,7 @@ declare module 'stripe' {
             original_transaction?: string;
           }
 
-          interface Fraudulent {
+          export interface Fraudulent {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -519,7 +525,7 @@ declare module 'stripe' {
             explanation?: string;
           }
 
-          interface MerchandiseNotAsDescribed {
+          export interface MerchandiseNotAsDescribed {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -553,11 +559,7 @@ declare module 'stripe' {
             returned_at?: Stripe.Emptyable<number>;
           }
 
-          namespace MerchandiseNotAsDescribed {
-            type ReturnStatus = 'merchant_rejected' | 'successful';
-          }
-
-          interface NotReceived {
+          export interface NotReceived {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -584,11 +586,7 @@ declare module 'stripe' {
             product_type?: Stripe.Emptyable<NotReceived.ProductType>;
           }
 
-          namespace NotReceived {
-            type ProductType = 'merchandise' | 'service';
-          }
-
-          interface Other {
+          export interface Other {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -610,11 +608,7 @@ declare module 'stripe' {
             product_type?: Stripe.Emptyable<Other.ProductType>;
           }
 
-          namespace Other {
-            type ProductType = 'merchandise' | 'service';
-          }
-
-          type Reason =
+          export type Reason =
             | 'canceled'
             | 'duplicate'
             | 'fraudulent'
@@ -623,7 +617,7 @@ declare module 'stripe' {
             | 'other'
             | 'service_not_as_described';
 
-          interface ServiceNotAsDescribed {
+          export interface ServiceNotAsDescribed {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -649,24 +643,35 @@ declare module 'stripe' {
              */
             received_at?: Stripe.Emptyable<number>;
           }
-        }
 
-        interface Treasury {
-          /**
-           * The ID of the ReceivedDebit to initiate an Issuings dispute for.
-           */
-          received_debit: string;
+          namespace Canceled {
+            export type ProductType = 'merchandise' | 'service';
+
+            export type ReturnStatus = 'merchant_rejected' | 'successful';
+          }
+
+          namespace MerchandiseNotAsDescribed {
+            export type ReturnStatus = 'merchant_rejected' | 'successful';
+          }
+
+          namespace NotReceived {
+            export type ProductType = 'merchandise' | 'service';
+          }
+
+          namespace Other {
+            export type ProductType = 'merchandise' | 'service';
+          }
         }
       }
 
-      interface DisputeRetrieveParams {
+      export interface DisputeRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface DisputeUpdateParams {
+      export interface DisputeUpdateParams {
         /**
          * The dispute amount in the card's currency and in the [smallest currency unit](https://stripe.com/docs/currencies#zero-decimal).
          */
@@ -689,7 +694,7 @@ declare module 'stripe' {
       }
 
       namespace DisputeUpdateParams {
-        interface Evidence {
+        export interface Evidence {
           /**
            * Evidence provided when `reason` is 'canceled'.
            */
@@ -736,7 +741,7 @@ declare module 'stripe' {
         }
 
         namespace Evidence {
-          interface Canceled {
+          export interface Canceled {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -788,13 +793,7 @@ declare module 'stripe' {
             returned_at?: Stripe.Emptyable<number>;
           }
 
-          namespace Canceled {
-            type ProductType = 'merchandise' | 'service';
-
-            type ReturnStatus = 'merchant_rejected' | 'successful';
-          }
-
-          interface Duplicate {
+          export interface Duplicate {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -826,7 +825,7 @@ declare module 'stripe' {
             original_transaction?: string;
           }
 
-          interface Fraudulent {
+          export interface Fraudulent {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -838,7 +837,7 @@ declare module 'stripe' {
             explanation?: string;
           }
 
-          interface MerchandiseNotAsDescribed {
+          export interface MerchandiseNotAsDescribed {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -872,11 +871,7 @@ declare module 'stripe' {
             returned_at?: Stripe.Emptyable<number>;
           }
 
-          namespace MerchandiseNotAsDescribed {
-            type ReturnStatus = 'merchant_rejected' | 'successful';
-          }
-
-          interface NotReceived {
+          export interface NotReceived {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -903,11 +898,7 @@ declare module 'stripe' {
             product_type?: Stripe.Emptyable<NotReceived.ProductType>;
           }
 
-          namespace NotReceived {
-            type ProductType = 'merchandise' | 'service';
-          }
-
-          interface Other {
+          export interface Other {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -929,11 +920,7 @@ declare module 'stripe' {
             product_type?: Stripe.Emptyable<Other.ProductType>;
           }
 
-          namespace Other {
-            type ProductType = 'merchandise' | 'service';
-          }
-
-          type Reason =
+          export type Reason =
             | 'canceled'
             | 'duplicate'
             | 'fraudulent'
@@ -942,7 +929,7 @@ declare module 'stripe' {
             | 'other'
             | 'service_not_as_described';
 
-          interface ServiceNotAsDescribed {
+          export interface ServiceNotAsDescribed {
             /**
              * (ID of a [file upload](https://stripe.com/docs/guides/file-upload)) Additional documentation supporting the dispute.
              */
@@ -968,10 +955,28 @@ declare module 'stripe' {
              */
             received_at?: Stripe.Emptyable<number>;
           }
+
+          namespace Canceled {
+            export type ProductType = 'merchandise' | 'service';
+
+            export type ReturnStatus = 'merchant_rejected' | 'successful';
+          }
+
+          namespace MerchandiseNotAsDescribed {
+            export type ReturnStatus = 'merchant_rejected' | 'successful';
+          }
+
+          namespace NotReceived {
+            export type ProductType = 'merchandise' | 'service';
+          }
+
+          namespace Other {
+            export type ProductType = 'merchandise' | 'service';
+          }
         }
       }
 
-      interface DisputeListParams extends PaginationParams {
+      export interface DisputeListParams extends PaginationParams {
         /**
          * Select Issuing disputes that were created during the given date interval.
          */
@@ -994,10 +999,15 @@ declare module 'stripe' {
       }
 
       namespace DisputeListParams {
-        type Status = 'expired' | 'lost' | 'submitted' | 'unsubmitted' | 'won';
+        export type Status =
+          | 'expired'
+          | 'lost'
+          | 'submitted'
+          | 'unsubmitted'
+          | 'won';
       }
 
-      interface DisputeSubmitParams {
+      export interface DisputeSubmitParams {
         /**
          * Specifies which fields in the response should be expanded.
          */

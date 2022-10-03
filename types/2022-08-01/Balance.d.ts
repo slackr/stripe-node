@@ -2,7 +2,183 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace Balance {
+      export interface Available {
+        /**
+         * Balance amount.
+         */
+        amount: number;
+
+        /**
+         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+         */
+        currency: string;
+
+        source_types?: Available.SourceTypes;
+      }
+
+      export interface ConnectReserved {
+        /**
+         * Balance amount.
+         */
+        amount: number;
+
+        /**
+         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+         */
+        currency: string;
+
+        source_types?: ConnectReserved.SourceTypes;
+      }
+
+      export interface InstantAvailable {
+        /**
+         * Balance amount.
+         */
+        amount: number;
+
+        /**
+         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+         */
+        currency: string;
+
+        source_types?: InstantAvailable.SourceTypes;
+      }
+
+      export interface Issuing {
+        /**
+         * Funds that are available for use.
+         */
+        available: Array<Issuing.Available>;
+      }
+
+      export interface Pending {
+        /**
+         * Balance amount.
+         */
+        amount: number;
+
+        /**
+         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+         */
+        currency: string;
+
+        source_types?: Pending.SourceTypes;
+      }
+
+      namespace Available {
+        export interface SourceTypes {
+          /**
+           * Amount for bank account.
+           */
+          bank_account?: number;
+
+          /**
+           * Amount for card.
+           */
+          card?: number;
+
+          /**
+           * Amount for FPX.
+           */
+          fpx?: number;
+        }
+      }
+
+      namespace ConnectReserved {
+        export interface SourceTypes {
+          /**
+           * Amount for bank account.
+           */
+          bank_account?: number;
+
+          /**
+           * Amount for card.
+           */
+          card?: number;
+
+          /**
+           * Amount for FPX.
+           */
+          fpx?: number;
+        }
+      }
+
+      namespace InstantAvailable {
+        export interface SourceTypes {
+          /**
+           * Amount for bank account.
+           */
+          bank_account?: number;
+
+          /**
+           * Amount for card.
+           */
+          card?: number;
+
+          /**
+           * Amount for FPX.
+           */
+          fpx?: number;
+        }
+      }
+
+      namespace Issuing {
+        export interface Available {
+          /**
+           * Balance amount.
+           */
+          amount: number;
+
+          /**
+           * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+           */
+          currency: string;
+
+          source_types?: Available.SourceTypes;
+        }
+
+        namespace Available {
+          export interface SourceTypes {
+            /**
+             * Amount for bank account.
+             */
+            bank_account?: number;
+
+            /**
+             * Amount for card.
+             */
+            card?: number;
+
+            /**
+             * Amount for FPX.
+             */
+            fpx?: number;
+          }
+        }
+      }
+
+      namespace Pending {
+        export interface SourceTypes {
+          /**
+           * Amount for bank account.
+           */
+          bank_account?: number;
+
+          /**
+           * Amount for card.
+           */
+          card?: number;
+
+          /**
+           * Amount for FPX.
+           */
+          fpx?: number;
+        }
+      }
+    }
+
+    export /**
      * This is an object representing your Stripe balance. You can retrieve it to see
      * the balance currently on your Stripe account.
      *
@@ -49,183 +225,7 @@ declare module 'stripe' {
       pending: Array<Balance.Pending>;
     }
 
-    namespace Balance {
-      interface Available {
-        /**
-         * Balance amount.
-         */
-        amount: number;
-
-        /**
-         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-         */
-        currency: string;
-
-        source_types?: Available.SourceTypes;
-      }
-
-      namespace Available {
-        interface SourceTypes {
-          /**
-           * Amount for bank account.
-           */
-          bank_account?: number;
-
-          /**
-           * Amount for card.
-           */
-          card?: number;
-
-          /**
-           * Amount for FPX.
-           */
-          fpx?: number;
-        }
-      }
-
-      interface ConnectReserved {
-        /**
-         * Balance amount.
-         */
-        amount: number;
-
-        /**
-         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-         */
-        currency: string;
-
-        source_types?: ConnectReserved.SourceTypes;
-      }
-
-      namespace ConnectReserved {
-        interface SourceTypes {
-          /**
-           * Amount for bank account.
-           */
-          bank_account?: number;
-
-          /**
-           * Amount for card.
-           */
-          card?: number;
-
-          /**
-           * Amount for FPX.
-           */
-          fpx?: number;
-        }
-      }
-
-      interface InstantAvailable {
-        /**
-         * Balance amount.
-         */
-        amount: number;
-
-        /**
-         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-         */
-        currency: string;
-
-        source_types?: InstantAvailable.SourceTypes;
-      }
-
-      namespace InstantAvailable {
-        interface SourceTypes {
-          /**
-           * Amount for bank account.
-           */
-          bank_account?: number;
-
-          /**
-           * Amount for card.
-           */
-          card?: number;
-
-          /**
-           * Amount for FPX.
-           */
-          fpx?: number;
-        }
-      }
-
-      interface Issuing {
-        /**
-         * Funds that are available for use.
-         */
-        available: Array<Issuing.Available>;
-      }
-
-      namespace Issuing {
-        interface Available {
-          /**
-           * Balance amount.
-           */
-          amount: number;
-
-          /**
-           * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-           */
-          currency: string;
-
-          source_types?: Available.SourceTypes;
-        }
-
-        namespace Available {
-          interface SourceTypes {
-            /**
-             * Amount for bank account.
-             */
-            bank_account?: number;
-
-            /**
-             * Amount for card.
-             */
-            card?: number;
-
-            /**
-             * Amount for FPX.
-             */
-            fpx?: number;
-          }
-        }
-      }
-
-      interface Pending {
-        /**
-         * Balance amount.
-         */
-        amount: number;
-
-        /**
-         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-         */
-        currency: string;
-
-        source_types?: Pending.SourceTypes;
-      }
-
-      namespace Pending {
-        interface SourceTypes {
-          /**
-           * Amount for bank account.
-           */
-          bank_account?: number;
-
-          /**
-           * Amount for card.
-           */
-          card?: number;
-
-          /**
-           * Amount for FPX.
-           */
-          fpx?: number;
-        }
-      }
-    }
-
-    interface BalanceRetrieveParams {
+    export interface BalanceRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

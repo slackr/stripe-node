@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Terminal {
-      /**
+      export /**
        * A Connection Token is used by the Stripe Terminal SDK to connect to a reader.
        *
        * Related guide: [Fleet Management](https://stripe.com/docs/terminal/fleet/locations).
@@ -25,7 +25,7 @@ declare module 'stripe' {
         secret: string;
       }
 
-      interface ConnectionTokenCreateParams {
+      export interface ConnectionTokenCreateParams {
         /**
          * Specifies which fields in the response should be expanded.
          */

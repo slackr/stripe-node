@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace TestHelpers {
-      interface RefundExpireParams {
+      export interface RefundExpireParams {
         /**
          * Specifies which fields in the response should be expanded.
          */

@@ -2,7 +2,16 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace SubscriptionItem {
+      export interface BillingThresholds {
+        /**
+         * Usage threshold that triggers the subscription to create an invoice
+         */
+        usage_gte: number | null;
+      }
+    }
+
+    export /**
      * Subscription items allow you to create customer subscriptions with more than
      * one plan, making it easy to represent complex billing relationships.
      */
@@ -72,16 +81,7 @@ declare module 'stripe' {
       tax_rates: Array<Stripe.TaxRate> | null;
     }
 
-    namespace SubscriptionItem {
-      interface BillingThresholds {
-        /**
-         * Usage threshold that triggers the subscription to create an invoice
-         */
-        usage_gte: number | null;
-      }
-    }
-
-    /**
+    export /**
      * The DeletedSubscriptionItem object.
      */
     interface DeletedSubscriptionItem {
@@ -101,7 +101,79 @@ declare module 'stripe' {
       deleted: true;
     }
 
-    interface SubscriptionItemCreateParams {
+    namespace SubscriptionItemCreateParams {
+      export interface BillingThresholds {
+        /**
+         * Usage threshold that triggers the subscription to advance to a new billing period
+         */
+        usage_gte: number;
+      }
+
+      export type PaymentBehavior =
+        | 'allow_incomplete'
+        | 'default_incomplete'
+        | 'error_if_incomplete'
+        | 'pending_if_incomplete';
+
+      export interface PriceData {
+        /**
+         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+         */
+        currency: string;
+
+        /**
+         * The ID of the product that this price will belong to.
+         */
+        product: string;
+
+        /**
+         * The recurring components of a price such as `interval` and `interval_count`.
+         */
+        recurring: PriceData.Recurring;
+
+        /**
+         * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+         */
+        tax_behavior?: PriceData.TaxBehavior;
+
+        /**
+         * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+         */
+        unit_amount?: number;
+
+        /**
+         * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
+         */
+        unit_amount_decimal?: string;
+      }
+
+      export type ProrationBehavior =
+        | 'always_invoice'
+        | 'create_prorations'
+        | 'none';
+
+      namespace PriceData {
+        export interface Recurring {
+          /**
+           * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
+           */
+          interval: Recurring.Interval;
+
+          /**
+           * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
+           */
+          interval_count?: number;
+        }
+
+        export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+
+        namespace Recurring {
+          export type Interval = 'day' | 'month' | 'week' | 'year';
+        }
+      }
+    }
+
+    export interface SubscriptionItemCreateParams {
       /**
        * The identifier of the subscription to modify.
        */
@@ -171,21 +243,28 @@ declare module 'stripe' {
       tax_rates?: Stripe.Emptyable<Array<string>>;
     }
 
-    namespace SubscriptionItemCreateParams {
-      interface BillingThresholds {
+    export interface SubscriptionItemRetrieveParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+    }
+
+    namespace SubscriptionItemUpdateParams {
+      export interface BillingThresholds {
         /**
          * Usage threshold that triggers the subscription to advance to a new billing period
          */
         usage_gte: number;
       }
 
-      type PaymentBehavior =
+      export type PaymentBehavior =
         | 'allow_incomplete'
         | 'default_incomplete'
         | 'error_if_incomplete'
         | 'pending_if_incomplete';
 
-      interface PriceData {
+      export interface PriceData {
         /**
          * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
          */
@@ -217,8 +296,13 @@ declare module 'stripe' {
         unit_amount_decimal?: string;
       }
 
+      export type ProrationBehavior =
+        | 'always_invoice'
+        | 'create_prorations'
+        | 'none';
+
       namespace PriceData {
-        interface Recurring {
+        export interface Recurring {
           /**
            * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
            */
@@ -230,24 +314,15 @@ declare module 'stripe' {
           interval_count?: number;
         }
 
+        export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+
         namespace Recurring {
-          type Interval = 'day' | 'month' | 'week' | 'year';
+          export type Interval = 'day' | 'month' | 'week' | 'year';
         }
-
-        type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
       }
-
-      type ProrationBehavior = 'always_invoice' | 'create_prorations' | 'none';
     }
 
-    interface SubscriptionItemRetrieveParams {
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-    }
-
-    interface SubscriptionItemUpdateParams {
+    export interface SubscriptionItemUpdateParams {
       /**
        * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period. When updating, pass an empty string to remove previously-defined thresholds.
        */
@@ -317,76 +392,7 @@ declare module 'stripe' {
       tax_rates?: Stripe.Emptyable<Array<string>>;
     }
 
-    namespace SubscriptionItemUpdateParams {
-      interface BillingThresholds {
-        /**
-         * Usage threshold that triggers the subscription to advance to a new billing period
-         */
-        usage_gte: number;
-      }
-
-      type PaymentBehavior =
-        | 'allow_incomplete'
-        | 'default_incomplete'
-        | 'error_if_incomplete'
-        | 'pending_if_incomplete';
-
-      interface PriceData {
-        /**
-         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-         */
-        currency: string;
-
-        /**
-         * The ID of the product that this price will belong to.
-         */
-        product: string;
-
-        /**
-         * The recurring components of a price such as `interval` and `interval_count`.
-         */
-        recurring: PriceData.Recurring;
-
-        /**
-         * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
-         */
-        tax_behavior?: PriceData.TaxBehavior;
-
-        /**
-         * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
-         */
-        unit_amount?: number;
-
-        /**
-         * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
-         */
-        unit_amount_decimal?: string;
-      }
-
-      namespace PriceData {
-        interface Recurring {
-          /**
-           * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
-           */
-          interval: Recurring.Interval;
-
-          /**
-           * The number of intervals between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
-           */
-          interval_count?: number;
-        }
-
-        namespace Recurring {
-          type Interval = 'day' | 'month' | 'week' | 'year';
-        }
-
-        type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
-      }
-
-      type ProrationBehavior = 'always_invoice' | 'create_prorations' | 'none';
-    }
-
-    interface SubscriptionItemListParams extends PaginationParams {
+    export interface SubscriptionItemListParams extends PaginationParams {
       /**
        * The ID of the subscription whose items will be retrieved.
        */
@@ -398,7 +404,14 @@ declare module 'stripe' {
       expand?: Array<string>;
     }
 
-    interface SubscriptionItemDeleteParams {
+    namespace SubscriptionItemDeleteParams {
+      export type ProrationBehavior =
+        | 'always_invoice'
+        | 'create_prorations'
+        | 'none';
+    }
+
+    export interface SubscriptionItemDeleteParams {
       /**
        * Delete all usage for the given subscription item. Allowed only when the current plan's `usage_type` is `metered`.
        */
@@ -413,10 +426,6 @@ declare module 'stripe' {
        * If set, the proration will be calculated as though the subscription was updated at the given time. This can be used to apply the same proration that was previewed with the [upcoming invoice](https://stripe.com/docs/api#retrieve_customer_invoice) endpoint.
        */
       proration_date?: number;
-    }
-
-    namespace SubscriptionItemDeleteParams {
-      type ProrationBehavior = 'always_invoice' | 'create_prorations' | 'none';
     }
 
     class SubscriptionItemsResource {

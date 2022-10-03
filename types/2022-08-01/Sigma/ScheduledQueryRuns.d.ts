@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Sigma {
-      /**
+      export /**
        * If you have [scheduled a Sigma query](https://stripe.com/docs/sigma/scheduled-queries), you'll
        * receive a `sigma.scheduled_query_run.created` webhook each time the query
        * runs. The webhook contains a `ScheduledQueryRun` object, which you can use to
@@ -64,7 +64,7 @@ declare module 'stripe' {
       }
 
       namespace ScheduledQueryRun {
-        interface Error {
+        export interface Error {
           /**
            * Information about the run failure.
            */
@@ -72,14 +72,14 @@ declare module 'stripe' {
         }
       }
 
-      interface ScheduledQueryRunRetrieveParams {
+      export interface ScheduledQueryRunRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface ScheduledQueryRunListParams extends PaginationParams {
+      export interface ScheduledQueryRunListParams extends PaginationParams {
         /**
          * Specifies which fields in the response should be expanded.
          */

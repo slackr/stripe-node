@@ -2,7 +2,128 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace Customer {
+      export interface InvoiceSettings {
+        /**
+         * Default custom fields to be displayed on invoices for this customer.
+         */
+        custom_fields: Array<InvoiceSettings.CustomField> | null;
+
+        /**
+         * ID of a payment method that's attached to the customer, to be used as the customer's default payment method for subscriptions and invoices.
+         */
+        default_payment_method: string | Stripe.PaymentMethod | null;
+
+        /**
+         * Default footer to be displayed on invoices for this customer.
+         */
+        footer: string | null;
+
+        /**
+         * Default options for invoice PDF rendering for this customer.
+         */
+        rendering_options: InvoiceSettings.RenderingOptions | null;
+      }
+
+      export interface Shipping {
+        address?: Stripe.Address;
+
+        /**
+         * The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
+         */
+        carrier?: string | null;
+
+        /**
+         * Recipient name.
+         */
+        name?: string;
+
+        /**
+         * Recipient phone (including extension).
+         */
+        phone?: string | null;
+
+        /**
+         * The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
+         */
+        tracking_number?: string | null;
+      }
+
+      export interface Tax {
+        /**
+         * Surfaces if automatic tax computation is possible given the current customer location information.
+         */
+        automatic_tax: Tax.AutomaticTax;
+
+        /**
+         * A recent IP address of the customer used for tax reporting and tax location inference.
+         */
+        ip_address: string | null;
+
+        /**
+         * The customer's location as identified by Stripe Tax.
+         */
+        location: Tax.Location | null;
+      }
+
+      export type TaxExempt = 'exempt' | 'none' | 'reverse';
+
+      namespace InvoiceSettings {
+        export interface CustomField {
+          /**
+           * The name of the custom field.
+           */
+          name: string;
+
+          /**
+           * The value of the custom field.
+           */
+          value: string;
+        }
+
+        export interface RenderingOptions {
+          /**
+           * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs.
+           */
+          amount_tax_display: string | null;
+        }
+      }
+
+      namespace Tax {
+        export type AutomaticTax =
+          | 'failed'
+          | 'not_collecting'
+          | 'supported'
+          | 'unrecognized_location';
+
+        export interface Location {
+          /**
+           * The customer's country as identified by Stripe Tax.
+           */
+          country: string;
+
+          /**
+           * The data source used to infer the customer's location.
+           */
+          source: Location.Source;
+
+          /**
+           * The customer's state, county, province, or region as identified by Stripe Tax.
+           */
+          state: string | null;
+        }
+
+        namespace Location {
+          export type Source =
+            | 'billing_address'
+            | 'ip_address'
+            | 'payment_method'
+            | 'shipping_destination';
+        }
+      }
+    }
+
+    export /**
      * This object represents a customer of your business. It lets you create recurring charges and track payments that belong to the same customer.
      *
      * Related guide: [Save a card during payment](https://stripe.com/docs/payments/save-during-payment).
@@ -151,128 +272,7 @@ declare module 'stripe' {
       test_clock?: string | Stripe.TestHelpers.TestClock | null;
     }
 
-    namespace Customer {
-      interface InvoiceSettings {
-        /**
-         * Default custom fields to be displayed on invoices for this customer.
-         */
-        custom_fields: Array<InvoiceSettings.CustomField> | null;
-
-        /**
-         * ID of a payment method that's attached to the customer, to be used as the customer's default payment method for subscriptions and invoices.
-         */
-        default_payment_method: string | Stripe.PaymentMethod | null;
-
-        /**
-         * Default footer to be displayed on invoices for this customer.
-         */
-        footer: string | null;
-
-        /**
-         * Default options for invoice PDF rendering for this customer.
-         */
-        rendering_options: InvoiceSettings.RenderingOptions | null;
-      }
-
-      namespace InvoiceSettings {
-        interface CustomField {
-          /**
-           * The name of the custom field.
-           */
-          name: string;
-
-          /**
-           * The value of the custom field.
-           */
-          value: string;
-        }
-
-        interface RenderingOptions {
-          /**
-           * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs.
-           */
-          amount_tax_display: string | null;
-        }
-      }
-
-      interface Shipping {
-        address?: Stripe.Address;
-
-        /**
-         * The delivery service that shipped a physical product, such as Fedex, UPS, USPS, etc.
-         */
-        carrier?: string | null;
-
-        /**
-         * Recipient name.
-         */
-        name?: string;
-
-        /**
-         * Recipient phone (including extension).
-         */
-        phone?: string | null;
-
-        /**
-         * The tracking number for a physical product, obtained from the delivery service. If multiple tracking numbers were generated for this purchase, please separate them with commas.
-         */
-        tracking_number?: string | null;
-      }
-
-      interface Tax {
-        /**
-         * Surfaces if automatic tax computation is possible given the current customer location information.
-         */
-        automatic_tax: Tax.AutomaticTax;
-
-        /**
-         * A recent IP address of the customer used for tax reporting and tax location inference.
-         */
-        ip_address: string | null;
-
-        /**
-         * The customer's location as identified by Stripe Tax.
-         */
-        location: Tax.Location | null;
-      }
-
-      namespace Tax {
-        type AutomaticTax =
-          | 'failed'
-          | 'not_collecting'
-          | 'supported'
-          | 'unrecognized_location';
-
-        interface Location {
-          /**
-           * The customer's country as identified by Stripe Tax.
-           */
-          country: string;
-
-          /**
-           * The data source used to infer the customer's location.
-           */
-          source: Location.Source;
-
-          /**
-           * The customer's state, county, province, or region as identified by Stripe Tax.
-           */
-          state: string | null;
-        }
-
-        namespace Location {
-          type Source =
-            | 'billing_address'
-            | 'ip_address'
-            | 'payment_method'
-            | 'shipping_destination';
-        }
-      }
-
-      type TaxExempt = 'exempt' | 'none' | 'reverse';
-    }
-
-    /**
+    export /**
      * The DeletedCustomer object.
      */
     interface DeletedCustomer {
@@ -292,7 +292,169 @@ declare module 'stripe' {
       deleted: true;
     }
 
-    interface CustomerCreateParams {
+    namespace CustomerCreateParams {
+      export interface CashBalance {
+        /**
+         * Settings controlling the behavior of the customer's cash balance,
+         * such as reconciliation of funds received.
+         */
+        settings?: CashBalance.Settings;
+      }
+
+      export interface InvoiceSettings {
+        /**
+         * Default custom fields to be displayed on invoices for this customer. When updating, pass an empty string to remove previously-defined fields.
+         */
+        custom_fields?: Stripe.Emptyable<Array<InvoiceSettings.CustomField>>;
+
+        /**
+         * ID of a payment method that's attached to the customer, to be used as the customer's default payment method for subscriptions and invoices.
+         */
+        default_payment_method?: string;
+
+        /**
+         * Default footer to be displayed on invoices for this customer.
+         */
+        footer?: string;
+
+        /**
+         * Default options for invoice PDF rendering for this customer.
+         */
+        rendering_options?: Stripe.Emptyable<InvoiceSettings.RenderingOptions>;
+      }
+
+      export interface Shipping {
+        /**
+         * Customer shipping address.
+         */
+        address: Stripe.AddressParam;
+
+        /**
+         * Customer name.
+         */
+        name: string;
+
+        /**
+         * Customer phone (including extension).
+         */
+        phone?: string;
+      }
+
+      export interface Tax {
+        /**
+         * A recent IP address of the customer used for tax reporting and tax location inference. Stripe recommends updating the IP address when a new PaymentMethod is attached or the address field on the customer is updated. We recommend against updating this field more frequently since it could result in unexpected tax location/reporting outcomes.
+         */
+        ip_address?: Stripe.Emptyable<string>;
+      }
+
+      export type TaxExempt = 'exempt' | 'none' | 'reverse';
+
+      export interface TaxIdDatum {
+        /**
+         * Type of the tax ID, one of `ae_trn`, `au_abn`, `au_arn`, `bg_uic`, `br_cnpj`, `br_cpf`, `ca_bn`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `ca_qst`, `ch_vat`, `cl_tin`, `es_cif`, `eu_oss_vat`, `eu_vat`, `gb_vat`, `ge_vat`, `hk_br`, `hu_tin`, `id_npwp`, `il_vat`, `in_gst`, `is_vat`, `jp_cn`, `jp_rn`, `kr_brn`, `li_uid`, `mx_rfc`, `my_frp`, `my_itn`, `my_sst`, `no_vat`, `nz_gst`, `ru_inn`, `ru_kpp`, `sa_vat`, `sg_gst`, `sg_uen`, `si_tin`, `th_vat`, `tw_vat`, `ua_vat`, `us_ein`, or `za_vat`
+         */
+        type: TaxIdDatum.Type;
+
+        /**
+         * Value of the tax ID.
+         */
+        value: string;
+      }
+
+      namespace CashBalance {
+        export interface Settings {
+          /**
+           * Controls how funds transferred by the customer are applied to payment intents and invoices. Valid options are `automatic` or `manual`. For more information about these reconciliation modes, see [Reconciliation](https://stripe.com/docs/payments/customer-balance/reconciliation).
+           */
+          reconciliation_mode?: Settings.ReconciliationMode;
+        }
+
+        namespace Settings {
+          export type ReconciliationMode = 'automatic' | 'manual';
+        }
+      }
+
+      namespace InvoiceSettings {
+        export interface CustomField {
+          /**
+           * The name of the custom field. This may be up to 30 characters.
+           */
+          name: string;
+
+          /**
+           * The value of the custom field. This may be up to 30 characters.
+           */
+          value: string;
+        }
+
+        export interface RenderingOptions {
+          /**
+           * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs. One of `exclude_tax` or `include_inclusive_tax`. `include_inclusive_tax` will include inclusive tax (and exclude exclusive tax) in invoice PDF amounts. `exclude_tax` will exclude all tax (inclusive and exclusive alike) from invoice PDF amounts.
+           */
+          amount_tax_display?: Stripe.Emptyable<
+            RenderingOptions.AmountTaxDisplay
+          >;
+        }
+
+        namespace RenderingOptions {
+          export type AmountTaxDisplay =
+            | 'exclude_tax'
+            | 'include_inclusive_tax';
+        }
+      }
+
+      namespace TaxIdDatum {
+        export type Type =
+          | 'ae_trn'
+          | 'au_abn'
+          | 'au_arn'
+          | 'bg_uic'
+          | 'br_cnpj'
+          | 'br_cpf'
+          | 'ca_bn'
+          | 'ca_gst_hst'
+          | 'ca_pst_bc'
+          | 'ca_pst_mb'
+          | 'ca_pst_sk'
+          | 'ca_qst'
+          | 'ch_vat'
+          | 'cl_tin'
+          | 'es_cif'
+          | 'eu_oss_vat'
+          | 'eu_vat'
+          | 'gb_vat'
+          | 'ge_vat'
+          | 'hk_br'
+          | 'hu_tin'
+          | 'id_npwp'
+          | 'il_vat'
+          | 'in_gst'
+          | 'is_vat'
+          | 'jp_cn'
+          | 'jp_rn'
+          | 'kr_brn'
+          | 'li_uid'
+          | 'mx_rfc'
+          | 'my_frp'
+          | 'my_itn'
+          | 'my_sst'
+          | 'no_vat'
+          | 'nz_gst'
+          | 'ru_inn'
+          | 'ru_kpp'
+          | 'sa_vat'
+          | 'sg_gst'
+          | 'sg_uen'
+          | 'si_tin'
+          | 'th_vat'
+          | 'tw_vat'
+          | 'ua_vat'
+          | 'us_ein'
+          | 'za_vat';
+      }
+    }
+
+    export interface CustomerCreateParams {
       /**
        * The customer's address.
        */
@@ -397,8 +559,15 @@ declare module 'stripe' {
       validate?: boolean;
     }
 
-    namespace CustomerCreateParams {
-      interface CashBalance {
+    export interface CustomerRetrieveParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+    }
+
+    namespace CustomerUpdateParams {
+      export interface CashBalance {
         /**
          * Settings controlling the behavior of the customer's cash balance,
          * such as reconciliation of funds received.
@@ -406,20 +575,7 @@ declare module 'stripe' {
         settings?: CashBalance.Settings;
       }
 
-      namespace CashBalance {
-        interface Settings {
-          /**
-           * Controls how funds transferred by the customer are applied to payment intents and invoices. Valid options are `automatic` or `manual`. For more information about these reconciliation modes, see [Reconciliation](https://stripe.com/docs/payments/customer-balance/reconciliation).
-           */
-          reconciliation_mode?: Settings.ReconciliationMode;
-        }
-
-        namespace Settings {
-          type ReconciliationMode = 'automatic' | 'manual';
-        }
-      }
-
-      interface InvoiceSettings {
+      export interface InvoiceSettings {
         /**
          * Default custom fields to be displayed on invoices for this customer. When updating, pass an empty string to remove previously-defined fields.
          */
@@ -441,34 +597,7 @@ declare module 'stripe' {
         rendering_options?: Stripe.Emptyable<InvoiceSettings.RenderingOptions>;
       }
 
-      namespace InvoiceSettings {
-        interface CustomField {
-          /**
-           * The name of the custom field. This may be up to 30 characters.
-           */
-          name: string;
-
-          /**
-           * The value of the custom field. This may be up to 30 characters.
-           */
-          value: string;
-        }
-
-        interface RenderingOptions {
-          /**
-           * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs. One of `exclude_tax` or `include_inclusive_tax`. `include_inclusive_tax` will include inclusive tax (and exclude exclusive tax) in invoice PDF amounts. `exclude_tax` will exclude all tax (inclusive and exclusive alike) from invoice PDF amounts.
-           */
-          amount_tax_display?: Stripe.Emptyable<
-            RenderingOptions.AmountTaxDisplay
-          >;
-        }
-
-        namespace RenderingOptions {
-          type AmountTaxDisplay = 'exclude_tax' | 'include_inclusive_tax';
-        }
-      }
-
-      interface Shipping {
+      export interface Shipping {
         /**
          * Customer shipping address.
          */
@@ -485,86 +614,59 @@ declare module 'stripe' {
         phone?: string;
       }
 
-      interface Tax {
+      export interface Tax {
         /**
          * A recent IP address of the customer used for tax reporting and tax location inference. Stripe recommends updating the IP address when a new PaymentMethod is attached or the address field on the customer is updated. We recommend against updating this field more frequently since it could result in unexpected tax location/reporting outcomes.
          */
         ip_address?: Stripe.Emptyable<string>;
       }
 
-      type TaxExempt = 'exempt' | 'none' | 'reverse';
+      export type TaxExempt = 'exempt' | 'none' | 'reverse';
 
-      interface TaxIdDatum {
-        /**
-         * Type of the tax ID, one of `ae_trn`, `au_abn`, `au_arn`, `bg_uic`, `br_cnpj`, `br_cpf`, `ca_bn`, `ca_gst_hst`, `ca_pst_bc`, `ca_pst_mb`, `ca_pst_sk`, `ca_qst`, `ch_vat`, `cl_tin`, `es_cif`, `eu_oss_vat`, `eu_vat`, `gb_vat`, `ge_vat`, `hk_br`, `hu_tin`, `id_npwp`, `il_vat`, `in_gst`, `is_vat`, `jp_cn`, `jp_rn`, `kr_brn`, `li_uid`, `mx_rfc`, `my_frp`, `my_itn`, `my_sst`, `no_vat`, `nz_gst`, `ru_inn`, `ru_kpp`, `sa_vat`, `sg_gst`, `sg_uen`, `si_tin`, `th_vat`, `tw_vat`, `ua_vat`, `us_ein`, or `za_vat`
-         */
-        type: TaxIdDatum.Type;
+      namespace CashBalance {
+        export interface Settings {
+          /**
+           * Controls how funds transferred by the customer are applied to payment intents and invoices. Valid options are `automatic` or `manual`. For more information about these reconciliation modes, see [Reconciliation](https://stripe.com/docs/payments/customer-balance/reconciliation).
+           */
+          reconciliation_mode?: Settings.ReconciliationMode;
+        }
 
-        /**
-         * Value of the tax ID.
-         */
-        value: string;
+        namespace Settings {
+          export type ReconciliationMode = 'automatic' | 'manual';
+        }
       }
 
-      namespace TaxIdDatum {
-        type Type =
-          | 'ae_trn'
-          | 'au_abn'
-          | 'au_arn'
-          | 'bg_uic'
-          | 'br_cnpj'
-          | 'br_cpf'
-          | 'ca_bn'
-          | 'ca_gst_hst'
-          | 'ca_pst_bc'
-          | 'ca_pst_mb'
-          | 'ca_pst_sk'
-          | 'ca_qst'
-          | 'ch_vat'
-          | 'cl_tin'
-          | 'es_cif'
-          | 'eu_oss_vat'
-          | 'eu_vat'
-          | 'gb_vat'
-          | 'ge_vat'
-          | 'hk_br'
-          | 'hu_tin'
-          | 'id_npwp'
-          | 'il_vat'
-          | 'in_gst'
-          | 'is_vat'
-          | 'jp_cn'
-          | 'jp_rn'
-          | 'kr_brn'
-          | 'li_uid'
-          | 'mx_rfc'
-          | 'my_frp'
-          | 'my_itn'
-          | 'my_sst'
-          | 'no_vat'
-          | 'nz_gst'
-          | 'ru_inn'
-          | 'ru_kpp'
-          | 'sa_vat'
-          | 'sg_gst'
-          | 'sg_uen'
-          | 'si_tin'
-          | 'th_vat'
-          | 'tw_vat'
-          | 'ua_vat'
-          | 'us_ein'
-          | 'za_vat';
+      namespace InvoiceSettings {
+        export interface CustomField {
+          /**
+           * The name of the custom field. This may be up to 30 characters.
+           */
+          name: string;
+
+          /**
+           * The value of the custom field. This may be up to 30 characters.
+           */
+          value: string;
+        }
+
+        export interface RenderingOptions {
+          /**
+           * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs. One of `exclude_tax` or `include_inclusive_tax`. `include_inclusive_tax` will include inclusive tax (and exclude exclusive tax) in invoice PDF amounts. `exclude_tax` will exclude all tax (inclusive and exclusive alike) from invoice PDF amounts.
+           */
+          amount_tax_display?: Stripe.Emptyable<
+            RenderingOptions.AmountTaxDisplay
+          >;
+        }
+
+        namespace RenderingOptions {
+          export type AmountTaxDisplay =
+            | 'exclude_tax'
+            | 'include_inclusive_tax';
+        }
       }
     }
 
-    interface CustomerRetrieveParams {
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-    }
-
-    interface CustomerUpdateParams {
+    export interface CustomerUpdateParams {
       /**
        * The customer's address.
        */
@@ -666,105 +768,7 @@ declare module 'stripe' {
       validate?: boolean;
     }
 
-    namespace CustomerUpdateParams {
-      interface CashBalance {
-        /**
-         * Settings controlling the behavior of the customer's cash balance,
-         * such as reconciliation of funds received.
-         */
-        settings?: CashBalance.Settings;
-      }
-
-      namespace CashBalance {
-        interface Settings {
-          /**
-           * Controls how funds transferred by the customer are applied to payment intents and invoices. Valid options are `automatic` or `manual`. For more information about these reconciliation modes, see [Reconciliation](https://stripe.com/docs/payments/customer-balance/reconciliation).
-           */
-          reconciliation_mode?: Settings.ReconciliationMode;
-        }
-
-        namespace Settings {
-          type ReconciliationMode = 'automatic' | 'manual';
-        }
-      }
-
-      interface InvoiceSettings {
-        /**
-         * Default custom fields to be displayed on invoices for this customer. When updating, pass an empty string to remove previously-defined fields.
-         */
-        custom_fields?: Stripe.Emptyable<Array<InvoiceSettings.CustomField>>;
-
-        /**
-         * ID of a payment method that's attached to the customer, to be used as the customer's default payment method for subscriptions and invoices.
-         */
-        default_payment_method?: string;
-
-        /**
-         * Default footer to be displayed on invoices for this customer.
-         */
-        footer?: string;
-
-        /**
-         * Default options for invoice PDF rendering for this customer.
-         */
-        rendering_options?: Stripe.Emptyable<InvoiceSettings.RenderingOptions>;
-      }
-
-      namespace InvoiceSettings {
-        interface CustomField {
-          /**
-           * The name of the custom field. This may be up to 30 characters.
-           */
-          name: string;
-
-          /**
-           * The value of the custom field. This may be up to 30 characters.
-           */
-          value: string;
-        }
-
-        interface RenderingOptions {
-          /**
-           * How line-item prices and amounts will be displayed with respect to tax on invoice PDFs. One of `exclude_tax` or `include_inclusive_tax`. `include_inclusive_tax` will include inclusive tax (and exclude exclusive tax) in invoice PDF amounts. `exclude_tax` will exclude all tax (inclusive and exclusive alike) from invoice PDF amounts.
-           */
-          amount_tax_display?: Stripe.Emptyable<
-            RenderingOptions.AmountTaxDisplay
-          >;
-        }
-
-        namespace RenderingOptions {
-          type AmountTaxDisplay = 'exclude_tax' | 'include_inclusive_tax';
-        }
-      }
-
-      interface Shipping {
-        /**
-         * Customer shipping address.
-         */
-        address: Stripe.AddressParam;
-
-        /**
-         * Customer name.
-         */
-        name: string;
-
-        /**
-         * Customer phone (including extension).
-         */
-        phone?: string;
-      }
-
-      interface Tax {
-        /**
-         * A recent IP address of the customer used for tax reporting and tax location inference. Stripe recommends updating the IP address when a new PaymentMethod is attached or the address field on the customer is updated. We recommend against updating this field more frequently since it could result in unexpected tax location/reporting outcomes.
-         */
-        ip_address?: Stripe.Emptyable<string>;
-      }
-
-      type TaxExempt = 'exempt' | 'none' | 'reverse';
-    }
-
-    interface CustomerListParams extends PaginationParams {
+    export interface CustomerListParams extends PaginationParams {
       created?: Stripe.RangeQueryParam | number;
 
       /**
@@ -783,9 +787,51 @@ declare module 'stripe' {
       test_clock?: string;
     }
 
-    interface CustomerDeleteParams {}
+    export interface CustomerDeleteParams {}
 
-    interface CustomerCreateFundingInstructionsParams {
+    namespace CustomerCreateFundingInstructionsParams {
+      export interface BankTransfer {
+        /**
+         * Configuration for eu_bank_transfer funding type.
+         */
+        eu_bank_transfer?: BankTransfer.EuBankTransfer;
+
+        /**
+         * List of address types that should be returned in the financial_addresses response. If not specified, all valid types will be returned.
+         *
+         * Permitted values include: `sort_code`, `zengin`, `iban`, or `spei`.
+         */
+        requested_address_types?: Array<BankTransfer.RequestedAddressType>;
+
+        /**
+         * The type of the `bank_transfer`
+         */
+        type: BankTransfer.Type;
+      }
+
+      namespace BankTransfer {
+        export interface EuBankTransfer {
+          /**
+           * The desired country code of the bank account information. Permitted values include: `DE`, `ES`, `FR`, `IE`, or `NL`.
+           */
+          country: string;
+        }
+
+        export type RequestedAddressType =
+          | 'iban'
+          | 'sort_code'
+          | 'spei'
+          | 'zengin';
+
+        export type Type =
+          | 'eu_bank_transfer'
+          | 'gb_bank_transfer'
+          | 'jp_bank_transfer'
+          | 'mx_bank_transfer';
+      }
+    }
+
+    export interface CustomerCreateFundingInstructionsParams {
       /**
        * Additional parameters for `bank_transfer` funding types
        */
@@ -807,60 +853,10 @@ declare module 'stripe' {
       expand?: Array<string>;
     }
 
-    namespace CustomerCreateFundingInstructionsParams {
-      interface BankTransfer {
-        /**
-         * Configuration for eu_bank_transfer funding type.
-         */
-        eu_bank_transfer?: BankTransfer.EuBankTransfer;
-
-        /**
-         * List of address types that should be returned in the financial_addresses response. If not specified, all valid types will be returned.
-         *
-         * Permitted values include: `sort_code`, `zengin`, `iban`, or `spei`.
-         */
-        requested_address_types?: Array<BankTransfer.RequestedAddressType>;
-
-        /**
-         * The type of the `bank_transfer`
-         */
-        type: BankTransfer.Type;
-      }
-
-      namespace BankTransfer {
-        interface EuBankTransfer {
-          /**
-           * The desired country code of the bank account information. Permitted values include: `DE`, `ES`, `FR`, `IE`, or `NL`.
-           */
-          country: string;
-        }
-
-        type RequestedAddressType = 'iban' | 'sort_code' | 'spei' | 'zengin';
-
-        type Type =
-          | 'eu_bank_transfer'
-          | 'gb_bank_transfer'
-          | 'jp_bank_transfer'
-          | 'mx_bank_transfer';
-      }
-    }
-
-    interface CustomerDeleteDiscountParams {}
-
-    interface CustomerListPaymentMethodsParams extends PaginationParams {
-      /**
-       * A required filter on the list, based on the object `type` field.
-       */
-      type: CustomerListPaymentMethodsParams.Type;
-
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-    }
+    export interface CustomerDeleteDiscountParams {}
 
     namespace CustomerListPaymentMethodsParams {
-      type Type =
+      export type Type =
         | 'acss_debit'
         | 'affirm'
         | 'afterpay_clearpay'
@@ -892,14 +888,26 @@ declare module 'stripe' {
         | 'wechat_pay';
     }
 
-    interface CustomerRetrievePaymentMethodParams {
+    export interface CustomerListPaymentMethodsParams extends PaginationParams {
+      /**
+       * A required filter on the list, based on the object `type` field.
+       */
+      type: CustomerListPaymentMethodsParams.Type;
+
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface CustomerSearchParams {
+    export interface CustomerRetrievePaymentMethodParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+    }
+
+    export interface CustomerSearchParams {
       /**
        * The search query string. See [search query language](https://stripe.com/docs/search#search-query-language) and the list of supported [query fields for customers](https://stripe.com/docs/search#query-fields-for-customers).
        */

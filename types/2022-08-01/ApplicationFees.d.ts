@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    export /**
      * The ApplicationFee object.
      */
     interface ApplicationFee {
@@ -77,14 +77,14 @@ declare module 'stripe' {
       refunds: ApiList<Stripe.FeeRefund>;
     }
 
-    interface ApplicationFeeRetrieveParams {
+    export interface ApplicationFeeRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface ApplicationFeeListParams extends PaginationParams {
+    export interface ApplicationFeeListParams extends PaginationParams {
       /**
        * Only return application fees for the charge specified by this charge ID.
        */

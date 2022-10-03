@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    export /**
      * The ApplePayDomain object.
      */
     interface ApplePayDomain {
@@ -31,7 +31,7 @@ declare module 'stripe' {
       livemode: boolean;
     }
 
-    /**
+    export /**
      * The DeletedApplePayDomain object.
      */
     interface DeletedApplePayDomain {
@@ -51,7 +51,7 @@ declare module 'stripe' {
       deleted: true;
     }
 
-    interface ApplePayDomainCreateParams {
+    export interface ApplePayDomainCreateParams {
       domain_name: string;
 
       /**
@@ -60,14 +60,14 @@ declare module 'stripe' {
       expand?: Array<string>;
     }
 
-    interface ApplePayDomainRetrieveParams {
+    export interface ApplePayDomainRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface ApplePayDomainListParams extends PaginationParams {
+    export interface ApplePayDomainListParams extends PaginationParams {
       domain_name?: string;
 
       /**
@@ -76,7 +76,7 @@ declare module 'stripe' {
       expand?: Array<string>;
     }
 
-    interface ApplePayDomainDeleteParams {}
+    export interface ApplePayDomainDeleteParams {}
 
     class ApplePayDomainsResource {
       /**

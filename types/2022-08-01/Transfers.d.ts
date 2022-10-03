@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    export /**
      * A `Transfer` object is created when you move funds between Stripe accounts as
      * part of Connect.
      *
@@ -101,7 +101,11 @@ declare module 'stripe' {
       transfer_group: string | null;
     }
 
-    interface TransferCreateParams {
+    namespace TransferCreateParams {
+      export type SourceType = 'bank_account' | 'card' | 'fpx';
+    }
+
+    export interface TransferCreateParams {
       /**
        * 3-letter [ISO code for currency](https://stripe.com/docs/payouts).
        */
@@ -148,18 +152,14 @@ declare module 'stripe' {
       transfer_group?: string;
     }
 
-    namespace TransferCreateParams {
-      type SourceType = 'bank_account' | 'card' | 'fpx';
-    }
-
-    interface TransferRetrieveParams {
+    export interface TransferRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface TransferUpdateParams {
+    export interface TransferUpdateParams {
       /**
        * An arbitrary string attached to the object. Often useful for displaying to users.
        */
@@ -176,7 +176,7 @@ declare module 'stripe' {
       metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
     }
 
-    interface TransferListParams extends PaginationParams {
+    export interface TransferListParams extends PaginationParams {
       created?: Stripe.RangeQueryParam | number;
 
       /**

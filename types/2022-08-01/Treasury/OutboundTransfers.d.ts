@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Treasury {
-      /**
+      export /**
        * Use OutboundTransfers to transfer funds from a [FinancialAccount](https://stripe.com/docs/api#financial_accounts) to a PaymentMethod belonging to the same entity. To send funds to a different party, use [OutboundPayments](https://stripe.com/docs/api#outbound_payments) instead. You can send funds over ACH rails or through a domestic wire transfer to a user's own external bank account.
        *
        * Simulate OutboundTransfer state changes with the `/v1/test_helpers/treasury/outbound_transfers` endpoints. These methods can only be called on test mode objects.
@@ -100,7 +100,7 @@ declare module 'stripe' {
       }
 
       namespace OutboundTransfer {
-        interface DestinationPaymentMethodDetails {
+        export interface DestinationPaymentMethodDetails {
           billing_details: DestinationPaymentMethodDetails.BillingDetails;
 
           /**
@@ -111,8 +111,49 @@ declare module 'stripe' {
           us_bank_account?: DestinationPaymentMethodDetails.UsBankAccount;
         }
 
+        export interface ReturnedDetails {
+          /**
+           * Reason for the return.
+           */
+          code: ReturnedDetails.Code;
+
+          /**
+           * The Transaction associated with this object.
+           */
+          transaction: string | Stripe.Treasury.Transaction;
+        }
+
+        export type Status =
+          | 'canceled'
+          | 'failed'
+          | 'posted'
+          | 'processing'
+          | 'returned';
+
+        export interface StatusTransitions {
+          /**
+           * Timestamp describing when an OutboundTransfer changed status to `canceled`
+           */
+          canceled_at: number | null;
+
+          /**
+           * Timestamp describing when an OutboundTransfer changed status to `failed`
+           */
+          failed_at: number | null;
+
+          /**
+           * Timestamp describing when an OutboundTransfer changed status to `posted`
+           */
+          posted_at: number | null;
+
+          /**
+           * Timestamp describing when an OutboundTransfer changed status to `returned`
+           */
+          returned_at: number | null;
+        }
+
         namespace DestinationPaymentMethodDetails {
-          interface BillingDetails {
+          export interface BillingDetails {
             address: Stripe.Address;
 
             /**
@@ -126,7 +167,7 @@ declare module 'stripe' {
             name: string | null;
           }
 
-          interface UsBankAccount {
+          export interface UsBankAccount {
             /**
              * Account holder type: individual or company.
              */
@@ -164,28 +205,16 @@ declare module 'stripe' {
           }
 
           namespace UsBankAccount {
-            type AccountHolderType = 'company' | 'individual';
+            export type AccountHolderType = 'company' | 'individual';
 
-            type AccountType = 'checking' | 'savings';
+            export type AccountType = 'checking' | 'savings';
 
-            type Network = 'ach' | 'us_domestic_wire';
+            export type Network = 'ach' | 'us_domestic_wire';
           }
         }
 
-        interface ReturnedDetails {
-          /**
-           * Reason for the return.
-           */
-          code: ReturnedDetails.Code;
-
-          /**
-           * The Transaction associated with this object.
-           */
-          transaction: string | Stripe.Treasury.Transaction;
-        }
-
         namespace ReturnedDetails {
-          type Code =
+          export type Code =
             | 'account_closed'
             | 'account_frozen'
             | 'bank_account_restricted'
@@ -197,38 +226,9 @@ declare module 'stripe' {
             | 'no_account'
             | 'other';
         }
-
-        type Status =
-          | 'canceled'
-          | 'failed'
-          | 'posted'
-          | 'processing'
-          | 'returned';
-
-        interface StatusTransitions {
-          /**
-           * Timestamp describing when an OutboundTransfer changed status to `canceled`
-           */
-          canceled_at: number | null;
-
-          /**
-           * Timestamp describing when an OutboundTransfer changed status to `failed`
-           */
-          failed_at: number | null;
-
-          /**
-           * Timestamp describing when an OutboundTransfer changed status to `posted`
-           */
-          posted_at: number | null;
-
-          /**
-           * Timestamp describing when an OutboundTransfer changed status to `returned`
-           */
-          returned_at: number | null;
-        }
       }
 
-      interface OutboundTransferCreateParams {
+      export interface OutboundTransferCreateParams {
         /**
          * Amount (in cents) to be transferred.
          */
@@ -276,7 +276,7 @@ declare module 'stripe' {
       }
 
       namespace OutboundTransferCreateParams {
-        interface DestinationPaymentMethodOptions {
+        export interface DestinationPaymentMethodOptions {
           /**
            * Optional fields for `us_bank_account`.
            */
@@ -286,7 +286,7 @@ declare module 'stripe' {
         }
 
         namespace DestinationPaymentMethodOptions {
-          interface UsBankAccount {
+          export interface UsBankAccount {
             /**
              * Designate the OutboundTransfer as using a US bank account network configuration.
              */
@@ -294,19 +294,19 @@ declare module 'stripe' {
           }
 
           namespace UsBankAccount {
-            type Network = 'ach' | 'us_domestic_wire';
+            export type Network = 'ach' | 'us_domestic_wire';
           }
         }
       }
 
-      interface OutboundTransferRetrieveParams {
+      export interface OutboundTransferRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface OutboundTransferListParams extends PaginationParams {
+      export interface OutboundTransferListParams extends PaginationParams {
         /**
          * Returns objects associated with this FinancialAccount.
          */
@@ -324,7 +324,7 @@ declare module 'stripe' {
       }
 
       namespace OutboundTransferListParams {
-        type Status =
+        export type Status =
           | 'canceled'
           | 'failed'
           | 'posted'
@@ -332,7 +332,7 @@ declare module 'stripe' {
           | 'returned';
       }
 
-      interface OutboundTransferCancelParams {
+      export interface OutboundTransferCancelParams {
         /**
          * Specifies which fields in the response should be expanded.
          */

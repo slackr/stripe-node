@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Terminal {
-      /**
+      export /**
        * A Location represents a grouping of readers.
        *
        * Related guide: [Fleet Management](https://stripe.com/docs/terminal/fleet/locations).
@@ -44,7 +44,7 @@ declare module 'stripe' {
         metadata: Stripe.Metadata;
       }
 
-      /**
+      export /**
        * The DeletedLocation object.
        */
       interface DeletedLocation {
@@ -64,7 +64,7 @@ declare module 'stripe' {
         deleted: true;
       }
 
-      interface LocationCreateParams {
+      export interface LocationCreateParams {
         /**
          * The full address of the location.
          */
@@ -92,7 +92,7 @@ declare module 'stripe' {
       }
 
       namespace LocationCreateParams {
-        interface Address {
+        export interface Address {
           /**
            * City, district, suburb, town, or village.
            */
@@ -125,14 +125,14 @@ declare module 'stripe' {
         }
       }
 
-      interface LocationRetrieveParams {
+      export interface LocationRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface LocationUpdateParams {
+      export interface LocationUpdateParams {
         /**
          * The full address of the location.
          */
@@ -159,14 +159,14 @@ declare module 'stripe' {
         metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
       }
 
-      interface LocationListParams extends PaginationParams {
+      export interface LocationListParams extends PaginationParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface LocationDeleteParams {}
+      export interface LocationDeleteParams {}
 
       class LocationsResource {
         /**

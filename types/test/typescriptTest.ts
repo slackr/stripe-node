@@ -48,7 +48,7 @@ stripe.setHost('host', 'port', 'protocol');
   const params: Stripe.CustomerCreateParams = {
     description: 'test',
   };
-  const opts: Stripe.RequestOptions = {
+  const opts: Stripe.Stripe.RequestOptions = {
     apiVersion: '2022-08-01',
   };
   const customer: Stripe.Customer = await stripe.customers.create(params, opts);

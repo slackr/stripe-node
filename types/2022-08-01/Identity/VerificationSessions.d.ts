@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Identity {
-      /**
+      export /**
        * A VerificationSession guides you through the process of collecting and verifying the identities
        * of your users. It contains details about the type of verification, such as what [verification
        * check](https://stripe.com/docs/identity/verification-checks) to perform. Only create one VerificationSession for
@@ -89,7 +89,7 @@ declare module 'stripe' {
       }
 
       namespace VerificationSession {
-        interface LastError {
+        export interface LastError {
           /**
            * A short machine-readable string giving the reason for the verification or user-session failure.
            */
@@ -101,77 +101,28 @@ declare module 'stripe' {
           reason: string | null;
         }
 
-        namespace LastError {
-          type Code =
-            | 'abandoned'
-            | 'consent_declined'
-            | 'country_not_supported'
-            | 'device_not_supported'
-            | 'document_expired'
-            | 'document_type_not_supported'
-            | 'document_unverified_other'
-            | 'id_number_insufficient_document_data'
-            | 'id_number_mismatch'
-            | 'id_number_unverified_other'
-            | 'selfie_document_missing_photo'
-            | 'selfie_face_mismatch'
-            | 'selfie_manipulated'
-            | 'selfie_unverified_other'
-            | 'under_supported_age';
-        }
-
-        interface Options {
+        export interface Options {
           document?: Options.Document;
 
           id_number?: Options.IdNumber;
         }
 
-        namespace Options {
-          interface Document {
-            /**
-             * Array of strings of allowed identity document types. If the provided identity document isn't one of the allowed types, the verification check will fail with a document_type_not_allowed error code.
-             */
-            allowed_types?: Array<Document.AllowedType>;
-
-            /**
-             * Collect an ID number and perform an [ID number check](https://stripe.com/docs/identity/verification-checks?type=id-number) with the document's extracted name and date of birth.
-             */
-            require_id_number?: boolean;
-
-            /**
-             * Disable image uploads, identity document images have to be captured using the device's camera.
-             */
-            require_live_capture?: boolean;
-
-            /**
-             * Capture a face image and perform a [selfie check](https://stripe.com/docs/identity/verification-checks?type=selfie) comparing a photo ID and a picture of your user's face. [Learn more](https://stripe.com/docs/identity/selfie).
-             */
-            require_matching_selfie?: boolean;
-          }
-
-          namespace Document {
-            type AllowedType = 'driving_license' | 'id_card' | 'passport';
-          }
-
-          interface IdNumber {}
-        }
-
-        interface Redaction {
+        export interface Redaction {
           /**
            * Indicates whether this object and its related objects have been redacted or not.
            */
           status: Redaction.Status;
         }
 
-        namespace Redaction {
-          type Status = 'processing' | 'redacted';
-        }
+        export type Status =
+          | 'canceled'
+          | 'processing'
+          | 'requires_input'
+          | 'verified';
 
-        type Status = 'canceled' | 'processing' | 'requires_input' | 'verified';
+        export type Type = 'document' | 'id_number';
 
-        type Type = 'document' | 'id_number';
-
-        interface VerifiedOutputs {
+        export interface VerifiedOutputs {
           /**
            * The user's verified address.
            */
@@ -203,8 +154,64 @@ declare module 'stripe' {
           last_name: string | null;
         }
 
+        namespace LastError {
+          export type Code =
+            | 'abandoned'
+            | 'consent_declined'
+            | 'country_not_supported'
+            | 'device_not_supported'
+            | 'document_expired'
+            | 'document_type_not_supported'
+            | 'document_unverified_other'
+            | 'id_number_insufficient_document_data'
+            | 'id_number_mismatch'
+            | 'id_number_unverified_other'
+            | 'selfie_document_missing_photo'
+            | 'selfie_face_mismatch'
+            | 'selfie_manipulated'
+            | 'selfie_unverified_other'
+            | 'under_supported_age';
+        }
+
+        namespace Options {
+          export interface Document {
+            /**
+             * Array of strings of allowed identity document types. If the provided identity document isn't one of the allowed types, the verification check will fail with a document_type_not_allowed error code.
+             */
+            allowed_types?: Array<Document.AllowedType>;
+
+            /**
+             * Collect an ID number and perform an [ID number check](https://stripe.com/docs/identity/verification-checks?type=id-number) with the document's extracted name and date of birth.
+             */
+            require_id_number?: boolean;
+
+            /**
+             * Disable image uploads, identity document images have to be captured using the device's camera.
+             */
+            require_live_capture?: boolean;
+
+            /**
+             * Capture a face image and perform a [selfie check](https://stripe.com/docs/identity/verification-checks?type=selfie) comparing a photo ID and a picture of your user's face. [Learn more](https://stripe.com/docs/identity/selfie).
+             */
+            require_matching_selfie?: boolean;
+          }
+
+          export interface IdNumber {}
+
+          namespace Document {
+            export type AllowedType =
+              | 'driving_license'
+              | 'id_card'
+              | 'passport';
+          }
+        }
+
+        namespace Redaction {
+          export type Status = 'processing' | 'redacted';
+        }
+
         namespace VerifiedOutputs {
-          interface Dob {
+          export interface Dob {
             /**
              * Numerical day between 1 and 31.
              */
@@ -221,11 +228,11 @@ declare module 'stripe' {
             year: number | null;
           }
 
-          type IdNumberType = 'br_cpf' | 'sg_nric' | 'us_ssn';
+          export type IdNumberType = 'br_cpf' | 'sg_nric' | 'us_ssn';
         }
       }
 
-      interface VerificationSessionCreateParams {
+      export interface VerificationSessionCreateParams {
         /**
          * The type of [verification check](https://stripe.com/docs/identity/verification-checks) to be performed.
          */
@@ -253,7 +260,9 @@ declare module 'stripe' {
       }
 
       namespace VerificationSessionCreateParams {
-        interface Options {
+        export type Type = 'document' | 'id_number';
+
+        export interface Options {
           /**
            * Options that apply to the [document check](https://stripe.com/docs/identity/verification-checks?type=document).
            */
@@ -261,7 +270,7 @@ declare module 'stripe' {
         }
 
         namespace Options {
-          interface Document {
+          export interface Document {
             /**
              * Array of strings of allowed identity document types. If the provided identity document isn't one of the allowed types, the verification check will fail with a document_type_not_allowed error code.
              */
@@ -284,21 +293,22 @@ declare module 'stripe' {
           }
 
           namespace Document {
-            type AllowedType = 'driving_license' | 'id_card' | 'passport';
+            export type AllowedType =
+              | 'driving_license'
+              | 'id_card'
+              | 'passport';
           }
         }
-
-        type Type = 'document' | 'id_number';
       }
 
-      interface VerificationSessionRetrieveParams {
+      export interface VerificationSessionRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface VerificationSessionUpdateParams {
+      export interface VerificationSessionUpdateParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
@@ -321,15 +331,17 @@ declare module 'stripe' {
       }
 
       namespace VerificationSessionUpdateParams {
-        interface Options {
+        export interface Options {
           /**
            * Options that apply to the [document check](https://stripe.com/docs/identity/verification-checks?type=document).
            */
           document?: Stripe.Emptyable<Options.Document>;
         }
 
+        export type Type = 'document' | 'id_number';
+
         namespace Options {
-          interface Document {
+          export interface Document {
             /**
              * Array of strings of allowed identity document types. If the provided identity document isn't one of the allowed types, the verification check will fail with a document_type_not_allowed error code.
              */
@@ -352,14 +364,15 @@ declare module 'stripe' {
           }
 
           namespace Document {
-            type AllowedType = 'driving_license' | 'id_card' | 'passport';
+            export type AllowedType =
+              | 'driving_license'
+              | 'id_card'
+              | 'passport';
           }
         }
-
-        type Type = 'document' | 'id_number';
       }
 
-      interface VerificationSessionListParams extends PaginationParams {
+      export interface VerificationSessionListParams extends PaginationParams {
         created?: Stripe.RangeQueryParam | number;
 
         /**
@@ -374,17 +387,21 @@ declare module 'stripe' {
       }
 
       namespace VerificationSessionListParams {
-        type Status = 'canceled' | 'processing' | 'requires_input' | 'verified';
+        export type Status =
+          | 'canceled'
+          | 'processing'
+          | 'requires_input'
+          | 'verified';
       }
 
-      interface VerificationSessionCancelParams {
+      export interface VerificationSessionCancelParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface VerificationSessionRedactParams {
+      export interface VerificationSessionRedactParams {
         /**
          * Specifies which fields in the response should be expanded.
          */

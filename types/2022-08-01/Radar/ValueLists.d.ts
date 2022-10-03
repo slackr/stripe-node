@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Radar {
-      /**
+      export /**
        * Value lists allow you to group values together which can then be referenced in rules.
        *
        * Related guide: [Default Stripe Lists](https://stripe.com/docs/radar/lists#managing-list-items).
@@ -63,7 +63,7 @@ declare module 'stripe' {
       }
 
       namespace ValueList {
-        type ItemType =
+        export type ItemType =
           | 'card_bin'
           | 'card_fingerprint'
           | 'case_sensitive_string'
@@ -74,7 +74,7 @@ declare module 'stripe' {
           | 'string';
       }
 
-      /**
+      export /**
        * The DeletedValueList object.
        */
       interface DeletedValueList {
@@ -94,7 +94,7 @@ declare module 'stripe' {
         deleted: true;
       }
 
-      interface ValueListCreateParams {
+      export interface ValueListCreateParams {
         /**
          * The name of the value list for use in rules.
          */
@@ -122,7 +122,7 @@ declare module 'stripe' {
       }
 
       namespace ValueListCreateParams {
-        type ItemType =
+        export type ItemType =
           | 'card_bin'
           | 'card_fingerprint'
           | 'case_sensitive_string'
@@ -133,14 +133,14 @@ declare module 'stripe' {
           | 'string';
       }
 
-      interface ValueListRetrieveParams {
+      export interface ValueListRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface ValueListUpdateParams {
+      export interface ValueListUpdateParams {
         /**
          * The name of the value list for use in rules.
          */
@@ -162,7 +162,7 @@ declare module 'stripe' {
         name?: string;
       }
 
-      interface ValueListListParams extends PaginationParams {
+      export interface ValueListListParams extends PaginationParams {
         /**
          * The alias used to reference the value list when writing rules.
          */
@@ -181,7 +181,7 @@ declare module 'stripe' {
         expand?: Array<string>;
       }
 
-      interface ValueListDeleteParams {}
+      export interface ValueListDeleteParams {}
 
       class ValueListsResource {
         /**

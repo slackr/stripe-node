@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Treasury {
-      /**
+      export /**
        * You can reverse some [ReceivedDebits](https://stripe.com/docs/api#received_debits) depending on their network and source flow. Reversing a ReceivedDebit leads to the creation of a new object known as a DebitReversal.
        */
       interface DebitReversal {
@@ -81,18 +81,18 @@ declare module 'stripe' {
       }
 
       namespace DebitReversal {
-        interface LinkedFlows {
+        export interface LinkedFlows {
           /**
            * Set if there is an Issuing dispute associated with the DebitReversal.
            */
           issuing_dispute: string | null;
         }
 
-        type Network = 'ach' | 'card';
+        export type Network = 'ach' | 'card';
 
-        type Status = 'failed' | 'processing' | 'succeeded';
+        export type Status = 'failed' | 'processing' | 'succeeded';
 
-        interface StatusTransitions {
+        export interface StatusTransitions {
           /**
            * Timestamp describing when the DebitReversal changed status to `completed`.
            */
@@ -100,7 +100,7 @@ declare module 'stripe' {
         }
       }
 
-      interface DebitReversalCreateParams {
+      export interface DebitReversalCreateParams {
         /**
          * The ReceivedDebit to reverse.
          */
@@ -117,14 +117,14 @@ declare module 'stripe' {
         metadata?: Stripe.MetadataParam;
       }
 
-      interface DebitReversalRetrieveParams {
+      export interface DebitReversalRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface DebitReversalListParams extends PaginationParams {
+      export interface DebitReversalListParams extends PaginationParams {
         /**
          * Returns objects associated with this FinancialAccount.
          */
@@ -152,9 +152,9 @@ declare module 'stripe' {
       }
 
       namespace DebitReversalListParams {
-        type Resolution = 'lost' | 'won';
+        export type Resolution = 'lost' | 'won';
 
-        type Status = 'canceled' | 'completed' | 'processing';
+        export type Status = 'canceled' | 'completed' | 'processing';
       }
 
       class DebitReversalsResource {

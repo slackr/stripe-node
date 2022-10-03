@@ -2,49 +2,8 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
-     * This is an object representing a capability for a Stripe account.
-     *
-     * Related guide: [Account capabilities](https://stripe.com/docs/connect/account-capabilities).
-     */
-    interface Capability {
-      /**
-       * The identifier for the capability.
-       */
-      id: string;
-
-      /**
-       * String representing the object's type. Objects of the same type share the same value.
-       */
-      object: 'capability';
-
-      /**
-       * The account for which the capability enables functionality.
-       */
-      account: string | Stripe.Account;
-
-      future_requirements?: Capability.FutureRequirements;
-
-      /**
-       * Whether the capability has been requested.
-       */
-      requested: boolean;
-
-      /**
-       * Time at which the capability was requested. Measured in seconds since the Unix epoch.
-       */
-      requested_at: number | null;
-
-      requirements?: Capability.Requirements;
-
-      /**
-       * The status of the capability. Can be `active`, `inactive`, `pending`, or `unrequested`.
-       */
-      status: Capability.Status;
-    }
-
     namespace Capability {
-      interface FutureRequirements {
+      export interface FutureRequirements {
         /**
          * Fields that are due and can be satisfied by providing the corresponding alternative fields instead.
          */
@@ -86,88 +45,7 @@ declare module 'stripe' {
         pending_verification: Array<string>;
       }
 
-      namespace FutureRequirements {
-        interface Alternative {
-          /**
-           * Fields that can be provided to satisfy all fields in `original_fields_due`.
-           */
-          alternative_fields_due: Array<string>;
-
-          /**
-           * Fields that are due and can be satisfied by providing all fields in `alternative_fields_due`.
-           */
-          original_fields_due: Array<string>;
-        }
-
-        interface Error {
-          /**
-           * The code for the type of error.
-           */
-          code: Error.Code;
-
-          /**
-           * An informative message that indicates the error type and provides additional details about the error.
-           */
-          reason: string;
-
-          /**
-           * The specific user onboarding requirement field (in the requirements hash) that needs to be resolved.
-           */
-          requirement: string;
-        }
-
-        namespace Error {
-          type Code =
-            | 'invalid_address_city_state_postal_code'
-            | 'invalid_street_address'
-            | 'invalid_tos_acceptance'
-            | 'invalid_value_other'
-            | 'verification_document_address_mismatch'
-            | 'verification_document_address_missing'
-            | 'verification_document_corrupt'
-            | 'verification_document_country_not_supported'
-            | 'verification_document_dob_mismatch'
-            | 'verification_document_duplicate_type'
-            | 'verification_document_expired'
-            | 'verification_document_failed_copy'
-            | 'verification_document_failed_greyscale'
-            | 'verification_document_failed_other'
-            | 'verification_document_failed_test_mode'
-            | 'verification_document_fraudulent'
-            | 'verification_document_id_number_mismatch'
-            | 'verification_document_id_number_missing'
-            | 'verification_document_incomplete'
-            | 'verification_document_invalid'
-            | 'verification_document_issue_or_expiry_date_missing'
-            | 'verification_document_manipulated'
-            | 'verification_document_missing_back'
-            | 'verification_document_missing_front'
-            | 'verification_document_name_mismatch'
-            | 'verification_document_name_missing'
-            | 'verification_document_nationality_mismatch'
-            | 'verification_document_not_readable'
-            | 'verification_document_not_signed'
-            | 'verification_document_not_uploaded'
-            | 'verification_document_photo_mismatch'
-            | 'verification_document_too_large'
-            | 'verification_document_type_not_supported'
-            | 'verification_failed_address_match'
-            | 'verification_failed_business_iec_number'
-            | 'verification_failed_document_match'
-            | 'verification_failed_id_number_match'
-            | 'verification_failed_keyed_identity'
-            | 'verification_failed_keyed_match'
-            | 'verification_failed_name_match'
-            | 'verification_failed_other'
-            | 'verification_failed_tax_id_match'
-            | 'verification_failed_tax_id_not_issued'
-            | 'verification_missing_executives'
-            | 'verification_missing_owners'
-            | 'verification_requires_additional_memorandum_of_associations';
-        }
-      }
-
-      interface Requirements {
+      export interface Requirements {
         /**
          * Fields that are due and can be satisfied by providing the corresponding alternative fields instead.
          */
@@ -215,8 +93,15 @@ declare module 'stripe' {
         pending_verification: Array<string>;
       }
 
-      namespace Requirements {
-        interface Alternative {
+      export type Status =
+        | 'active'
+        | 'disabled'
+        | 'inactive'
+        | 'pending'
+        | 'unrequested';
+
+      namespace FutureRequirements {
+        export interface Alternative {
           /**
            * Fields that can be provided to satisfy all fields in `original_fields_due`.
            */
@@ -228,7 +113,7 @@ declare module 'stripe' {
           original_fields_due: Array<string>;
         }
 
-        interface Error {
+        export interface Error {
           /**
            * The code for the type of error.
            */
@@ -246,7 +131,7 @@ declare module 'stripe' {
         }
 
         namespace Error {
-          type Code =
+          export type Code =
             | 'invalid_address_city_state_postal_code'
             | 'invalid_street_address'
             | 'invalid_tos_acceptance'
@@ -296,22 +181,137 @@ declare module 'stripe' {
         }
       }
 
-      type Status =
-        | 'active'
-        | 'disabled'
-        | 'inactive'
-        | 'pending'
-        | 'unrequested';
+      namespace Requirements {
+        export interface Alternative {
+          /**
+           * Fields that can be provided to satisfy all fields in `original_fields_due`.
+           */
+          alternative_fields_due: Array<string>;
+
+          /**
+           * Fields that are due and can be satisfied by providing all fields in `alternative_fields_due`.
+           */
+          original_fields_due: Array<string>;
+        }
+
+        export interface Error {
+          /**
+           * The code for the type of error.
+           */
+          code: Error.Code;
+
+          /**
+           * An informative message that indicates the error type and provides additional details about the error.
+           */
+          reason: string;
+
+          /**
+           * The specific user onboarding requirement field (in the requirements hash) that needs to be resolved.
+           */
+          requirement: string;
+        }
+
+        namespace Error {
+          export type Code =
+            | 'invalid_address_city_state_postal_code'
+            | 'invalid_street_address'
+            | 'invalid_tos_acceptance'
+            | 'invalid_value_other'
+            | 'verification_document_address_mismatch'
+            | 'verification_document_address_missing'
+            | 'verification_document_corrupt'
+            | 'verification_document_country_not_supported'
+            | 'verification_document_dob_mismatch'
+            | 'verification_document_duplicate_type'
+            | 'verification_document_expired'
+            | 'verification_document_failed_copy'
+            | 'verification_document_failed_greyscale'
+            | 'verification_document_failed_other'
+            | 'verification_document_failed_test_mode'
+            | 'verification_document_fraudulent'
+            | 'verification_document_id_number_mismatch'
+            | 'verification_document_id_number_missing'
+            | 'verification_document_incomplete'
+            | 'verification_document_invalid'
+            | 'verification_document_issue_or_expiry_date_missing'
+            | 'verification_document_manipulated'
+            | 'verification_document_missing_back'
+            | 'verification_document_missing_front'
+            | 'verification_document_name_mismatch'
+            | 'verification_document_name_missing'
+            | 'verification_document_nationality_mismatch'
+            | 'verification_document_not_readable'
+            | 'verification_document_not_signed'
+            | 'verification_document_not_uploaded'
+            | 'verification_document_photo_mismatch'
+            | 'verification_document_too_large'
+            | 'verification_document_type_not_supported'
+            | 'verification_failed_address_match'
+            | 'verification_failed_business_iec_number'
+            | 'verification_failed_document_match'
+            | 'verification_failed_id_number_match'
+            | 'verification_failed_keyed_identity'
+            | 'verification_failed_keyed_match'
+            | 'verification_failed_name_match'
+            | 'verification_failed_other'
+            | 'verification_failed_tax_id_match'
+            | 'verification_failed_tax_id_not_issued'
+            | 'verification_missing_executives'
+            | 'verification_missing_owners'
+            | 'verification_requires_additional_memorandum_of_associations';
+        }
+      }
     }
 
-    interface CapabilityRetrieveParams {
+    export /**
+     * This is an object representing a capability for a Stripe account.
+     *
+     * Related guide: [Account capabilities](https://stripe.com/docs/connect/account-capabilities).
+     */
+    interface Capability {
+      /**
+       * The identifier for the capability.
+       */
+      id: string;
+
+      /**
+       * String representing the object's type. Objects of the same type share the same value.
+       */
+      object: 'capability';
+
+      /**
+       * The account for which the capability enables functionality.
+       */
+      account: string | Stripe.Account;
+
+      future_requirements?: Capability.FutureRequirements;
+
+      /**
+       * Whether the capability has been requested.
+       */
+      requested: boolean;
+
+      /**
+       * Time at which the capability was requested. Measured in seconds since the Unix epoch.
+       */
+      requested_at: number | null;
+
+      requirements?: Capability.Requirements;
+
+      /**
+       * The status of the capability. Can be `active`, `inactive`, `pending`, or `unrequested`.
+       */
+      status: Capability.Status;
+    }
+
+    export interface CapabilityRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface CapabilityUpdateParams {
+    export interface CapabilityUpdateParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
@@ -323,7 +323,7 @@ declare module 'stripe' {
       requested?: boolean;
     }
 
-    interface CapabilityListParams {
+    export interface CapabilityListParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

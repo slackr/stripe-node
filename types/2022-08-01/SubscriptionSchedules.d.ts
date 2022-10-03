@@ -2,7 +2,314 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace SubscriptionSchedule {
+      export interface CurrentPhase {
+        /**
+         * The end of this phase of the subscription schedule.
+         */
+        end_date: number;
+
+        /**
+         * The start of this phase of the subscription schedule.
+         */
+        start_date: number;
+      }
+
+      export interface DefaultSettings {
+        /**
+         * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the application owner's Stripe account during this phase of the schedule.
+         */
+        application_fee_percent: number | null;
+
+        automatic_tax?: DefaultSettings.AutomaticTax;
+
+        /**
+         * Possible values are `phase_start` or `automatic`. If `phase_start` then billing cycle anchor of the subscription is set to the start of the phase when entering the phase. If `automatic` then the billing cycle anchor is automatically modified as needed when entering the phase. For more information, see the billing cycle [documentation](https://stripe.com/docs/billing/subscriptions/billing-cycle).
+         */
+        billing_cycle_anchor: DefaultSettings.BillingCycleAnchor;
+
+        /**
+         * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period
+         */
+        billing_thresholds: DefaultSettings.BillingThresholds | null;
+
+        /**
+         * Either `charge_automatically`, or `send_invoice`. When charging automatically, Stripe will attempt to pay the underlying subscription at the end of each billing cycle using the default source attached to the customer. When sending an invoice, Stripe will email your customer an invoice with payment instructions.
+         */
+        collection_method: DefaultSettings.CollectionMethod | null;
+
+        /**
+         * ID of the default payment method for the subscription schedule. If not set, invoices will use the default payment method in the customer's invoice settings.
+         */
+        default_payment_method: string | Stripe.PaymentMethod | null;
+
+        /**
+         * Subscription description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription.
+         */
+        description: string | null;
+
+        /**
+         * The subscription schedule's default invoice settings.
+         */
+        invoice_settings: DefaultSettings.InvoiceSettings | null;
+
+        /**
+         * The account (if any) the associated subscription's payments will be attributed to for tax reporting, and where funds from each payment will be transferred to for each of the subscription's invoices.
+         */
+        transfer_data: DefaultSettings.TransferData | null;
+      }
+
+      export type EndBehavior = 'cancel' | 'none' | 'release' | 'renew';
+
+      export interface Phase {
+        /**
+         * A list of prices and quantities that will generate invoice items appended to the next invoice for this phase.
+         */
+        add_invoice_items: Array<Phase.AddInvoiceItem>;
+
+        /**
+         * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the application owner's Stripe account during this phase of the schedule.
+         */
+        application_fee_percent: number | null;
+
+        automatic_tax?: Phase.AutomaticTax;
+
+        /**
+         * Possible values are `phase_start` or `automatic`. If `phase_start` then billing cycle anchor of the subscription is set to the start of the phase when entering the phase. If `automatic` then the billing cycle anchor is automatically modified as needed when entering the phase. For more information, see the billing cycle [documentation](https://stripe.com/docs/billing/subscriptions/billing-cycle).
+         */
+        billing_cycle_anchor: Phase.BillingCycleAnchor | null;
+
+        /**
+         * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period
+         */
+        billing_thresholds: Phase.BillingThresholds | null;
+
+        /**
+         * Either `charge_automatically`, or `send_invoice`. When charging automatically, Stripe will attempt to pay the underlying subscription at the end of each billing cycle using the default source attached to the customer. When sending an invoice, Stripe will email your customer an invoice with payment instructions.
+         */
+        collection_method: Phase.CollectionMethod | null;
+
+        /**
+         * ID of the coupon to use during this phase of the subscription schedule.
+         */
+        coupon: string | Stripe.Coupon | Stripe.DeletedCoupon | null;
+
+        /**
+         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+         */
+        currency: string;
+
+        /**
+         * ID of the default payment method for the subscription schedule. It must belong to the customer associated with the subscription schedule. If not set, invoices will use the default payment method in the customer's invoice settings.
+         */
+        default_payment_method: string | Stripe.PaymentMethod | null;
+
+        /**
+         * The default tax rates to apply to the subscription during this phase of the subscription schedule.
+         */
+        default_tax_rates?: Array<Stripe.TaxRate> | null;
+
+        /**
+         * Subscription description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription.
+         */
+        description: string | null;
+
+        /**
+         * The end of this phase of the subscription schedule.
+         */
+        end_date: number;
+
+        /**
+         * The invoice settings applicable during this phase.
+         */
+        invoice_settings: Phase.InvoiceSettings | null;
+
+        /**
+         * Subscription items to configure the subscription to during this phase of the subscription schedule.
+         */
+        items: Array<Phase.Item>;
+
+        /**
+         * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to a phase. Metadata on a schedule's phase will update the underlying subscription's `metadata` when the phase is entered. Updating the underlying subscription's `metadata` directly will not affect the current phase's `metadata`.
+         */
+        metadata: Stripe.Metadata | null;
+
+        /**
+         * If the subscription schedule will prorate when transitioning to this phase. Possible values are `create_prorations` and `none`.
+         */
+        proration_behavior: Phase.ProrationBehavior;
+
+        /**
+         * The start of this phase of the subscription schedule.
+         */
+        start_date: number;
+
+        /**
+         * The account (if any) the associated subscription's payments will be attributed to for tax reporting, and where funds from each payment will be transferred to for each of the subscription's invoices.
+         */
+        transfer_data: Phase.TransferData | null;
+
+        /**
+         * When the trial ends within the phase.
+         */
+        trial_end: number | null;
+      }
+
+      export type Status =
+        | 'active'
+        | 'canceled'
+        | 'completed'
+        | 'not_started'
+        | 'released';
+
+      namespace DefaultSettings {
+        export interface AutomaticTax {
+          /**
+           * Whether Stripe automatically computes tax on invoices created during this phase.
+           */
+          enabled: boolean;
+        }
+
+        export type BillingCycleAnchor = 'automatic' | 'phase_start';
+
+        export interface BillingThresholds {
+          /**
+           * Monetary threshold that triggers the subscription to create an invoice
+           */
+          amount_gte: number | null;
+
+          /**
+           * Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged. This value may not be `true` if the subscription contains items with plans that have `aggregate_usage=last_ever`.
+           */
+          reset_billing_cycle_anchor: boolean | null;
+        }
+
+        export type CollectionMethod = 'charge_automatically' | 'send_invoice';
+
+        export interface InvoiceSettings {
+          /**
+           * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
+           */
+          days_until_due: number | null;
+        }
+
+        export interface TransferData {
+          /**
+           * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+           */
+          amount_percent: number | null;
+
+          /**
+           * The account where funds from the payment will be transferred to upon payment success.
+           */
+          destination: string | Stripe.Account;
+        }
+      }
+
+      namespace Phase {
+        export interface AddInvoiceItem {
+          /**
+           * ID of the price used to generate the invoice item.
+           */
+          price: string | Stripe.Price | Stripe.DeletedPrice;
+
+          /**
+           * The quantity of the invoice item.
+           */
+          quantity: number | null;
+
+          /**
+           * The tax rates which apply to the item. When set, the `default_tax_rates` do not apply to this item.
+           */
+          tax_rates?: Array<Stripe.TaxRate> | null;
+        }
+
+        export interface AutomaticTax {
+          /**
+           * Whether Stripe automatically computes tax on invoices created during this phase.
+           */
+          enabled: boolean;
+        }
+
+        export type BillingCycleAnchor = 'automatic' | 'phase_start';
+
+        export interface BillingThresholds {
+          /**
+           * Monetary threshold that triggers the subscription to create an invoice
+           */
+          amount_gte: number | null;
+
+          /**
+           * Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged. This value may not be `true` if the subscription contains items with plans that have `aggregate_usage=last_ever`.
+           */
+          reset_billing_cycle_anchor: boolean | null;
+        }
+
+        export type CollectionMethod = 'charge_automatically' | 'send_invoice';
+
+        export interface InvoiceSettings {
+          /**
+           * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
+           */
+          days_until_due: number | null;
+        }
+
+        export interface Item {
+          /**
+           * Define thresholds at which an invoice will be sent, and the related subscription advanced to a new billing period
+           */
+          billing_thresholds: Item.BillingThresholds | null;
+
+          /**
+           * ID of the plan to which the customer should be subscribed.
+           */
+          plan: string | Stripe.Plan | Stripe.DeletedPlan;
+
+          /**
+           * ID of the price to which the customer should be subscribed.
+           */
+          price: string | Stripe.Price | Stripe.DeletedPrice;
+
+          /**
+           * Quantity of the plan to which the customer should be subscribed.
+           */
+          quantity?: number;
+
+          /**
+           * The tax rates which apply to this `phase_item`. When set, the `default_tax_rates` on the phase do not apply to this `phase_item`.
+           */
+          tax_rates?: Array<Stripe.TaxRate> | null;
+        }
+
+        export type ProrationBehavior =
+          | 'always_invoice'
+          | 'create_prorations'
+          | 'none';
+
+        export interface TransferData {
+          /**
+           * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+           */
+          amount_percent: number | null;
+
+          /**
+           * The account where funds from the payment will be transferred to upon payment success.
+           */
+          destination: string | Stripe.Account;
+        }
+
+        namespace Item {
+          export interface BillingThresholds {
+            /**
+             * Usage threshold that triggers the subscription to create an invoice
+             */
+            usage_gte: number | null;
+          }
+        }
+      }
+    }
+
+    export /**
      * A subscription schedule allows you to create and manage the lifecycle of a subscription by predefining expected changes.
      *
      * Related guide: [Subscription Schedules](https://stripe.com/docs/billing/subscriptions/subscription-schedules).
@@ -100,357 +407,8 @@ declare module 'stripe' {
       test_clock: string | Stripe.TestHelpers.TestClock | null;
     }
 
-    namespace SubscriptionSchedule {
-      interface CurrentPhase {
-        /**
-         * The end of this phase of the subscription schedule.
-         */
-        end_date: number;
-
-        /**
-         * The start of this phase of the subscription schedule.
-         */
-        start_date: number;
-      }
-
-      interface DefaultSettings {
-        /**
-         * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the application owner's Stripe account during this phase of the schedule.
-         */
-        application_fee_percent: number | null;
-
-        automatic_tax?: DefaultSettings.AutomaticTax;
-
-        /**
-         * Possible values are `phase_start` or `automatic`. If `phase_start` then billing cycle anchor of the subscription is set to the start of the phase when entering the phase. If `automatic` then the billing cycle anchor is automatically modified as needed when entering the phase. For more information, see the billing cycle [documentation](https://stripe.com/docs/billing/subscriptions/billing-cycle).
-         */
-        billing_cycle_anchor: DefaultSettings.BillingCycleAnchor;
-
-        /**
-         * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period
-         */
-        billing_thresholds: DefaultSettings.BillingThresholds | null;
-
-        /**
-         * Either `charge_automatically`, or `send_invoice`. When charging automatically, Stripe will attempt to pay the underlying subscription at the end of each billing cycle using the default source attached to the customer. When sending an invoice, Stripe will email your customer an invoice with payment instructions.
-         */
-        collection_method: DefaultSettings.CollectionMethod | null;
-
-        /**
-         * ID of the default payment method for the subscription schedule. If not set, invoices will use the default payment method in the customer's invoice settings.
-         */
-        default_payment_method: string | Stripe.PaymentMethod | null;
-
-        /**
-         * Subscription description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription.
-         */
-        description: string | null;
-
-        /**
-         * The subscription schedule's default invoice settings.
-         */
-        invoice_settings: DefaultSettings.InvoiceSettings | null;
-
-        /**
-         * The account (if any) the associated subscription's payments will be attributed to for tax reporting, and where funds from each payment will be transferred to for each of the subscription's invoices.
-         */
-        transfer_data: DefaultSettings.TransferData | null;
-      }
-
-      namespace DefaultSettings {
-        interface AutomaticTax {
-          /**
-           * Whether Stripe automatically computes tax on invoices created during this phase.
-           */
-          enabled: boolean;
-        }
-
-        type BillingCycleAnchor = 'automatic' | 'phase_start';
-
-        interface BillingThresholds {
-          /**
-           * Monetary threshold that triggers the subscription to create an invoice
-           */
-          amount_gte: number | null;
-
-          /**
-           * Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged. This value may not be `true` if the subscription contains items with plans that have `aggregate_usage=last_ever`.
-           */
-          reset_billing_cycle_anchor: boolean | null;
-        }
-
-        type CollectionMethod = 'charge_automatically' | 'send_invoice';
-
-        interface InvoiceSettings {
-          /**
-           * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
-           */
-          days_until_due: number | null;
-        }
-
-        interface TransferData {
-          /**
-           * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
-           */
-          amount_percent: number | null;
-
-          /**
-           * The account where funds from the payment will be transferred to upon payment success.
-           */
-          destination: string | Stripe.Account;
-        }
-      }
-
-      type EndBehavior = 'cancel' | 'none' | 'release' | 'renew';
-
-      interface Phase {
-        /**
-         * A list of prices and quantities that will generate invoice items appended to the next invoice for this phase.
-         */
-        add_invoice_items: Array<Phase.AddInvoiceItem>;
-
-        /**
-         * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the application owner's Stripe account during this phase of the schedule.
-         */
-        application_fee_percent: number | null;
-
-        automatic_tax?: Phase.AutomaticTax;
-
-        /**
-         * Possible values are `phase_start` or `automatic`. If `phase_start` then billing cycle anchor of the subscription is set to the start of the phase when entering the phase. If `automatic` then the billing cycle anchor is automatically modified as needed when entering the phase. For more information, see the billing cycle [documentation](https://stripe.com/docs/billing/subscriptions/billing-cycle).
-         */
-        billing_cycle_anchor: Phase.BillingCycleAnchor | null;
-
-        /**
-         * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period
-         */
-        billing_thresholds: Phase.BillingThresholds | null;
-
-        /**
-         * Either `charge_automatically`, or `send_invoice`. When charging automatically, Stripe will attempt to pay the underlying subscription at the end of each billing cycle using the default source attached to the customer. When sending an invoice, Stripe will email your customer an invoice with payment instructions.
-         */
-        collection_method: Phase.CollectionMethod | null;
-
-        /**
-         * ID of the coupon to use during this phase of the subscription schedule.
-         */
-        coupon: string | Stripe.Coupon | Stripe.DeletedCoupon | null;
-
-        /**
-         * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-         */
-        currency: string;
-
-        /**
-         * ID of the default payment method for the subscription schedule. It must belong to the customer associated with the subscription schedule. If not set, invoices will use the default payment method in the customer's invoice settings.
-         */
-        default_payment_method: string | Stripe.PaymentMethod | null;
-
-        /**
-         * The default tax rates to apply to the subscription during this phase of the subscription schedule.
-         */
-        default_tax_rates?: Array<Stripe.TaxRate> | null;
-
-        /**
-         * Subscription description, meant to be displayable to the customer. Use this field to optionally store an explanation of the subscription.
-         */
-        description: string | null;
-
-        /**
-         * The end of this phase of the subscription schedule.
-         */
-        end_date: number;
-
-        /**
-         * The invoice settings applicable during this phase.
-         */
-        invoice_settings: Phase.InvoiceSettings | null;
-
-        /**
-         * Subscription items to configure the subscription to during this phase of the subscription schedule.
-         */
-        items: Array<Phase.Item>;
-
-        /**
-         * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to a phase. Metadata on a schedule's phase will update the underlying subscription's `metadata` when the phase is entered. Updating the underlying subscription's `metadata` directly will not affect the current phase's `metadata`.
-         */
-        metadata: Stripe.Metadata | null;
-
-        /**
-         * If the subscription schedule will prorate when transitioning to this phase. Possible values are `create_prorations` and `none`.
-         */
-        proration_behavior: Phase.ProrationBehavior;
-
-        /**
-         * The start of this phase of the subscription schedule.
-         */
-        start_date: number;
-
-        /**
-         * The account (if any) the associated subscription's payments will be attributed to for tax reporting, and where funds from each payment will be transferred to for each of the subscription's invoices.
-         */
-        transfer_data: Phase.TransferData | null;
-
-        /**
-         * When the trial ends within the phase.
-         */
-        trial_end: number | null;
-      }
-
-      namespace Phase {
-        interface AddInvoiceItem {
-          /**
-           * ID of the price used to generate the invoice item.
-           */
-          price: string | Stripe.Price | Stripe.DeletedPrice;
-
-          /**
-           * The quantity of the invoice item.
-           */
-          quantity: number | null;
-
-          /**
-           * The tax rates which apply to the item. When set, the `default_tax_rates` do not apply to this item.
-           */
-          tax_rates?: Array<Stripe.TaxRate> | null;
-        }
-
-        interface AutomaticTax {
-          /**
-           * Whether Stripe automatically computes tax on invoices created during this phase.
-           */
-          enabled: boolean;
-        }
-
-        type BillingCycleAnchor = 'automatic' | 'phase_start';
-
-        interface BillingThresholds {
-          /**
-           * Monetary threshold that triggers the subscription to create an invoice
-           */
-          amount_gte: number | null;
-
-          /**
-           * Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged. This value may not be `true` if the subscription contains items with plans that have `aggregate_usage=last_ever`.
-           */
-          reset_billing_cycle_anchor: boolean | null;
-        }
-
-        type CollectionMethod = 'charge_automatically' | 'send_invoice';
-
-        interface InvoiceSettings {
-          /**
-           * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
-           */
-          days_until_due: number | null;
-        }
-
-        interface Item {
-          /**
-           * Define thresholds at which an invoice will be sent, and the related subscription advanced to a new billing period
-           */
-          billing_thresholds: Item.BillingThresholds | null;
-
-          /**
-           * ID of the plan to which the customer should be subscribed.
-           */
-          plan: string | Stripe.Plan | Stripe.DeletedPlan;
-
-          /**
-           * ID of the price to which the customer should be subscribed.
-           */
-          price: string | Stripe.Price | Stripe.DeletedPrice;
-
-          /**
-           * Quantity of the plan to which the customer should be subscribed.
-           */
-          quantity?: number;
-
-          /**
-           * The tax rates which apply to this `phase_item`. When set, the `default_tax_rates` on the phase do not apply to this `phase_item`.
-           */
-          tax_rates?: Array<Stripe.TaxRate> | null;
-        }
-
-        namespace Item {
-          interface BillingThresholds {
-            /**
-             * Usage threshold that triggers the subscription to create an invoice
-             */
-            usage_gte: number | null;
-          }
-        }
-
-        type ProrationBehavior =
-          | 'always_invoice'
-          | 'create_prorations'
-          | 'none';
-
-        interface TransferData {
-          /**
-           * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
-           */
-          amount_percent: number | null;
-
-          /**
-           * The account where funds from the payment will be transferred to upon payment success.
-           */
-          destination: string | Stripe.Account;
-        }
-      }
-
-      type Status =
-        | 'active'
-        | 'canceled'
-        | 'completed'
-        | 'not_started'
-        | 'released';
-    }
-
-    interface SubscriptionScheduleCreateParams {
-      /**
-       * The identifier of the customer to create the subscription schedule for.
-       */
-      customer?: string;
-
-      /**
-       * Object representing the subscription schedule's default settings.
-       */
-      default_settings?: SubscriptionScheduleCreateParams.DefaultSettings;
-
-      /**
-       * Configures how the subscription schedule behaves when it ends. Possible values are `release` or `cancel` with the default being `release`. `release` will end the subscription schedule and keep the underlying subscription running.`cancel` will end the subscription schedule and cancel the underlying subscription.
-       */
-      end_behavior?: SubscriptionScheduleCreateParams.EndBehavior;
-
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-
-      /**
-       * Migrate an existing subscription to be managed by a subscription schedule. If this parameter is set, a subscription schedule will be created using the subscription's item(s), set to auto-renew using the subscription's interval. When using this parameter, other parameters (such as phase values) cannot be set. To create a subscription schedule with other modifications, we recommend making two separate API calls.
-       */
-      from_subscription?: string;
-
-      /**
-       * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
-       */
-      metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
-
-      /**
-       * List representing phases of the subscription schedule. Each phase can be customized to have different durations, plans, and coupons. If there are multiple phases, the `end_date` of one phase will always equal the `start_date` of the next phase.
-       */
-      phases?: Array<SubscriptionScheduleCreateParams.Phase>;
-
-      /**
-       * When the subscription schedule starts. We recommend using `now` so that it starts the subscription immediately. You can also use a Unix timestamp to backdate the subscription so that it starts on a past date, or set a future date for the subscription to start on.
-       */
-      start_date?: number | 'now';
-    }
-
     namespace SubscriptionScheduleCreateParams {
-      interface DefaultSettings {
+      export interface DefaultSettings {
         /**
          * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the application owner's Stripe account. The request must be made by a platform account on a connected account in order to set an application fee percentage. For more information, see the application fees [documentation](https://stripe.com/docs/connect/subscriptions#collecting-fees-on-subscriptions).
          */
@@ -499,53 +457,9 @@ declare module 'stripe' {
         transfer_data?: Stripe.Emptyable<DefaultSettings.TransferData>;
       }
 
-      namespace DefaultSettings {
-        interface AutomaticTax {
-          /**
-           * Enabled automatic tax calculation which will automatically compute tax rates on all invoices generated by the subscription.
-           */
-          enabled: boolean;
-        }
+      export type EndBehavior = 'cancel' | 'none' | 'release' | 'renew';
 
-        type BillingCycleAnchor = 'automatic' | 'phase_start';
-
-        interface BillingThresholds {
-          /**
-           * Monetary threshold that triggers the subscription to advance to a new billing period
-           */
-          amount_gte?: number;
-
-          /**
-           * Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged.
-           */
-          reset_billing_cycle_anchor?: boolean;
-        }
-
-        type CollectionMethod = 'charge_automatically' | 'send_invoice';
-
-        interface InvoiceSettings {
-          /**
-           * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
-           */
-          days_until_due?: number;
-        }
-
-        interface TransferData {
-          /**
-           * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
-           */
-          amount_percent?: number;
-
-          /**
-           * ID of an existing, connected Stripe account.
-           */
-          destination: string;
-        }
-      }
-
-      type EndBehavior = 'cancel' | 'none' | 'release' | 'renew';
-
-      interface Phase {
+      export interface Phase {
         /**
          * A list of prices and quantities that will generate invoice items appended to the next invoice for this phase. You may pass up to 20 items.
          */
@@ -647,8 +561,52 @@ declare module 'stripe' {
         trial_end?: number;
       }
 
+      namespace DefaultSettings {
+        export interface AutomaticTax {
+          /**
+           * Enabled automatic tax calculation which will automatically compute tax rates on all invoices generated by the subscription.
+           */
+          enabled: boolean;
+        }
+
+        export type BillingCycleAnchor = 'automatic' | 'phase_start';
+
+        export interface BillingThresholds {
+          /**
+           * Monetary threshold that triggers the subscription to advance to a new billing period
+           */
+          amount_gte?: number;
+
+          /**
+           * Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged.
+           */
+          reset_billing_cycle_anchor?: boolean;
+        }
+
+        export type CollectionMethod = 'charge_automatically' | 'send_invoice';
+
+        export interface InvoiceSettings {
+          /**
+           * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
+           */
+          days_until_due?: number;
+        }
+
+        export interface TransferData {
+          /**
+           * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+           */
+          amount_percent?: number;
+
+          /**
+           * ID of an existing, connected Stripe account.
+           */
+          destination: string;
+        }
+      }
+
       namespace Phase {
-        interface AddInvoiceItem {
+        export interface AddInvoiceItem {
           /**
            * The ID of the price object.
            */
@@ -670,49 +628,16 @@ declare module 'stripe' {
           tax_rates?: Stripe.Emptyable<Array<string>>;
         }
 
-        namespace AddInvoiceItem {
-          interface PriceData {
-            /**
-             * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-             */
-            currency: string;
-
-            /**
-             * The ID of the product that this price will belong to.
-             */
-            product: string;
-
-            /**
-             * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
-             */
-            tax_behavior?: PriceData.TaxBehavior;
-
-            /**
-             * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
-             */
-            unit_amount?: number;
-
-            /**
-             * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
-             */
-            unit_amount_decimal?: string;
-          }
-
-          namespace PriceData {
-            type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
-          }
-        }
-
-        interface AutomaticTax {
+        export interface AutomaticTax {
           /**
            * Enabled automatic tax calculation which will automatically compute tax rates on all invoices generated by the subscription.
            */
           enabled: boolean;
         }
 
-        type BillingCycleAnchor = 'automatic' | 'phase_start';
+        export type BillingCycleAnchor = 'automatic' | 'phase_start';
 
-        interface BillingThresholds {
+        export interface BillingThresholds {
           /**
            * Monetary threshold that triggers the subscription to advance to a new billing period
            */
@@ -724,16 +649,16 @@ declare module 'stripe' {
           reset_billing_cycle_anchor?: boolean;
         }
 
-        type CollectionMethod = 'charge_automatically' | 'send_invoice';
+        export type CollectionMethod = 'charge_automatically' | 'send_invoice';
 
-        interface InvoiceSettings {
+        export interface InvoiceSettings {
           /**
            * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
            */
           days_until_due?: number;
         }
 
-        interface Item {
+        export interface Item {
           /**
            * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period. When updating, pass an empty string to remove previously-defined thresholds.
            */
@@ -765,15 +690,65 @@ declare module 'stripe' {
           tax_rates?: Stripe.Emptyable<Array<string>>;
         }
 
+        export type ProrationBehavior =
+          | 'always_invoice'
+          | 'create_prorations'
+          | 'none';
+
+        export interface TransferData {
+          /**
+           * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+           */
+          amount_percent?: number;
+
+          /**
+           * ID of an existing, connected Stripe account.
+           */
+          destination: string;
+        }
+
+        namespace AddInvoiceItem {
+          export interface PriceData {
+            /**
+             * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+             */
+            currency: string;
+
+            /**
+             * The ID of the product that this price will belong to.
+             */
+            product: string;
+
+            /**
+             * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+             */
+            tax_behavior?: PriceData.TaxBehavior;
+
+            /**
+             * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+             */
+            unit_amount?: number;
+
+            /**
+             * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
+             */
+            unit_amount_decimal?: string;
+          }
+
+          namespace PriceData {
+            export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+          }
+        }
+
         namespace Item {
-          interface BillingThresholds {
+          export interface BillingThresholds {
             /**
              * Usage threshold that triggers the subscription to advance to a new billing period
              */
             usage_gte: number;
           }
 
-          interface PriceData {
+          export interface PriceData {
             /**
              * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
              */
@@ -806,7 +781,7 @@ declare module 'stripe' {
           }
 
           namespace PriceData {
-            interface Recurring {
+            export interface Recurring {
               /**
                * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
                */
@@ -818,55 +793,41 @@ declare module 'stripe' {
               interval_count?: number;
             }
 
+            export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+
             namespace Recurring {
-              type Interval = 'day' | 'month' | 'week' | 'year';
+              export type Interval = 'day' | 'month' | 'week' | 'year';
             }
-
-            type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
           }
-        }
-
-        type ProrationBehavior =
-          | 'always_invoice'
-          | 'create_prorations'
-          | 'none';
-
-        interface TransferData {
-          /**
-           * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
-           */
-          amount_percent?: number;
-
-          /**
-           * ID of an existing, connected Stripe account.
-           */
-          destination: string;
         }
       }
     }
 
-    interface SubscriptionScheduleRetrieveParams {
+    export interface SubscriptionScheduleCreateParams {
       /**
-       * Specifies which fields in the response should be expanded.
+       * The identifier of the customer to create the subscription schedule for.
        */
-      expand?: Array<string>;
-    }
+      customer?: string;
 
-    interface SubscriptionScheduleUpdateParams {
       /**
        * Object representing the subscription schedule's default settings.
        */
-      default_settings?: SubscriptionScheduleUpdateParams.DefaultSettings;
+      default_settings?: SubscriptionScheduleCreateParams.DefaultSettings;
 
       /**
        * Configures how the subscription schedule behaves when it ends. Possible values are `release` or `cancel` with the default being `release`. `release` will end the subscription schedule and keep the underlying subscription running.`cancel` will end the subscription schedule and cancel the underlying subscription.
        */
-      end_behavior?: SubscriptionScheduleUpdateParams.EndBehavior;
+      end_behavior?: SubscriptionScheduleCreateParams.EndBehavior;
 
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
+
+      /**
+       * Migrate an existing subscription to be managed by a subscription schedule. If this parameter is set, a subscription schedule will be created using the subscription's item(s), set to auto-renew using the subscription's interval. When using this parameter, other parameters (such as phase values) cannot be set. To create a subscription schedule with other modifications, we recommend making two separate API calls.
+       */
+      from_subscription?: string;
 
       /**
        * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
@@ -874,18 +835,25 @@ declare module 'stripe' {
       metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
 
       /**
-       * List representing phases of the subscription schedule. Each phase can be customized to have different durations, plans, and coupons. If there are multiple phases, the `end_date` of one phase will always equal the `start_date` of the next phase. Note that past phases can be omitted.
+       * List representing phases of the subscription schedule. Each phase can be customized to have different durations, plans, and coupons. If there are multiple phases, the `end_date` of one phase will always equal the `start_date` of the next phase.
        */
-      phases?: Array<SubscriptionScheduleUpdateParams.Phase>;
+      phases?: Array<SubscriptionScheduleCreateParams.Phase>;
 
       /**
-       * If the update changes the current phase, indicates whether the changes should be prorated. The default value is `create_prorations`.
+       * When the subscription schedule starts. We recommend using `now` so that it starts the subscription immediately. You can also use a Unix timestamp to backdate the subscription so that it starts on a past date, or set a future date for the subscription to start on.
        */
-      proration_behavior?: SubscriptionScheduleUpdateParams.ProrationBehavior;
+      start_date?: number | 'now';
+    }
+
+    export interface SubscriptionScheduleRetrieveParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
     }
 
     namespace SubscriptionScheduleUpdateParams {
-      interface DefaultSettings {
+      export interface DefaultSettings {
         /**
          * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the application owner's Stripe account. The request must be made by a platform account on a connected account in order to set an application fee percentage. For more information, see the application fees [documentation](https://stripe.com/docs/connect/subscriptions#collecting-fees-on-subscriptions).
          */
@@ -934,53 +902,9 @@ declare module 'stripe' {
         transfer_data?: Stripe.Emptyable<DefaultSettings.TransferData>;
       }
 
-      namespace DefaultSettings {
-        interface AutomaticTax {
-          /**
-           * Enabled automatic tax calculation which will automatically compute tax rates on all invoices generated by the subscription.
-           */
-          enabled: boolean;
-        }
+      export type EndBehavior = 'cancel' | 'none' | 'release' | 'renew';
 
-        type BillingCycleAnchor = 'automatic' | 'phase_start';
-
-        interface BillingThresholds {
-          /**
-           * Monetary threshold that triggers the subscription to advance to a new billing period
-           */
-          amount_gte?: number;
-
-          /**
-           * Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged.
-           */
-          reset_billing_cycle_anchor?: boolean;
-        }
-
-        type CollectionMethod = 'charge_automatically' | 'send_invoice';
-
-        interface InvoiceSettings {
-          /**
-           * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
-           */
-          days_until_due?: number;
-        }
-
-        interface TransferData {
-          /**
-           * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
-           */
-          amount_percent?: number;
-
-          /**
-           * ID of an existing, connected Stripe account.
-           */
-          destination: string;
-        }
-      }
-
-      type EndBehavior = 'cancel' | 'none' | 'release' | 'renew';
-
-      interface Phase {
+      export interface Phase {
         /**
          * A list of prices and quantities that will generate invoice items appended to the next invoice for this phase. You may pass up to 20 items.
          */
@@ -1087,8 +1011,57 @@ declare module 'stripe' {
         trial_end?: number | 'now';
       }
 
+      export type ProrationBehavior =
+        | 'always_invoice'
+        | 'create_prorations'
+        | 'none';
+
+      namespace DefaultSettings {
+        export interface AutomaticTax {
+          /**
+           * Enabled automatic tax calculation which will automatically compute tax rates on all invoices generated by the subscription.
+           */
+          enabled: boolean;
+        }
+
+        export type BillingCycleAnchor = 'automatic' | 'phase_start';
+
+        export interface BillingThresholds {
+          /**
+           * Monetary threshold that triggers the subscription to advance to a new billing period
+           */
+          amount_gte?: number;
+
+          /**
+           * Indicates if the `billing_cycle_anchor` should be reset when a threshold is reached. If true, `billing_cycle_anchor` will be updated to the date/time the threshold was last reached; otherwise, the value will remain unchanged.
+           */
+          reset_billing_cycle_anchor?: boolean;
+        }
+
+        export type CollectionMethod = 'charge_automatically' | 'send_invoice';
+
+        export interface InvoiceSettings {
+          /**
+           * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
+           */
+          days_until_due?: number;
+        }
+
+        export interface TransferData {
+          /**
+           * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+           */
+          amount_percent?: number;
+
+          /**
+           * ID of an existing, connected Stripe account.
+           */
+          destination: string;
+        }
+      }
+
       namespace Phase {
-        interface AddInvoiceItem {
+        export interface AddInvoiceItem {
           /**
            * The ID of the price object.
            */
@@ -1110,49 +1083,16 @@ declare module 'stripe' {
           tax_rates?: Stripe.Emptyable<Array<string>>;
         }
 
-        namespace AddInvoiceItem {
-          interface PriceData {
-            /**
-             * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-             */
-            currency: string;
-
-            /**
-             * The ID of the product that this price will belong to.
-             */
-            product: string;
-
-            /**
-             * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
-             */
-            tax_behavior?: PriceData.TaxBehavior;
-
-            /**
-             * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
-             */
-            unit_amount?: number;
-
-            /**
-             * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
-             */
-            unit_amount_decimal?: string;
-          }
-
-          namespace PriceData {
-            type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
-          }
-        }
-
-        interface AutomaticTax {
+        export interface AutomaticTax {
           /**
            * Enabled automatic tax calculation which will automatically compute tax rates on all invoices generated by the subscription.
            */
           enabled: boolean;
         }
 
-        type BillingCycleAnchor = 'automatic' | 'phase_start';
+        export type BillingCycleAnchor = 'automatic' | 'phase_start';
 
-        interface BillingThresholds {
+        export interface BillingThresholds {
           /**
            * Monetary threshold that triggers the subscription to advance to a new billing period
            */
@@ -1164,16 +1104,16 @@ declare module 'stripe' {
           reset_billing_cycle_anchor?: boolean;
         }
 
-        type CollectionMethod = 'charge_automatically' | 'send_invoice';
+        export type CollectionMethod = 'charge_automatically' | 'send_invoice';
 
-        interface InvoiceSettings {
+        export interface InvoiceSettings {
           /**
            * Number of days within which a customer must pay invoices generated by this subscription schedule. This value will be `null` for subscription schedules where `billing=charge_automatically`.
            */
           days_until_due?: number;
         }
 
-        interface Item {
+        export interface Item {
           /**
            * Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period. When updating, pass an empty string to remove previously-defined thresholds.
            */
@@ -1205,15 +1145,65 @@ declare module 'stripe' {
           tax_rates?: Stripe.Emptyable<Array<string>>;
         }
 
+        export type ProrationBehavior =
+          | 'always_invoice'
+          | 'create_prorations'
+          | 'none';
+
+        export interface TransferData {
+          /**
+           * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
+           */
+          amount_percent?: number;
+
+          /**
+           * ID of an existing, connected Stripe account.
+           */
+          destination: string;
+        }
+
+        namespace AddInvoiceItem {
+          export interface PriceData {
+            /**
+             * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+             */
+            currency: string;
+
+            /**
+             * The ID of the product that this price will belong to.
+             */
+            product: string;
+
+            /**
+             * Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of `inclusive`, `exclusive`, or `unspecified`. Once specified as either `inclusive` or `exclusive`, it cannot be changed.
+             */
+            tax_behavior?: PriceData.TaxBehavior;
+
+            /**
+             * A positive integer in cents (or local equivalent) (or 0 for a free price) representing how much to charge.
+             */
+            unit_amount?: number;
+
+            /**
+             * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
+             */
+            unit_amount_decimal?: string;
+          }
+
+          namespace PriceData {
+            export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+          }
+        }
+
         namespace Item {
-          interface BillingThresholds {
+          export interface BillingThresholds {
             /**
              * Usage threshold that triggers the subscription to advance to a new billing period
              */
             usage_gte: number;
           }
 
-          interface PriceData {
+          export interface PriceData {
             /**
              * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
              */
@@ -1246,7 +1236,7 @@ declare module 'stripe' {
           }
 
           namespace PriceData {
-            interface Recurring {
+            export interface Recurring {
               /**
                * Specifies billing frequency. Either `day`, `week`, `month` or `year`.
                */
@@ -1258,36 +1248,49 @@ declare module 'stripe' {
               interval_count?: number;
             }
 
-            namespace Recurring {
-              type Interval = 'day' | 'month' | 'week' | 'year';
-            }
+            export type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
 
-            type TaxBehavior = 'exclusive' | 'inclusive' | 'unspecified';
+            namespace Recurring {
+              export type Interval = 'day' | 'month' | 'week' | 'year';
+            }
           }
         }
-
-        type ProrationBehavior =
-          | 'always_invoice'
-          | 'create_prorations'
-          | 'none';
-
-        interface TransferData {
-          /**
-           * A non-negative decimal between 0 and 100, with at most two decimal places. This represents the percentage of the subscription invoice subtotal that will be transferred to the destination account. By default, the entire amount is transferred to the destination.
-           */
-          amount_percent?: number;
-
-          /**
-           * ID of an existing, connected Stripe account.
-           */
-          destination: string;
-        }
       }
-
-      type ProrationBehavior = 'always_invoice' | 'create_prorations' | 'none';
     }
 
-    interface SubscriptionScheduleListParams extends PaginationParams {
+    export interface SubscriptionScheduleUpdateParams {
+      /**
+       * Object representing the subscription schedule's default settings.
+       */
+      default_settings?: SubscriptionScheduleUpdateParams.DefaultSettings;
+
+      /**
+       * Configures how the subscription schedule behaves when it ends. Possible values are `release` or `cancel` with the default being `release`. `release` will end the subscription schedule and keep the underlying subscription running.`cancel` will end the subscription schedule and cancel the underlying subscription.
+       */
+      end_behavior?: SubscriptionScheduleUpdateParams.EndBehavior;
+
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+
+      /**
+       * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+       */
+      metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
+
+      /**
+       * List representing phases of the subscription schedule. Each phase can be customized to have different durations, plans, and coupons. If there are multiple phases, the `end_date` of one phase will always equal the `start_date` of the next phase. Note that past phases can be omitted.
+       */
+      phases?: Array<SubscriptionScheduleUpdateParams.Phase>;
+
+      /**
+       * If the update changes the current phase, indicates whether the changes should be prorated. The default value is `create_prorations`.
+       */
+      proration_behavior?: SubscriptionScheduleUpdateParams.ProrationBehavior;
+    }
+
+    export interface SubscriptionScheduleListParams extends PaginationParams {
       /**
        * Only return subscription schedules that were created canceled the given date interval.
        */
@@ -1324,7 +1327,7 @@ declare module 'stripe' {
       scheduled?: boolean;
     }
 
-    interface SubscriptionScheduleCancelParams {
+    export interface SubscriptionScheduleCancelParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
@@ -1341,7 +1344,7 @@ declare module 'stripe' {
       prorate?: boolean;
     }
 
-    interface SubscriptionScheduleReleaseParams {
+    export interface SubscriptionScheduleReleaseParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

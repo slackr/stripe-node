@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Treasury {
-      /**
+      export /**
        * ReceivedDebits represent funds pulled from a [FinancialAccount](https://stripe.com/docs/api#financial_accounts). These are not initiated from the FinancialAccount.
        */
       interface ReceivedDebit {
@@ -83,13 +83,13 @@ declare module 'stripe' {
       }
 
       namespace ReceivedDebit {
-        type FailureCode =
+        export type FailureCode =
           | 'account_closed'
           | 'account_frozen'
           | 'insufficient_funds'
           | 'other';
 
-        interface InitiatingPaymentMethodDetails {
+        export interface InitiatingPaymentMethodDetails {
           /**
            * Set when `type` is `balance`.
            */
@@ -112,59 +112,7 @@ declare module 'stripe' {
           us_bank_account?: InitiatingPaymentMethodDetails.UsBankAccount;
         }
 
-        namespace InitiatingPaymentMethodDetails {
-          interface BillingDetails {
-            address: Stripe.Address;
-
-            /**
-             * Email address.
-             */
-            email: string | null;
-
-            /**
-             * Full name.
-             */
-            name: string | null;
-          }
-
-          interface FinancialAccount {
-            /**
-             * The FinancialAccount ID.
-             */
-            id: string;
-
-            /**
-             * The rails the ReceivedCredit was sent over. A FinancialAccount can only send funds over `stripe`.
-             */
-            network: 'stripe';
-          }
-
-          type Type =
-            | 'balance'
-            | 'financial_account'
-            | 'issuing_card'
-            | 'stripe'
-            | 'us_bank_account';
-
-          interface UsBankAccount {
-            /**
-             * Bank name.
-             */
-            bank_name: string | null;
-
-            /**
-             * The last four digits of the bank account number.
-             */
-            last4: string | null;
-
-            /**
-             * The routing number for the bank account.
-             */
-            routing_number: string | null;
-          }
-        }
-
-        interface LinkedFlows {
+        export interface LinkedFlows {
           /**
            * The DebitReversal created as a result of this ReceivedDebit being reversed.
            */
@@ -186,9 +134,9 @@ declare module 'stripe' {
           issuing_transaction: string | null;
         }
 
-        type Network = 'ach' | 'card' | 'stripe';
+        export type Network = 'ach' | 'card' | 'stripe';
 
-        interface ReversalDetails {
+        export interface ReversalDetails {
           /**
            * Time before which a ReceivedDebit can be reversed.
            */
@@ -200,26 +148,78 @@ declare module 'stripe' {
           restricted_reason: ReversalDetails.RestrictedReason | null;
         }
 
+        export type Status = 'failed' | 'succeeded';
+
+        namespace InitiatingPaymentMethodDetails {
+          export interface BillingDetails {
+            address: Stripe.Address;
+
+            /**
+             * Email address.
+             */
+            email: string | null;
+
+            /**
+             * Full name.
+             */
+            name: string | null;
+          }
+
+          export interface FinancialAccount {
+            /**
+             * The FinancialAccount ID.
+             */
+            id: string;
+
+            /**
+             * The rails the ReceivedCredit was sent over. A FinancialAccount can only send funds over `stripe`.
+             */
+            network: 'stripe';
+          }
+
+          export type Type =
+            | 'balance'
+            | 'financial_account'
+            | 'issuing_card'
+            | 'stripe'
+            | 'us_bank_account';
+
+          export interface UsBankAccount {
+            /**
+             * Bank name.
+             */
+            bank_name: string | null;
+
+            /**
+             * The last four digits of the bank account number.
+             */
+            last4: string | null;
+
+            /**
+             * The routing number for the bank account.
+             */
+            routing_number: string | null;
+          }
+        }
+
         namespace ReversalDetails {
-          type RestrictedReason =
+          export type RestrictedReason =
             | 'already_reversed'
             | 'deadline_passed'
             | 'network_restricted'
             | 'other'
             | 'source_flow_restricted';
         }
-
-        type Status = 'failed' | 'succeeded';
       }
 
-      interface ReceivedDebitRetrieveParams {
+      export interface ReceivedDebitRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface ReceivedDebitListParams extends PaginationParams {
+      export interface ReceivedDebitListParams extends PaginationParams {
         /**
          * The FinancialAccount that funds were pulled from.
          */
@@ -237,7 +237,7 @@ declare module 'stripe' {
       }
 
       namespace ReceivedDebitListParams {
-        type Status = 'failed' | 'succeeded';
+        export type Status = 'failed' | 'succeeded';
       }
 
       class ReceivedDebitsResource {

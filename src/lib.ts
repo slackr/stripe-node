@@ -3,7 +3,7 @@
 
 import {Agent} from 'http';
 
-export namespace Stripe {
+namespace Stripe {
   type StripeResourceClass = typeof StripeResource;
 
   interface StripeResourceExtension<T extends object>
@@ -29,23 +29,23 @@ export namespace Stripe {
     static BASIC_METHODS: {
       create<T>(
         params: CouponCreateParams,
-        options?: RequestOptions
+        options?: Stripe.RequestOptions
       ): Promise<T>;
       retrieve<T>(
         id: string,
         params?: CouponRetrieveParams,
-        options?: RequestOptions
+        options?: Stripe.RequestOptions
       ): Promise<T>;
       update<T>(
         id: string,
         params?: CouponUpdateParams,
-        options?: RequestOptions
+        options?: Stripe.RequestOptions
       ): Promise<T>;
       list<T>(
         params?: CouponListParams,
-        options?: RequestOptions
+        options?: Stripe.RequestOptions
       ): ApiListPromise<T>;
-      del<T>(id: string, options?: RequestOptions): Promise<T>;
+      del<T>(id: string, options?: Stripe.RequestOptions): Promise<T>;
     };
     static MAX_BUFFERED_REQUEST_METRICS: number;
   }

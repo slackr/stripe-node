@@ -2,7 +2,25 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace Coupon {
+      export interface AppliesTo {
+        /**
+         * A list of product IDs this coupon applies to
+         */
+        products: Array<string>;
+      }
+
+      export interface CurrencyOptions {
+        /**
+         * Amount (in the `currency` specified) that will be taken off the subtotal of any invoices for this customer.
+         */
+        amount_off: number;
+      }
+
+      export type Duration = 'forever' | 'once' | 'repeating';
+    }
+
+    export /**
      * A coupon contains information about a percent-off or amount-off discount you
      * might want to apply to a customer. Coupons may be applied to [subscriptions](https://stripe.com/docs/api#subscriptions), [invoices](https://stripe.com/docs/api#invoices),
      * [checkout sessions](https://stripe.com/docs/api/checkout/sessions), [quotes](https://stripe.com/docs/api#quotes), and more. Coupons do not work with conventional one-off [charges](https://stripe.com/docs/api#create_charge) or [payment intents](https://stripe.com/docs/api/payment_intents).
@@ -95,25 +113,7 @@ declare module 'stripe' {
       valid: boolean;
     }
 
-    namespace Coupon {
-      interface AppliesTo {
-        /**
-         * A list of product IDs this coupon applies to
-         */
-        products: Array<string>;
-      }
-
-      interface CurrencyOptions {
-        /**
-         * Amount (in the `currency` specified) that will be taken off the subtotal of any invoices for this customer.
-         */
-        amount_off: number;
-      }
-
-      type Duration = 'forever' | 'once' | 'repeating';
-    }
-
-    /**
+    export /**
      * The DeletedCoupon object.
      */
     interface DeletedCoupon {
@@ -133,7 +133,25 @@ declare module 'stripe' {
       deleted: true;
     }
 
-    interface CouponCreateParams {
+    namespace CouponCreateParams {
+      export interface AppliesTo {
+        /**
+         * An array of Product IDs that this Coupon will apply to.
+         */
+        products?: Array<string>;
+      }
+
+      export interface CurrencyOptions {
+        /**
+         * A positive integer representing the amount to subtract from an invoice total.
+         */
+        amount_off: number;
+      }
+
+      export type Duration = 'forever' | 'once' | 'repeating';
+    }
+
+    export interface CouponCreateParams {
       /**
        * A positive integer representing the amount to subtract from an invoice total (required if `percent_off` is not passed).
        */
@@ -202,32 +220,23 @@ declare module 'stripe' {
       redeem_by?: number;
     }
 
-    namespace CouponCreateParams {
-      interface AppliesTo {
-        /**
-         * An array of Product IDs that this Coupon will apply to.
-         */
-        products?: Array<string>;
-      }
-
-      interface CurrencyOptions {
-        /**
-         * A positive integer representing the amount to subtract from an invoice total.
-         */
-        amount_off: number;
-      }
-
-      type Duration = 'forever' | 'once' | 'repeating';
-    }
-
-    interface CouponRetrieveParams {
+    export interface CouponRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface CouponUpdateParams {
+    namespace CouponUpdateParams {
+      export interface CurrencyOptions {
+        /**
+         * A positive integer representing the amount to subtract from an invoice total.
+         */
+        amount_off: number;
+      }
+    }
+
+    export interface CouponUpdateParams {
       /**
        * Coupons defined in each available currency option (only supported if the coupon is amount-based). Each key must be a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html) and a [supported currency](https://stripe.com/docs/currencies).
        */
@@ -251,16 +260,7 @@ declare module 'stripe' {
       name?: string;
     }
 
-    namespace CouponUpdateParams {
-      interface CurrencyOptions {
-        /**
-         * A positive integer representing the amount to subtract from an invoice total.
-         */
-        amount_off: number;
-      }
-    }
-
-    interface CouponListParams extends PaginationParams {
+    export interface CouponListParams extends PaginationParams {
       /**
        * A filter on the list, based on the object `created` field. The value can be a string with an integer Unix timestamp, or it can be a dictionary with a number of different query options.
        */
@@ -272,7 +272,7 @@ declare module 'stripe' {
       expand?: Array<string>;
     }
 
-    interface CouponDeleteParams {}
+    export interface CouponDeleteParams {}
 
     class CouponsResource {
       /**

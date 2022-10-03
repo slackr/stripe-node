@@ -2,7 +2,67 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace Review {
+      export type ClosedReason =
+        | 'approved'
+        | 'disputed'
+        | 'redacted'
+        | 'refunded'
+        | 'refunded_as_fraud';
+
+      export interface IpAddressLocation {
+        /**
+         * The city where the payment originated.
+         */
+        city: string | null;
+
+        /**
+         * Two-letter ISO code representing the country where the payment originated.
+         */
+        country: string | null;
+
+        /**
+         * The geographic latitude where the payment originated.
+         */
+        latitude: number | null;
+
+        /**
+         * The geographic longitude where the payment originated.
+         */
+        longitude: number | null;
+
+        /**
+         * The state/county/province/region where the payment originated.
+         */
+        region: string | null;
+      }
+
+      export type OpenedReason = 'manual' | 'rule';
+
+      export interface Session {
+        /**
+         * The browser used in this browser session (e.g., `Chrome`).
+         */
+        browser: string | null;
+
+        /**
+         * Information about the device used for the browser session (e.g., `Samsung SM-G930T`).
+         */
+        device: string | null;
+
+        /**
+         * The platform for the browser session (e.g., `Macintosh`).
+         */
+        platform: string | null;
+
+        /**
+         * The version for the browser session (e.g., `61.0.3163.100`).
+         */
+        version: string | null;
+      }
+    }
+
+    export /**
      * Reviews can be used to supplement automated fraud detection with human expertise.
      *
      * Learn more about [Radar](https://stripe.com/radar) and reviewing payments
@@ -80,74 +140,14 @@ declare module 'stripe' {
       session: Review.Session | null;
     }
 
-    namespace Review {
-      type ClosedReason =
-        | 'approved'
-        | 'disputed'
-        | 'redacted'
-        | 'refunded'
-        | 'refunded_as_fraud';
-
-      interface IpAddressLocation {
-        /**
-         * The city where the payment originated.
-         */
-        city: string | null;
-
-        /**
-         * Two-letter ISO code representing the country where the payment originated.
-         */
-        country: string | null;
-
-        /**
-         * The geographic latitude where the payment originated.
-         */
-        latitude: number | null;
-
-        /**
-         * The geographic longitude where the payment originated.
-         */
-        longitude: number | null;
-
-        /**
-         * The state/county/province/region where the payment originated.
-         */
-        region: string | null;
-      }
-
-      type OpenedReason = 'manual' | 'rule';
-
-      interface Session {
-        /**
-         * The browser used in this browser session (e.g., `Chrome`).
-         */
-        browser: string | null;
-
-        /**
-         * Information about the device used for the browser session (e.g., `Samsung SM-G930T`).
-         */
-        device: string | null;
-
-        /**
-         * The platform for the browser session (e.g., `Macintosh`).
-         */
-        platform: string | null;
-
-        /**
-         * The version for the browser session (e.g., `61.0.3163.100`).
-         */
-        version: string | null;
-      }
-    }
-
-    interface ReviewRetrieveParams {
+    export interface ReviewRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface ReviewListParams extends PaginationParams {
+    export interface ReviewListParams extends PaginationParams {
       created?: Stripe.RangeQueryParam | number;
 
       /**
@@ -156,7 +156,7 @@ declare module 'stripe' {
       expand?: Array<string>;
     }
 
-    interface ReviewApproveParams {
+    export interface ReviewApproveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

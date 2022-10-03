@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    export /**
      * [Stripe Connect](https://stripe.com/docs/connect) platforms can reverse transfers made to a
      * connected account, either entirely or partially, and can also specify whether
      * to refund any related application fees. Transfer reversals add to the
@@ -69,7 +69,7 @@ declare module 'stripe' {
       transfer: string | Stripe.Transfer;
     }
 
-    interface TransferReversalCreateParams {
+    export interface TransferReversalCreateParams {
       /**
        * A positive integer in cents (or local equivalent) representing how much of this transfer to reverse. Can only reverse up to the unreversed amount remaining of the transfer. Partial transfer reversals are only allowed for transfers to Stripe Accounts. Defaults to the entire transfer amount.
        */
@@ -96,14 +96,14 @@ declare module 'stripe' {
       refund_application_fee?: boolean;
     }
 
-    interface TransferReversalRetrieveParams {
+    export interface TransferReversalRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface TransferReversalUpdateParams {
+    export interface TransferReversalUpdateParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
@@ -115,7 +115,7 @@ declare module 'stripe' {
       metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
     }
 
-    interface TransferReversalListParams extends PaginationParams {
+    export interface TransferReversalListParams extends PaginationParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

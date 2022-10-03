@@ -2,7 +2,83 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace CustomerCashBalanceTransaction {
+      export interface AppliedToPayment {
+        /**
+         * The [Payment Intent](https://stripe.com/docs/api/payment_intents/object) that funds were applied to.
+         */
+        payment_intent: string | Stripe.PaymentIntent;
+      }
+
+      export interface Funded {
+        bank_transfer: Funded.BankTransfer;
+      }
+
+      export interface RefundedFromPayment {
+        /**
+         * The [Refund](https://stripe.com/docs/api/refunds/object) that moved these funds into the customer's cash balance.
+         */
+        refund: string | Stripe.Refund;
+      }
+
+      export type Type =
+        | 'applied_to_payment'
+        | 'funded'
+        | 'refunded_from_payment'
+        | 'return_canceled'
+        | 'return_initiated'
+        | 'unapplied_from_payment';
+
+      export interface UnappliedFromPayment {
+        /**
+         * The [Payment Intent](https://stripe.com/docs/api/payment_intents/object) that funds were unapplied from.
+         */
+        payment_intent: string | Stripe.PaymentIntent;
+      }
+
+      namespace Funded {
+        export interface BankTransfer {
+          eu_bank_transfer?: BankTransfer.EuBankTransfer;
+
+          /**
+           * The user-supplied reference field on the bank transfer.
+           */
+          reference: string | null;
+
+          /**
+           * The funding method type used to fund the customer balance. Permitted values include: `eu_bank_transfer`, `gb_bank_transfer`, `jp_bank_transfer`, or `mx_bank_transfer`.
+           */
+          type: BankTransfer.Type;
+        }
+
+        namespace BankTransfer {
+          export interface EuBankTransfer {
+            /**
+             * The BIC of the bank of the sender of the funding.
+             */
+            bic: string | null;
+
+            /**
+             * The last 4 digits of the IBAN of the sender of the funding.
+             */
+            iban_last4: string | null;
+
+            /**
+             * The full name of the sender, as supplied by the sending bank.
+             */
+            sender_name: string | null;
+          }
+
+          export type Type =
+            | 'eu_bank_transfer'
+            | 'gb_bank_transfer'
+            | 'jp_bank_transfer'
+            | 'mx_bank_transfer';
+        }
+      }
+    }
+
+    export /**
      * Customers with certain payments enabled have a cash balance, representing funds that were paid
      * by the customer to a merchant, but have not yet been allocated to a payment. Cash Balance Transactions
      * represent when funds are moved into or out of this balance. This includes funding by the customer, allocation
@@ -63,90 +139,14 @@ declare module 'stripe' {
       unapplied_from_payment?: CustomerCashBalanceTransaction.UnappliedFromPayment;
     }
 
-    namespace CustomerCashBalanceTransaction {
-      interface AppliedToPayment {
-        /**
-         * The [Payment Intent](https://stripe.com/docs/api/payment_intents/object) that funds were applied to.
-         */
-        payment_intent: string | Stripe.PaymentIntent;
-      }
-
-      interface Funded {
-        bank_transfer: Funded.BankTransfer;
-      }
-
-      namespace Funded {
-        interface BankTransfer {
-          eu_bank_transfer?: BankTransfer.EuBankTransfer;
-
-          /**
-           * The user-supplied reference field on the bank transfer.
-           */
-          reference: string | null;
-
-          /**
-           * The funding method type used to fund the customer balance. Permitted values include: `eu_bank_transfer`, `gb_bank_transfer`, `jp_bank_transfer`, or `mx_bank_transfer`.
-           */
-          type: BankTransfer.Type;
-        }
-
-        namespace BankTransfer {
-          interface EuBankTransfer {
-            /**
-             * The BIC of the bank of the sender of the funding.
-             */
-            bic: string | null;
-
-            /**
-             * The last 4 digits of the IBAN of the sender of the funding.
-             */
-            iban_last4: string | null;
-
-            /**
-             * The full name of the sender, as supplied by the sending bank.
-             */
-            sender_name: string | null;
-          }
-
-          type Type =
-            | 'eu_bank_transfer'
-            | 'gb_bank_transfer'
-            | 'jp_bank_transfer'
-            | 'mx_bank_transfer';
-        }
-      }
-
-      interface RefundedFromPayment {
-        /**
-         * The [Refund](https://stripe.com/docs/api/refunds/object) that moved these funds into the customer's cash balance.
-         */
-        refund: string | Stripe.Refund;
-      }
-
-      type Type =
-        | 'applied_to_payment'
-        | 'funded'
-        | 'refunded_from_payment'
-        | 'return_canceled'
-        | 'return_initiated'
-        | 'unapplied_from_payment';
-
-      interface UnappliedFromPayment {
-        /**
-         * The [Payment Intent](https://stripe.com/docs/api/payment_intents/object) that funds were unapplied from.
-         */
-        payment_intent: string | Stripe.PaymentIntent;
-      }
-    }
-
-    interface CustomerCashBalanceTransactionRetrieveParams {
+    export interface CustomerCashBalanceTransactionRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface CustomerCashBalanceTransactionListParams
+    export interface CustomerCashBalanceTransactionListParams
       extends PaginationParams {
       /**
        * Specifies which fields in the response should be expanded.

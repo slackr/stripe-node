@@ -2,7 +2,20 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace CashBalance {
+      export interface Settings {
+        /**
+         * The configuration for how funds that land in the customer cash balance are reconciled.
+         */
+        reconciliation_mode: Settings.ReconciliationMode;
+      }
+
+      namespace Settings {
+        export type ReconciliationMode = 'automatic' | 'manual';
+      }
+    }
+
+    export /**
      * A customer's `Cash balance` represents real funds. Customers can add funds to their cash balance by sending a bank transfer. These funds can be used for payment and can eventually be paid out to your bank account.
      */
     interface CashBalance {
@@ -31,27 +44,27 @@ declare module 'stripe' {
       settings: CashBalance.Settings;
     }
 
-    namespace CashBalance {
-      interface Settings {
-        /**
-         * The configuration for how funds that land in the customer cash balance are reconciled.
-         */
-        reconciliation_mode: Settings.ReconciliationMode;
-      }
-
-      namespace Settings {
-        type ReconciliationMode = 'automatic' | 'manual';
-      }
-    }
-
-    interface CashBalanceRetrieveParams {
+    export interface CashBalanceRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface CashBalanceUpdateParams {
+    namespace CashBalanceUpdateParams {
+      export interface Settings {
+        /**
+         * Controls how funds transferred by the customer are applied to payment intents and invoices. Valid options are `automatic` or `manual`. For more information about these reconciliation modes, see [Reconciliation](https://stripe.com/docs/payments/customer-balance/reconciliation).
+         */
+        reconciliation_mode?: Settings.ReconciliationMode;
+      }
+
+      namespace Settings {
+        export type ReconciliationMode = 'automatic' | 'manual';
+      }
+    }
+
+    export interface CashBalanceUpdateParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
@@ -61,19 +74,6 @@ declare module 'stripe' {
        * A hash of settings for this cash balance.
        */
       settings?: CashBalanceUpdateParams.Settings;
-    }
-
-    namespace CashBalanceUpdateParams {
-      interface Settings {
-        /**
-         * Controls how funds transferred by the customer are applied to payment intents and invoices. Valid options are `automatic` or `manual`. For more information about these reconciliation modes, see [Reconciliation](https://stripe.com/docs/payments/customer-balance/reconciliation).
-         */
-        reconciliation_mode?: Settings.ReconciliationMode;
-      }
-
-      namespace Settings {
-        type ReconciliationMode = 'automatic' | 'manual';
-      }
     }
   }
 }

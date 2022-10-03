@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace FinancialConnections {
-      /**
+      export /**
        * A Financial Connections Account represents an account that exists outside of Stripe, to which you have been granted some degree of access.
        */
       interface Account {
@@ -109,7 +109,7 @@ declare module 'stripe' {
       }
 
       namespace Account {
-        interface AccountHolder {
+        export interface AccountHolder {
           /**
            * The ID of the Stripe account this account belongs to. Should only be present if `account_holder.type` is `account`.
            */
@@ -126,11 +126,7 @@ declare module 'stripe' {
           type: AccountHolder.Type;
         }
 
-        namespace AccountHolder {
-          type Type = 'account' | 'customer';
-        }
-
-        interface Balance {
+        export interface Balance {
           /**
            * The time that the external institution calculated this balance. Measured in seconds since the Unix epoch.
            */
@@ -157,8 +153,56 @@ declare module 'stripe' {
           type: Balance.Type;
         }
 
+        export interface BalanceRefresh {
+          /**
+           * The time at which the last refresh attempt was initiated. Measured in seconds since the Unix epoch.
+           */
+          last_attempted_at: number;
+
+          /**
+           * The status of the last refresh attempt.
+           */
+          status: BalanceRefresh.Status;
+        }
+
+        export type Category = 'cash' | 'credit' | 'investment' | 'other';
+
+        export interface OwnershipRefresh {
+          /**
+           * The time at which the last refresh attempt was initiated. Measured in seconds since the Unix epoch.
+           */
+          last_attempted_at: number;
+
+          /**
+           * The status of the last refresh attempt.
+           */
+          status: OwnershipRefresh.Status;
+        }
+
+        export type Permission =
+          | 'balances'
+          | 'ownership'
+          | 'payment_method'
+          | 'transactions';
+
+        export type Status = 'active' | 'disconnected' | 'inactive';
+
+        export type Subcategory =
+          | 'checking'
+          | 'credit_card'
+          | 'line_of_credit'
+          | 'mortgage'
+          | 'other'
+          | 'savings';
+
+        export type SupportedPaymentMethodType = 'link' | 'us_bank_account';
+
+        namespace AccountHolder {
+          export type Type = 'account' | 'customer';
+        }
+
         namespace Balance {
-          interface Cash {
+          export interface Cash {
             /**
              * The funds available to the account holder. Typically this is the current balance less any holds.
              *
@@ -171,7 +215,7 @@ declare module 'stripe' {
             } | null;
           }
 
-          interface Credit {
+          export interface Credit {
             /**
              * The credit that has been used by the account holder.
              *
@@ -184,70 +228,26 @@ declare module 'stripe' {
             } | null;
           }
 
-          type Type = 'cash' | 'credit';
-        }
-
-        interface BalanceRefresh {
-          /**
-           * The time at which the last refresh attempt was initiated. Measured in seconds since the Unix epoch.
-           */
-          last_attempted_at: number;
-
-          /**
-           * The status of the last refresh attempt.
-           */
-          status: BalanceRefresh.Status;
+          export type Type = 'cash' | 'credit';
         }
 
         namespace BalanceRefresh {
-          type Status = 'failed' | 'pending' | 'succeeded';
-        }
-
-        type Category = 'cash' | 'credit' | 'investment' | 'other';
-
-        interface OwnershipRefresh {
-          /**
-           * The time at which the last refresh attempt was initiated. Measured in seconds since the Unix epoch.
-           */
-          last_attempted_at: number;
-
-          /**
-           * The status of the last refresh attempt.
-           */
-          status: OwnershipRefresh.Status;
+          export type Status = 'failed' | 'pending' | 'succeeded';
         }
 
         namespace OwnershipRefresh {
-          type Status = 'failed' | 'pending' | 'succeeded';
+          export type Status = 'failed' | 'pending' | 'succeeded';
         }
-
-        type Permission =
-          | 'balances'
-          | 'ownership'
-          | 'payment_method'
-          | 'transactions';
-
-        type Status = 'active' | 'disconnected' | 'inactive';
-
-        type Subcategory =
-          | 'checking'
-          | 'credit_card'
-          | 'line_of_credit'
-          | 'mortgage'
-          | 'other'
-          | 'savings';
-
-        type SupportedPaymentMethodType = 'link' | 'us_bank_account';
       }
 
-      interface AccountRetrieveParams {
+      export interface AccountRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface AccountListParams extends PaginationParams {
+      export interface AccountListParams extends PaginationParams {
         /**
          * If present, only return accounts that belong to the specified account holder. `account_holder[customer]` and `account_holder[account]` are mutually exclusive.
          */
@@ -265,7 +265,7 @@ declare module 'stripe' {
       }
 
       namespace AccountListParams {
-        interface AccountHolder {
+        export interface AccountHolder {
           /**
            * The ID of the Stripe account whose accounts will be retrieved.
            */
@@ -278,14 +278,14 @@ declare module 'stripe' {
         }
       }
 
-      interface AccountDisconnectParams {
+      export interface AccountDisconnectParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface AccountListOwnersParams extends PaginationParams {
+      export interface AccountListOwnersParams extends PaginationParams {
         /**
          * The ID of the ownership object to fetch owners from.
          */
@@ -297,7 +297,7 @@ declare module 'stripe' {
         expand?: Array<string>;
       }
 
-      interface AccountRefreshParams {
+      export interface AccountRefreshParams {
         /**
          * The list of account features that you would like to refresh.
          */
@@ -310,7 +310,7 @@ declare module 'stripe' {
       }
 
       namespace AccountRefreshParams {
-        type Feature = 'balance' | 'ownership';
+        export type Feature = 'balance' | 'ownership';
       }
 
       class AccountsResource {

@@ -2,7 +2,7 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    export /**
      * `Application Fee Refund` objects allow you to refund an application fee that
      * has previously been created but not yet refunded. Funds will be refunded to
      * the Stripe account from which the fee was originally collected.
@@ -51,7 +51,7 @@ declare module 'stripe' {
       metadata: Stripe.Metadata | null;
     }
 
-    interface FeeRefundCreateParams {
+    export interface FeeRefundCreateParams {
       /**
        * A positive integer, in _cents (or local equivalent)_, representing how much of this fee to refund. Can refund only up to the remaining unrefunded amount of the fee.
        */
@@ -68,14 +68,14 @@ declare module 'stripe' {
       metadata?: Stripe.MetadataParam;
     }
 
-    interface FeeRefundRetrieveParams {
+    export interface FeeRefundRetrieveParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
       expand?: Array<string>;
     }
 
-    interface FeeRefundUpdateParams {
+    export interface FeeRefundUpdateParams {
       /**
        * Specifies which fields in the response should be expanded.
        */
@@ -87,7 +87,7 @@ declare module 'stripe' {
       metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
     }
 
-    interface FeeRefundListParams extends PaginationParams {
+    export interface FeeRefundListParams extends PaginationParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

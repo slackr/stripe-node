@@ -2,7 +2,48 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace CreditNote {
+      export interface DiscountAmount {
+        /**
+         * The amount, in %s, of the discount.
+         */
+        amount: number;
+
+        /**
+         * The discount that was applied to get this discount amount.
+         */
+        discount: string | Stripe.Discount | Stripe.DeletedDiscount;
+      }
+
+      export type Reason =
+        | 'duplicate'
+        | 'fraudulent'
+        | 'order_change'
+        | 'product_unsatisfactory';
+
+      export type Status = 'issued' | 'void';
+
+      export interface TaxAmount {
+        /**
+         * The amount, in %s, of the tax.
+         */
+        amount: number;
+
+        /**
+         * Whether this tax amount is inclusive or exclusive.
+         */
+        inclusive: boolean;
+
+        /**
+         * The tax rate that was applied to get this tax amount.
+         */
+        tax_rate: string | Stripe.TaxRate;
+      }
+
+      export type Type = 'post_payment' | 'pre_payment';
+    }
+
+    export /**
      * Issue a credit note to adjust an invoice's amount after the invoice is finalized.
      *
      * Related guide: [Credit Notes](https://stripe.com/docs/billing/invoices/credit-notes).
@@ -147,48 +188,61 @@ declare module 'stripe' {
       voided_at: number | null;
     }
 
-    namespace CreditNote {
-      interface DiscountAmount {
+    namespace CreditNoteCreateParams {
+      export interface Line {
         /**
-         * The amount, in %s, of the discount.
+         * The line item amount to credit. Only valid when `type` is `invoice_line_item`.
          */
-        amount: number;
+        amount?: number;
 
         /**
-         * The discount that was applied to get this discount amount.
+         * The description of the credit note line item. Only valid when the `type` is `custom_line_item`.
          */
-        discount: string | Stripe.Discount | Stripe.DeletedDiscount;
+        description?: string;
+
+        /**
+         * The invoice line item to credit. Only valid when the `type` is `invoice_line_item`.
+         */
+        invoice_line_item?: string;
+
+        /**
+         * The line item quantity to credit.
+         */
+        quantity?: number;
+
+        /**
+         * The tax rates which apply to the credit note line item. Only valid when the `type` is `custom_line_item`.
+         */
+        tax_rates?: Stripe.Emptyable<Array<string>>;
+
+        /**
+         * Type of the credit note line item, one of `invoice_line_item` or `custom_line_item`
+         */
+        type: Line.Type;
+
+        /**
+         * The integer unit amount in cents (or local equivalent) of the credit note line item. This `unit_amount` will be multiplied by the quantity to get the full amount to credit for this line item. Only valid when `type` is `custom_line_item`.
+         */
+        unit_amount?: number;
+
+        /**
+         * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
+         */
+        unit_amount_decimal?: string;
       }
 
-      type Reason =
+      export type Reason =
         | 'duplicate'
         | 'fraudulent'
         | 'order_change'
         | 'product_unsatisfactory';
 
-      type Status = 'issued' | 'void';
-
-      interface TaxAmount {
-        /**
-         * The amount, in %s, of the tax.
-         */
-        amount: number;
-
-        /**
-         * Whether this tax amount is inclusive or exclusive.
-         */
-        inclusive: boolean;
-
-        /**
-         * The tax rate that was applied to get this tax amount.
-         */
-        tax_rate: string | Stripe.TaxRate;
+      namespace Line {
+        export type Type = 'custom_line_item' | 'invoice_line_item';
       }
-
-      type Type = 'post_payment' | 'pre_payment';
     }
 
-    interface CreditNoteCreateParams {
+    export interface CreditNoteCreateParams {
       /**
        * ID of the invoice.
        */
@@ -245,8 +299,49 @@ declare module 'stripe' {
       refund_amount?: number;
     }
 
-    namespace CreditNoteCreateParams {
-      interface Line {
+    export interface CreditNoteRetrieveParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+    }
+
+    export interface CreditNoteUpdateParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+
+      /**
+       * Credit note memo.
+       */
+      memo?: string;
+
+      /**
+       * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
+       */
+      metadata?: Stripe.MetadataParam;
+    }
+
+    export interface CreditNoteListParams extends PaginationParams {
+      /**
+       * Only return credit notes for the customer specified by this customer ID.
+       */
+      customer?: string;
+
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+
+      /**
+       * Only return credit notes for the invoice specified by this invoice ID.
+       */
+      invoice?: string;
+    }
+
+    namespace CreditNoteListPreviewLineItemsParams {
+      export interface Line {
         /**
          * The line item amount to credit. Only valid when `type` is `invoice_line_item`.
          */
@@ -288,59 +383,19 @@ declare module 'stripe' {
         unit_amount_decimal?: string;
       }
 
-      namespace Line {
-        type Type = 'custom_line_item' | 'invoice_line_item';
-      }
-
-      type Reason =
+      export type Reason =
         | 'duplicate'
         | 'fraudulent'
         | 'order_change'
         | 'product_unsatisfactory';
+
+      namespace Line {
+        export type Type = 'custom_line_item' | 'invoice_line_item';
+      }
     }
 
-    interface CreditNoteRetrieveParams {
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-    }
-
-    interface CreditNoteUpdateParams {
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-
-      /**
-       * Credit note memo.
-       */
-      memo?: string;
-
-      /**
-       * Set of [key-value pairs](https://stripe.com/docs/api/metadata) that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to `metadata`.
-       */
-      metadata?: Stripe.MetadataParam;
-    }
-
-    interface CreditNoteListParams extends PaginationParams {
-      /**
-       * Only return credit notes for the customer specified by this customer ID.
-       */
-      customer?: string;
-
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-
-      /**
-       * Only return credit notes for the invoice specified by this invoice ID.
-       */
-      invoice?: string;
-    }
-
-    interface CreditNoteListPreviewLineItemsParams extends PaginationParams {
+    export interface CreditNoteListPreviewLineItemsParams
+      extends PaginationParams {
       /**
        * ID of the invoice.
        */
@@ -397,8 +452,8 @@ declare module 'stripe' {
       refund_amount?: number;
     }
 
-    namespace CreditNoteListPreviewLineItemsParams {
-      interface Line {
+    namespace CreditNotePreviewParams {
+      export interface Line {
         /**
          * The line item amount to credit. Only valid when `type` is `invoice_line_item`.
          */
@@ -440,18 +495,18 @@ declare module 'stripe' {
         unit_amount_decimal?: string;
       }
 
-      namespace Line {
-        type Type = 'custom_line_item' | 'invoice_line_item';
-      }
-
-      type Reason =
+      export type Reason =
         | 'duplicate'
         | 'fraudulent'
         | 'order_change'
         | 'product_unsatisfactory';
+
+      namespace Line {
+        export type Type = 'custom_line_item' | 'invoice_line_item';
+      }
     }
 
-    interface CreditNotePreviewParams {
+    export interface CreditNotePreviewParams {
       /**
        * ID of the invoice.
        */
@@ -508,61 +563,7 @@ declare module 'stripe' {
       refund_amount?: number;
     }
 
-    namespace CreditNotePreviewParams {
-      interface Line {
-        /**
-         * The line item amount to credit. Only valid when `type` is `invoice_line_item`.
-         */
-        amount?: number;
-
-        /**
-         * The description of the credit note line item. Only valid when the `type` is `custom_line_item`.
-         */
-        description?: string;
-
-        /**
-         * The invoice line item to credit. Only valid when the `type` is `invoice_line_item`.
-         */
-        invoice_line_item?: string;
-
-        /**
-         * The line item quantity to credit.
-         */
-        quantity?: number;
-
-        /**
-         * The tax rates which apply to the credit note line item. Only valid when the `type` is `custom_line_item`.
-         */
-        tax_rates?: Stripe.Emptyable<Array<string>>;
-
-        /**
-         * Type of the credit note line item, one of `invoice_line_item` or `custom_line_item`
-         */
-        type: Line.Type;
-
-        /**
-         * The integer unit amount in cents (or local equivalent) of the credit note line item. This `unit_amount` will be multiplied by the quantity to get the full amount to credit for this line item. Only valid when `type` is `custom_line_item`.
-         */
-        unit_amount?: number;
-
-        /**
-         * Same as `unit_amount`, but accepts a decimal value in cents (or local equivalent) with at most 12 decimal places. Only one of `unit_amount` and `unit_amount_decimal` can be set.
-         */
-        unit_amount_decimal?: string;
-      }
-
-      namespace Line {
-        type Type = 'custom_line_item' | 'invoice_line_item';
-      }
-
-      type Reason =
-        | 'duplicate'
-        | 'fraudulent'
-        | 'order_change'
-        | 'product_unsatisfactory';
-    }
-
-    interface CreditNoteVoidCreditNoteParams {
+    export interface CreditNoteVoidCreditNoteParams {
       /**
        * Specifies which fields in the response should be expanded.
        */

@@ -2,7 +2,26 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
+    namespace File {
+      export type Purpose =
+        | 'account_requirement'
+        | 'additional_verification'
+        | 'business_icon'
+        | 'business_logo'
+        | 'customer_signature'
+        | 'dispute_evidence'
+        | 'document_provider_identity_document'
+        | 'finance_report_run'
+        | 'identity_document'
+        | 'identity_document_downloadable'
+        | 'pci_document'
+        | 'selfie'
+        | 'sigma_scheduled_query'
+        | 'tax_document_user_upload'
+        | 'terminal_reader_splashscreen';
+    }
+
+    export /**
      * This is an object representing a file hosted on Stripe's servers. The
      * file may have been uploaded by yourself using the [create file](https://stripe.com/docs/api#create_file)
      * request (for example, when uploading dispute evidence) or it may have
@@ -68,8 +87,17 @@ declare module 'stripe' {
       url: string | null;
     }
 
-    namespace File {
-      type Purpose =
+    export interface FileCreateParams {}
+
+    export interface FileRetrieveParams {
+      /**
+       * Specifies which fields in the response should be expanded.
+       */
+      expand?: Array<string>;
+    }
+
+    namespace FileListParams {
+      export type Purpose =
         | 'account_requirement'
         | 'additional_verification'
         | 'business_icon'
@@ -87,16 +115,7 @@ declare module 'stripe' {
         | 'terminal_reader_splashscreen';
     }
 
-    interface FileCreateParams {}
-
-    interface FileRetrieveParams {
-      /**
-       * Specifies which fields in the response should be expanded.
-       */
-      expand?: Array<string>;
-    }
-
-    interface FileListParams extends PaginationParams {
+    export interface FileListParams extends PaginationParams {
       created?: Stripe.RangeQueryParam | number;
 
       /**
@@ -108,25 +127,6 @@ declare module 'stripe' {
        * The file purpose to filter queries by. If none is provided, files will not be filtered by purpose.
        */
       purpose?: FileListParams.Purpose;
-    }
-
-    namespace FileListParams {
-      type Purpose =
-        | 'account_requirement'
-        | 'additional_verification'
-        | 'business_icon'
-        | 'business_logo'
-        | 'customer_signature'
-        | 'dispute_evidence'
-        | 'document_provider_identity_document'
-        | 'finance_report_run'
-        | 'identity_document'
-        | 'identity_document_downloadable'
-        | 'pci_document'
-        | 'selfie'
-        | 'sigma_scheduled_query'
-        | 'tax_document_user_upload'
-        | 'terminal_reader_splashscreen';
     }
 
     class FilesResource {

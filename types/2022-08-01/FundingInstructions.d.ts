@@ -2,39 +2,8 @@
 
 declare module 'stripe' {
   namespace Stripe {
-    /**
-     * Each customer has a [`balance`](https://stripe.com/docs/api/customers/object#customer_object-balance) that is
-     * automatically applied to future invoices and payments using the `customer_balance` payment method.
-     * Customers can fund this balance by initiating a bank transfer to any account in the
-     * `financial_addresses` field.
-     * Related guide: [Customer Balance - Funding Instructions](https://stripe.com/docs/payments/customer-balance/funding-instructions) to learn more
-     */
-    interface FundingInstructions {
-      /**
-       * String representing the object's type. Objects of the same type share the same value.
-       */
-      object: 'funding_instructions';
-
-      bank_transfer: FundingInstructions.BankTransfer;
-
-      /**
-       * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
-       */
-      currency: string;
-
-      /**
-       * The `funding_type` of the returned instructions
-       */
-      funding_type: 'bank_transfer';
-
-      /**
-       * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
-       */
-      livemode: boolean;
-    }
-
     namespace FundingInstructions {
-      interface BankTransfer {
+      export interface BankTransfer {
         /**
          * The country of the bank account to fund
          */
@@ -52,7 +21,7 @@ declare module 'stripe' {
       }
 
       namespace BankTransfer {
-        interface FinancialAddress {
+        export interface FinancialAddress {
           /**
            * Iban Records contain E.U. bank account details per the SEPA format.
            */
@@ -84,8 +53,10 @@ declare module 'stripe' {
           zengin?: FinancialAddress.Zengin;
         }
 
+        export type Type = 'eu_bank_transfer' | 'jp_bank_transfer';
+
         namespace FinancialAddress {
-          interface Iban {
+          export interface Iban {
             /**
              * The name of the person or business that owns the bank account
              */
@@ -107,7 +78,7 @@ declare module 'stripe' {
             iban: string;
           }
 
-          interface SortCode {
+          export interface SortCode {
             /**
              * The name of the person or business that owns the bank account
              */
@@ -124,7 +95,7 @@ declare module 'stripe' {
             sort_code: string;
           }
 
-          interface Spei {
+          export interface Spei {
             /**
              * The three-digit bank code
              */
@@ -141,11 +112,16 @@ declare module 'stripe' {
             clabe: string;
           }
 
-          type SupportedNetwork = 'bacs' | 'fps' | 'sepa' | 'spei' | 'zengin';
+          export type SupportedNetwork =
+            | 'bacs'
+            | 'fps'
+            | 'sepa'
+            | 'spei'
+            | 'zengin';
 
-          type Type = 'iban' | 'sort_code' | 'spei' | 'zengin';
+          export type Type = 'iban' | 'sort_code' | 'spei' | 'zengin';
 
-          interface Zengin {
+          export interface Zengin {
             /**
              * The account holder name
              */
@@ -182,9 +158,38 @@ declare module 'stripe' {
             branch_name: string | null;
           }
         }
-
-        type Type = 'eu_bank_transfer' | 'jp_bank_transfer';
       }
+    }
+
+    export /**
+     * Each customer has a [`balance`](https://stripe.com/docs/api/customers/object#customer_object-balance) that is
+     * automatically applied to future invoices and payments using the `customer_balance` payment method.
+     * Customers can fund this balance by initiating a bank transfer to any account in the
+     * `financial_addresses` field.
+     * Related guide: [Customer Balance - Funding Instructions](https://stripe.com/docs/payments/customer-balance/funding-instructions) to learn more
+     */
+    interface FundingInstructions {
+      /**
+       * String representing the object's type. Objects of the same type share the same value.
+       */
+      object: 'funding_instructions';
+
+      bank_transfer: FundingInstructions.BankTransfer;
+
+      /**
+       * Three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be a [supported currency](https://stripe.com/docs/currencies).
+       */
+      currency: string;
+
+      /**
+       * The `funding_type` of the returned instructions
+       */
+      funding_type: 'bank_transfer';
+
+      /**
+       * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+       */
+      livemode: boolean;
     }
   }
 }

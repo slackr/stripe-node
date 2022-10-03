@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Issuing {
-      /**
+      export /**
        * Any use of an [issued card](https://stripe.com/docs/issuing) that results in funds entering or leaving
        * your Stripe account, such as a completed purchase or refund, is represented by an Issuing
        * `Transaction` object.
@@ -110,14 +110,14 @@ declare module 'stripe' {
       }
 
       namespace Transaction {
-        interface AmountDetails {
+        export interface AmountDetails {
           /**
            * The fee charged by the ATM for the cash withdrawal.
            */
           atm_fee: number | null;
         }
 
-        interface MerchantData {
+        export interface MerchantData {
           /**
            * A categorization of the seller's type of business. See our [merchant categories guide](https://stripe.com/docs/issuing/merchant-categories) for a list of possible values.
            */
@@ -159,7 +159,7 @@ declare module 'stripe' {
           state: string | null;
         }
 
-        interface PurchaseDetails {
+        export interface PurchaseDetails {
           /**
            * Information about the flight that was purchased with this transaction.
            */
@@ -186,8 +186,24 @@ declare module 'stripe' {
           reference: string | null;
         }
 
+        export interface Treasury {
+          /**
+           * The Treasury [ReceivedCredit](https://stripe.com/docs/api/treasury/received_debits) representing this Issuing transaction if it is a refund
+           */
+          received_credit: string | null;
+
+          /**
+           * The Treasury [ReceivedDebit](https://stripe.com/docs/api/treasury/received_credits) representing this Issuing transaction if it is a capture
+           */
+          received_debit: string | null;
+        }
+
+        export type Type = 'capture' | 'refund';
+
+        export type Wallet = 'apple_pay' | 'google_pay' | 'samsung_pay';
+
         namespace PurchaseDetails {
-          interface Flight {
+          export interface Flight {
             /**
              * The time that the flight departed.
              */
@@ -214,8 +230,64 @@ declare module 'stripe' {
             travel_agency: string | null;
           }
 
+          export interface Fuel {
+            /**
+             * The type of fuel that was purchased. One of `diesel`, `unleaded_plus`, `unleaded_regular`, `unleaded_super`, or `other`.
+             */
+            type: string;
+
+            /**
+             * The units for `volume_decimal`. One of `us_gallon` or `liter`.
+             */
+            unit: string;
+
+            /**
+             * The cost in cents per each unit of fuel, represented as a decimal string with at most 12 decimal places.
+             */
+            unit_cost_decimal: string;
+
+            /**
+             * The volume of the fuel that was pumped, represented as a decimal string with at most 12 decimal places.
+             */
+            volume_decimal: string | null;
+          }
+
+          export interface Lodging {
+            /**
+             * The time of checking into the lodging.
+             */
+            check_in_at: number | null;
+
+            /**
+             * The number of nights stayed at the lodging.
+             */
+            nights: number | null;
+          }
+
+          export interface Receipt {
+            /**
+             * The description of the item. The maximum length of this field is 26 characters.
+             */
+            description: string | null;
+
+            /**
+             * The quantity of the item.
+             */
+            quantity: number | null;
+
+            /**
+             * The total for this line item in cents.
+             */
+            total: number | null;
+
+            /**
+             * The unit cost of the item in cents.
+             */
+            unit_cost: number | null;
+          }
+
           namespace Flight {
-            interface Segment {
+            export interface Segment {
               /**
                * The three-letter IATA airport code of the flight's destination.
                */
@@ -247,89 +319,17 @@ declare module 'stripe' {
               stopover_allowed: boolean | null;
             }
           }
-
-          interface Fuel {
-            /**
-             * The type of fuel that was purchased. One of `diesel`, `unleaded_plus`, `unleaded_regular`, `unleaded_super`, or `other`.
-             */
-            type: string;
-
-            /**
-             * The units for `volume_decimal`. One of `us_gallon` or `liter`.
-             */
-            unit: string;
-
-            /**
-             * The cost in cents per each unit of fuel, represented as a decimal string with at most 12 decimal places.
-             */
-            unit_cost_decimal: string;
-
-            /**
-             * The volume of the fuel that was pumped, represented as a decimal string with at most 12 decimal places.
-             */
-            volume_decimal: string | null;
-          }
-
-          interface Lodging {
-            /**
-             * The time of checking into the lodging.
-             */
-            check_in_at: number | null;
-
-            /**
-             * The number of nights stayed at the lodging.
-             */
-            nights: number | null;
-          }
-
-          interface Receipt {
-            /**
-             * The description of the item. The maximum length of this field is 26 characters.
-             */
-            description: string | null;
-
-            /**
-             * The quantity of the item.
-             */
-            quantity: number | null;
-
-            /**
-             * The total for this line item in cents.
-             */
-            total: number | null;
-
-            /**
-             * The unit cost of the item in cents.
-             */
-            unit_cost: number | null;
-          }
         }
-
-        interface Treasury {
-          /**
-           * The Treasury [ReceivedCredit](https://stripe.com/docs/api/treasury/received_debits) representing this Issuing transaction if it is a refund
-           */
-          received_credit: string | null;
-
-          /**
-           * The Treasury [ReceivedDebit](https://stripe.com/docs/api/treasury/received_credits) representing this Issuing transaction if it is a capture
-           */
-          received_debit: string | null;
-        }
-
-        type Type = 'capture' | 'refund';
-
-        type Wallet = 'apple_pay' | 'google_pay' | 'samsung_pay';
       }
 
-      interface TransactionRetrieveParams {
+      export interface TransactionRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface TransactionUpdateParams {
+      export interface TransactionUpdateParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
@@ -341,7 +341,7 @@ declare module 'stripe' {
         metadata?: Stripe.Emptyable<Stripe.MetadataParam>;
       }
 
-      interface TransactionListParams extends PaginationParams {
+      export interface TransactionListParams extends PaginationParams {
         /**
          * Only return transactions that belong to the given card.
          */
@@ -369,7 +369,7 @@ declare module 'stripe' {
       }
 
       namespace TransactionListParams {
-        type Type = 'capture' | 'refund';
+        export type Type = 'capture' | 'refund';
       }
 
       class TransactionsResource {

@@ -3,7 +3,7 @@
 declare module 'stripe' {
   namespace Stripe {
     namespace Treasury {
-      /**
+      export /**
        * Use [InboundTransfers](https://stripe.com/docs/treasury/moving-money/financial-accounts/into/inbound-transfers) to add funds to your [FinancialAccount](https://stripe.com/docs/api#financial_accounts) via a PaymentMethod that is owned by you. The funds will be transferred via an ACH debit.
        */
       interface InboundTransfer {
@@ -103,15 +103,52 @@ declare module 'stripe' {
       }
 
       namespace InboundTransfer {
-        interface FailureDetails {
+        export interface FailureDetails {
           /**
            * Reason for the failure.
            */
           code: FailureDetails.Code;
         }
 
+        export interface LinkedFlows {
+          /**
+           * If funds for this flow were returned after the flow went to the `succeeded` state, this field contains a reference to the ReceivedDebit return.
+           */
+          received_debit: string | null;
+        }
+
+        export interface OriginPaymentMethodDetails {
+          billing_details: OriginPaymentMethodDetails.BillingDetails;
+
+          /**
+           * The type of the payment method used in the InboundTransfer.
+           */
+          type: 'us_bank_account';
+
+          us_bank_account?: OriginPaymentMethodDetails.UsBankAccount;
+        }
+
+        export type Status = 'canceled' | 'failed' | 'processing' | 'succeeded';
+
+        export interface StatusTransitions {
+          /**
+           * Timestamp describing when an InboundTransfer changed status to `canceled`.
+           */
+          canceled_at?: number | null;
+
+          /**
+           * Timestamp describing when an InboundTransfer changed status to `failed`.
+           */
+          failed_at: number | null;
+
+          /**
+           * Timestamp describing when an InboundTransfer changed status to `succeeded`.
+           */
+          succeeded_at: number | null;
+        }
+
         namespace FailureDetails {
-          type Code =
+          export type Code =
             | 'account_closed'
             | 'account_frozen'
             | 'bank_account_restricted'
@@ -127,26 +164,8 @@ declare module 'stripe' {
             | 'other';
         }
 
-        interface LinkedFlows {
-          /**
-           * If funds for this flow were returned after the flow went to the `succeeded` state, this field contains a reference to the ReceivedDebit return.
-           */
-          received_debit: string | null;
-        }
-
-        interface OriginPaymentMethodDetails {
-          billing_details: OriginPaymentMethodDetails.BillingDetails;
-
-          /**
-           * The type of the payment method used in the InboundTransfer.
-           */
-          type: 'us_bank_account';
-
-          us_bank_account?: OriginPaymentMethodDetails.UsBankAccount;
-        }
-
         namespace OriginPaymentMethodDetails {
-          interface BillingDetails {
+          export interface BillingDetails {
             address: Stripe.Address;
 
             /**
@@ -160,7 +179,7 @@ declare module 'stripe' {
             name: string | null;
           }
 
-          interface UsBankAccount {
+          export interface UsBankAccount {
             /**
              * Account holder type: individual or company.
              */
@@ -198,33 +217,14 @@ declare module 'stripe' {
           }
 
           namespace UsBankAccount {
-            type AccountHolderType = 'company' | 'individual';
+            export type AccountHolderType = 'company' | 'individual';
 
-            type AccountType = 'checking' | 'savings';
+            export type AccountType = 'checking' | 'savings';
           }
-        }
-
-        type Status = 'canceled' | 'failed' | 'processing' | 'succeeded';
-
-        interface StatusTransitions {
-          /**
-           * Timestamp describing when an InboundTransfer changed status to `canceled`.
-           */
-          canceled_at?: number | null;
-
-          /**
-           * Timestamp describing when an InboundTransfer changed status to `failed`.
-           */
-          failed_at: number | null;
-
-          /**
-           * Timestamp describing when an InboundTransfer changed status to `succeeded`.
-           */
-          succeeded_at: number | null;
         }
       }
 
-      interface InboundTransferCreateParams {
+      export interface InboundTransferCreateParams {
         /**
          * Amount (in cents) to be transferred.
          */
@@ -266,14 +266,14 @@ declare module 'stripe' {
         statement_descriptor?: string;
       }
 
-      interface InboundTransferRetrieveParams {
+      export interface InboundTransferRetrieveParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
         expand?: Array<string>;
       }
 
-      interface InboundTransferListParams extends PaginationParams {
+      export interface InboundTransferListParams extends PaginationParams {
         /**
          * Returns objects associated with this FinancialAccount.
          */
@@ -291,10 +291,10 @@ declare module 'stripe' {
       }
 
       namespace InboundTransferListParams {
-        type Status = 'canceled' | 'failed' | 'processing' | 'succeeded';
+        export type Status = 'canceled' | 'failed' | 'processing' | 'succeeded';
       }
 
-      interface InboundTransferCancelParams {
+      export interface InboundTransferCancelParams {
         /**
          * Specifies which fields in the response should be expanded.
          */
