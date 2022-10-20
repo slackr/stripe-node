@@ -152,7 +152,7 @@ const utils = {
   /**
    * Return the options hash from a list of arguments
    */
-  getOptionsFromArgs: (args) => {
+  getOptionsFromArgs: (args): Options => {
     const opts: Options = {
       auth: null,
       headers: {},
@@ -274,7 +274,9 @@ const utils = {
   /**
    * Remove empty values from an object
    */
-  removeNullish: (obj) => {
+  removeNullish: (
+    obj: Record<string, unknown | undefined | null>
+  ): Record<string, unknown> => {
     if (typeof obj !== 'object') {
       throw new Error('Argument must be an object');
     }
@@ -293,7 +295,7 @@ const utils = {
    * becomes
    * {'Foo-Bar': 'hi'}
    */
-  normalizeHeaders: (obj) => {
+  normalizeHeaders: (obj: Record<string, unknown>): Record<string, unknown> => {
     if (!(obj && typeof obj === 'object')) {
       return obj;
     }
@@ -308,7 +310,7 @@ const utils = {
    * Stolen from https://github.com/marten-de-vries/header-case-normalizer/blob/master/index.js#L36-L41
    * without the exceptions which are irrelevant to us.
    */
-  normalizeHeader: (header) => {
+  normalizeHeader: (header: string): string => {
     return header
       .split('-')
       .map(
@@ -321,14 +323,17 @@ const utils = {
    * Determine if file data is a derivative of EventEmitter class.
    * https://nodejs.org/api/events.html#events_events
    */
-  checkForStream: (obj) => {
+  checkForStream: (obj): boolean => {
     if (obj.file && obj.file.data) {
       return obj.file.data instanceof EventEmitter;
     }
     return false;
   },
 
-  callbackifyPromiseWithTimeout: (promise, callback) => {
+  callbackifyPromiseWithTimeout: (
+    promise: Promise<unknown>,
+    callback
+  ): Promise<unknown> => {
     if (callback) {
       // Ensure callback is called outside of promise stack.
       return promise.then(
@@ -351,7 +356,7 @@ const utils = {
   /**
    * Allow for special capitalization cases (such as OAuth)
    */
-  pascalToCamelCase: (name) => {
+  pascalToCamelCase: (name: string): string => {
     if (name === 'OAuth') {
       return 'oauth';
     } else {
@@ -386,13 +391,15 @@ const utils = {
   // For mocking in tests.
   _exec: exec,
 
-  isObject: (obj) => {
+  isObject: (obj: unknown): boolean => {
     const type = typeof obj;
     return (type === 'function' || type === 'object') && !!obj;
   },
 
   // For use in multipart requests
-  flattenAndStringify: (data) => {
+  flattenAndStringify: (
+    data: Record<string, unknown>
+  ): Record<string, string | any> => {
     const result = {};
 
     const step = (obj, prevKey) => {
@@ -427,7 +434,7 @@ const utils = {
   /**
    * https://stackoverflow.com/a/2117523
    */
-  uuid4: () => {
+  uuid4: (): string => {
     // available in: v14.17.x+
     if (crypto.randomUUID) {
       return crypto.randomUUID();
@@ -441,8 +448,8 @@ const utils = {
     });
   },
 
-  validateInteger: (name, n, defaultVal) => {
-    if (!Number.isInteger(n)) {
+  validateInteger: (name: string, n: unknown, defaultVal?: number): number => {
+    if (typeof n !== 'number' || !Number.isInteger(n)) {
       if (defaultVal !== undefined) {
         return defaultVal;
       } else {
@@ -453,7 +460,11 @@ const utils = {
     return n;
   },
 
-  determineProcessUserAgentProperties: () => {
+  determineProcessUserAgentProperties: (): {
+    // eslint-disable-next-line camelcase
+    lang_version?: string;
+    platform?: string;
+  } => {
     return typeof process === 'undefined'
       ? {}
       : {
@@ -463,7 +474,7 @@ const utils = {
   },
 };
 
-function emitWarning(warning) {
+function emitWarning(warning: string | Error): void {
   if (typeof process.emitWarning !== 'function') {
     return console.warn(
       `Stripe: ${warning}`
