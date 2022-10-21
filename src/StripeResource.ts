@@ -14,6 +14,7 @@ const {HttpClient} = require('./net/HttpClient');
 
 type Settings = {
   timeout?: number;
+  maxNetworkRetries?: number;
 };
 
 type Options = {
@@ -22,63 +23,57 @@ type Options = {
   headers?: Record<string, string>;
 };
 
-// Provide extension mechanism for Stripe Resource Sub-Classes
-StripeResource.extend = utils.protoExtend;
-
-// Expose method-creator & prepared (basic) methods
-StripeResource.method = require('./StripeMethod');
-StripeResource.BASIC_METHODS = require('./StripeMethod.basic');
-
-StripeResource.MAX_BUFFERED_REQUEST_METRICS = 100;
 const MAX_RETRY_AFTER_WAIT = 60;
 
 /**
  * Encapsulates request logic for a Stripe Resource
  */
-function StripeResource(stripe, deprecatedUrlData) {
-  this._stripe = stripe;
-  if (deprecatedUrlData) {
-    throw new Error(
-      'Support for curried url params was dropped in stripe-node v7.0.0. Instead, pass two ids.'
-    );
-  }
+class StripeResource {
+  // Provide extension mechanism for Stripe Resource Sub-Classes
+  static extend = utils.protoExtend;
+  // Expose method-creator & prepared (basic) methods
+  static method = require('./StripeMethod');
+  static BASIC_METHODS = require('./StripeMethod.basic');
 
-  this.basePath = utils.makeURLInterpolator(
-    this.basePath || stripe.getApiField('basePath')
-  );
-  this.resourcePath = this.path;
-  this.path = utils.makeURLInterpolator(this.path);
+  static MAX_BUFFERED_REQUEST_METRICS = 100;
 
-  // DEPRECATED: This was kept for backwards compatibility in case users were
-  // using this, but basic methods are now explicitly defined on a resource.
-  if (this.includeBasic) {
-    this.includeBasic.forEach(function(methodName) {
-      this[methodName] = StripeResource.BASIC_METHODS[methodName];
-    }, this);
-  }
-
-  this.initialize(...arguments);
-}
-
-StripeResource.prototype = {
-  path: '',
+  path: any = '';
+  resourcePath: string;
 
   // Methods that don't use the API's default '/v1' path can override it with this setting.
-  basePath: null,
-
-  initialize() {},
+  basePath = null;
 
   // Function to override the default data processor. This allows full control
   // over how a StripeResource's request data will get converted into an HTTP
   // body. This is useful for non-standard HTTP requests. The function should
   // take method name, data, and headers as arguments.
-  requestDataProcessor: null,
+  requestDataProcessor = null;
 
   // Function to add a validation checks before sending the request, errors should
   // be thrown, and they will be passed to the callback/promise.
-  validateRequest: null,
+  validateRequest = null;
 
-  createFullPath(commandPath, urlData) {
+  // DEPRECATED: Here for backcompat in case users relied on this.
+  wrapTimeout = utils.callbackifyPromiseWithTimeout;
+
+  _stripe: any;
+
+  constructor(stripe, deprecatedUrlData) {
+    this._stripe = stripe;
+    if (deprecatedUrlData) {
+      throw new Error(
+        'Support for curried url params was dropped in stripe-node v7.0.0. Instead, pass two ids.'
+      );
+    }
+
+    this.basePath = utils.makeURLInterpolator(
+      this.basePath || stripe.getApiField('basePath')
+    );
+    this.resourcePath = this.path;
+    this.path = utils.makeURLInterpolator(this.path);
+  }
+
+  public createFullPath(commandPath, urlData) {
     const urlParts = [this.basePath(urlData), this.path(urlData)];
 
     if (typeof commandPath === 'function') {
@@ -94,12 +89,12 @@ StripeResource.prototype = {
     }
 
     return this._joinUrlParts(urlParts);
-  },
+  }
 
   // Creates a relative resource path with symbols left in (unlike
   // createFullPath which takes some data to replace them with). For example it
   // might produce: /invoices/{id}
-  createResourcePathWithSymbols(pathWithSymbols) {
+  public createResourcePathWithSymbols(pathWithSymbols) {
     // If there is no path beyond the resource path, we want to produce just
     // /<resource path> rather than /<resource path>/.
     if (pathWithSymbols) {
@@ -107,29 +102,26 @@ StripeResource.prototype = {
     } else {
       return `/${this.resourcePath}`;
     }
-  },
+  }
 
-  _joinUrlParts(parts) {
+  private _joinUrlParts(parts) {
     // Replace any accidentally doubled up slashes. This previously used
     // path.join, which would do this as well. Unfortunately we need to do this
     // as the functions for creating paths are technically part of the public
     // interface and so we need to preserve backwards compatibility.
     return parts.join('/').replace(/\/{2,}/g, '/');
-  },
+  }
 
-  // DEPRECATED: Here for backcompat in case users relied on this.
-  wrapTimeout: utils.callbackifyPromiseWithTimeout,
-
-  _timeoutHandler(timeout, req, callback) {
+  private _timeoutHandler(timeout, req, callback) {
     return () => {
       const timeoutErr = new TypeError('ETIMEDOUT');
       (timeoutErr as any).code = 'ETIMEDOUT';
 
       req.destroy(timeoutErr);
     };
-  },
+  }
 
-  _addHeadersDirectlyToObject(obj, headers) {
+  private _addHeadersDirectlyToObject(obj, headers) {
     // For convenience, make some headers easily accessible on
     // lastResponse.
 
@@ -138,9 +130,9 @@ StripeResource.prototype = {
     obj.stripeAccount = obj.stripeAccount || headers['stripe-account'];
     obj.apiVersion = obj.apiVersion || headers['stripe-version'];
     obj.idempotencyKey = obj.idempotencyKey || headers['idempotency-key'];
-  },
+  }
 
-  _makeResponseEvent(requestEvent, statusCode, headers) {
+  private _makeResponseEvent(requestEvent, statusCode, headers) {
     const requestEndTime = Date.now();
     const requestDurationMs = requestEndTime - requestEvent.request_start_time;
 
@@ -156,11 +148,11 @@ StripeResource.prototype = {
       request_start_time: requestEvent.request_start_time,
       request_end_time: requestEndTime,
     });
-  },
+  }
 
-  _getRequestId(headers) {
+  private _getRequestId(headers) {
     return headers['request-id'];
-  },
+  }
 
   /**
    * Used by methods with spec.streaming === true. For these methods, we do not
@@ -172,7 +164,7 @@ StripeResource.prototype = {
    * still be buffered/parsed and handled by _jsonResponseHandler -- see
    * makeRequest)
    */
-  _streamingResponseHandler(requestEvent, callback) {
+  private _streamingResponseHandler(requestEvent, callback) {
     return (res) => {
       const headers = res.getHeaders();
 
@@ -198,14 +190,14 @@ StripeResource.prototype = {
 
       return callback(null, stream);
     };
-  },
+  }
 
   /**
    * Default handler for Stripe responses. Buffers the response into memory,
    * parses the JSON and returns it (i.e. passes it to the callback) if there
    * is no "error" field. Otherwise constructs/passes an appropriate Error.
    */
-  _jsonResponseHandler(requestEvent, callback) {
+  private _jsonResponseHandler(requestEvent, callback) {
     return (res) => {
       const headers = res.getHeaders();
       const requestId = this._getRequestId(headers);
@@ -279,15 +271,15 @@ StripeResource.prototype = {
           (e) => callback.call(this, e, null)
         );
     };
-  },
+  }
 
-  _generateConnectionErrorMessage(requestRetries) {
+  private _generateConnectionErrorMessage(requestRetries) {
     return `An error occurred with our connection to Stripe.${
       requestRetries > 0 ? ` Request was retried ${requestRetries} times.` : ''
     }`;
-  },
+  }
 
-  _errorHandler(req, requestRetries, callback) {
+  private _errorHandler(req, requestRetries, callback) {
     return (message, detail) => {
       callback.call(
         this,
@@ -298,10 +290,10 @@ StripeResource.prototype = {
         null
       );
     };
-  },
+  }
 
   // For more on when and how to retry API requests, see https://stripe.com/docs/error-handling#safely-retrying-requests-with-idempotency
-  _shouldRetry(res, numRetries, maxRetries, error) {
+  private _shouldRetry(res, numRetries, maxRetries, error) {
     if (
       error &&
       numRetries === 0 &&
@@ -344,9 +336,9 @@ StripeResource.prototype = {
     }
 
     return false;
-  },
+  }
 
-  _getSleepTimeInMS(numRetries, retryAfter = null) {
+  private _getSleepTimeInMS(numRetries, retryAfter = null) {
     const initialNetworkRetryDelay = this._stripe.getInitialNetworkRetryDelay();
     const maxNetworkRetryDelay = this._stripe.getMaxNetworkRetryDelay();
 
@@ -371,17 +363,17 @@ StripeResource.prototype = {
     }
 
     return sleepSeconds * 1000;
-  },
+  }
 
   // Max retries can be set on a per request basis. Favor those over the global setting
-  _getMaxNetworkRetries(settings: {maxNetworkRetries?: number} = {}) {
+  private _getMaxNetworkRetries(settings: {maxNetworkRetries?: number} = {}) {
     return settings.maxNetworkRetries &&
       Number.isInteger(settings.maxNetworkRetries)
       ? settings.maxNetworkRetries
       : this._stripe.getMaxNetworkRetries();
-  },
+  }
 
-  _defaultIdempotencyKey(method, settings) {
+  private _defaultIdempotencyKey(method, settings) {
     // If this is a POST and we allow multiple retries, ensure an idempotency key.
     const maxRetries = this._getMaxNetworkRetries(settings);
 
@@ -389,9 +381,9 @@ StripeResource.prototype = {
       return `stripe-node-retry-${utils.uuid4()}`;
     }
     return null;
-  },
+  }
 
-  _makeHeaders(
+  private _makeHeaders(
     auth,
     contentLength,
     apiVersion,
@@ -449,18 +441,18 @@ StripeResource.prototype = {
       // If the user supplied, say 'idempotency-key', override instead of appending by ensuring caps are the same.
       utils.normalizeHeaders(userSuppliedHeaders)
     );
-  },
+  }
 
-  _getUserAgentString() {
+  private _getUserAgentString() {
     const packageVersion = this._stripe.getConstant('PACKAGE_VERSION');
     const appInfo = this._stripe._appInfo
       ? this._stripe.getAppInfoAsString()
       : '';
 
     return `Stripe/v1 NodeBindings/${packageVersion} ${appInfo}`.trim();
-  },
+  }
 
-  _getTelemetryHeader() {
+  private _getTelemetryHeader() {
     if (
       this._stripe.getTelemetryEnabled() &&
       this._stripe._prevRequestMetrics.length > 0
@@ -470,9 +462,9 @@ StripeResource.prototype = {
         last_request_metrics: metrics,
       });
     }
-  },
+  }
 
-  _recordRequestMetrics(requestId, requestDurationMs) {
+  private _recordRequestMetrics(requestId, requestDurationMs) {
     if (this._stripe.getTelemetryEnabled() && requestId) {
       if (
         this._stripe._prevRequestMetrics.length >
@@ -488,9 +480,17 @@ StripeResource.prototype = {
         });
       }
     }
-  },
+  }
 
-  _request(method, host, path, data, auth, options: Options = {}, callback) {
+  private _request(
+    method,
+    host,
+    path,
+    data,
+    auth,
+    options: Options = {},
+    callback
+  ) {
     let requestData;
 
     const retryRequest = (
@@ -551,7 +551,7 @@ StripeResource.prototype = {
 
       req
         .then((res) => {
-          if (this._shouldRetry(res, requestRetries, maxRetries)) {
+          if (this._shouldRetry(res, requestRetries, maxRetries, undefined)) {
             return retryRequest(
               makeRequest,
               apiVersion,
@@ -624,7 +624,7 @@ StripeResource.prototype = {
     } else {
       prepareAndMakeRequest(null, utils.stringifyRequestData(data || {}));
     }
-  },
-};
+  }
+}
 
 export = StripeResource;
